@@ -1,7 +1,10 @@
 "use client";
 
-import { MapPinHouse, Plus, Radio, RadioTower } from "lucide-react";
+import { useMutation } from "convex/react";
+import { MapPinHouse, Plus, Radio, RadioTower, SunIcon } from "lucide-react";
 import { useRef, useState } from "react";
+import toast from "react-hot-toast";
+import { api } from "../../../convex/_generated/api";
 import Button from "../shared/button";
 import Input from "../shared/input";
 
@@ -11,6 +14,8 @@ function NewStationModal() {
   const [address, setAddress] = useState("");
   const [frequency, setFrequency] = useState("");
   const [enabled, setEnabled] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const create = useMutation(api.stations.create);
   const showModal = () => {
     if (newStationModal.current) {
       newStationModal.current.showModal();
@@ -21,6 +26,28 @@ function NewStationModal() {
     if (newStationModal.current) {
       newStationModal.current.close();
     }
+  };
+
+  const handleNewStation = async () => {
+    if (!stationName || !address || !frequency) {
+      toast.error("Please provide all missing details");
+      return;
+    }
+    setIsLoading(true);
+
+    const data = {
+      name: stationName,
+      address,
+      frequency,
+      enabled,
+    };
+    await create(data);
+    setIsLoading(false);
+    setAddress("")
+    setStationName("")
+    setFrequency("")
+    closeModal()
+    toast.success("Station added successfully");
   };
   return (
     <div>
@@ -78,9 +105,13 @@ function NewStationModal() {
             </label>
           </div>
           <div className="flex justify-between items-cente mt-6">
-            <Button onClick={closeModal} variant="primary">
+            {
+                isLoading ? <SunIcon className="text-gray-100 animate-spin" size={20} /> : (
+                    <Button onClick={handleNewStation} variant="primary">
               Submit
             </Button>
+                )
+            }
             <Button onClick={closeModal} variant="secondary">
               Cancel
             </Button>
