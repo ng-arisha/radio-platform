@@ -10,7 +10,7 @@ function HomeLayout({ children }: Readonly<{ children: React.ReactNode }>) {
       {/* top navigation */}
       <TopNavigation />
         {/* main content */}
-        <div className="px-4 py-6 flex-1 min-h-screen bg-gray-900 overflow-y-auto">
+        <div className="px-4 py-6 flex-1 h-[cal(100vh-4rem)] bg-gray-900 overflow-y-auto">
             {children}
         </div>
       </div>
