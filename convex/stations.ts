@@ -34,3 +34,26 @@ export const get = query({
     return stations;
   },
 });
+
+
+export const updateById = mutation({
+  args:{id:v.id("stations"),name:v.string(),address:v.string(),frequency:v.string(),enabled:v.boolean()},
+  handler:async(ctx,args)=>{
+    const user = await ctx.auth.getUserIdentity();
+    if (!user) {
+      throw new ConvexError("Unauthorized");
+    }
+    const station = await ctx.db.get(args.id);
+    if(!station){
+      throw new ConvexError("Station not found");
+    }
+    
+    await ctx.db.patch(args.id,{
+      name:args.name,
+      address:args.address,
+      frequency:args.frequency,
+      enabled:args.enabled
+    })
+    return true;
+  }
+})
