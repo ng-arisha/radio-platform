@@ -1,4 +1,4 @@
-import { House, Presentation, Radio } from "lucide-react";
+import { House, Radio, Tv } from "lucide-react";
 
 export const sidebarLinks = [
     {
@@ -14,6 +14,6 @@ export const sidebarLinks = [
     {
         label:"Shows",
         path:"/shows",
-        icon:Presentation
+        icon:Tv
     }
 ]

@@ -26,7 +26,7 @@ function SideNavigation() {
           <li key={path} className="">
             <Link
               href={path}
-              className={`px-2 flex space-x-2 items-center text-gray-100 ${path === activePath ? "border border-gray-300" : ""}`}
+              className={`px-2 flex space-x-2 items-center text-gray-100 ${path === activePath ? "border border-gray-300/50" : ""}`}
             >
               <Icon size={24} />
               <span>{label}</span>
