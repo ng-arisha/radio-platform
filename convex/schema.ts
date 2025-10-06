@@ -11,5 +11,17 @@ export default defineSchema({
         enabled:v.boolean()
     }).searchIndex("search_name",{
         searchField:"name"
+    }),
+
+    shows:defineTable({
+        stationId:v.id("stations"),
+        name:v.string(),
+        code:v.string(),
+        startTime:v.string(),
+        endTime:v.string(),
+        jackpotEnabled:v.boolean()
     })
+
 })
+
+
