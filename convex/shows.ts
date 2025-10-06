@@ -38,3 +38,16 @@ export const get = query({
         return shows;
     }
 })
+
+export const getByStationId = query({
+    args:{stationId:v.id("stations")},
+    handler:async(ctx,args)=>{
+        const user = await ctx.auth.getUserIdentity();
+        if(!user){
+            throw new ConvexError("Unauthorized");
+        }
+
+        const shows = await ctx.db.query("shows").filter(q=>q.eq(q.field("stationId"),args.stationId)).collect();
+        return shows;
+    }
+})
