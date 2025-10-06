@@ -6,7 +6,7 @@ function StationsPage() {
         <div>
            <div className="flex justify-between items-center">
             <h1>Radio Stations</h1>
-            <NewStationModal />
+            <NewStationModal page="stations" />
            </div>
 
          <div className="mt-4">
