@@ -9,5 +9,7 @@ export default defineSchema({
         address:v.string(),
         frequency:v.string(),
         enabled:v.boolean()
+    }).searchIndex("search_name",{
+        searchField:"name"
     })
 })

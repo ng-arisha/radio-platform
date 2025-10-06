@@ -1,5 +1,5 @@
 import { ConvexError, v } from "convex/values";
-import { mutation } from "./_generated/server";
+import { mutation, query } from "./_generated/server";
 
 export const create = mutation({
     args:{
@@ -24,3 +24,22 @@ export const create = mutation({
 });
 
 
+export const get = query({
+    args:{
+        search:v.optional(v.string())
+    },
+    handler: async (ctx,args)=>{
+        const user = await ctx.auth.getUserIdentity();
+        if(!user){
+            throw new ConvexError("Unauthorized")
+            
+        }
+
+        if(args.search){
+            return await ctx.db.query("stations").withSearchIndex("search_name",(q)=>q.search("name",args.search!))
+        }
+
+        const stations = await ctx.db.query("stations").collect();
+        return stations
+    }
+})
