@@ -1,5 +1,5 @@
 import { ConvexError, v } from "convex/values";
-import { mutation } from "./_generated/server";
+import { mutation, query } from "./_generated/server";
 
 
 export const create = mutation({
@@ -24,5 +24,17 @@ export const create = mutation({
             endTime:args.endTime,
             jackpotEnabled:args.jackpotEnabled
         })
+    }
+})
+
+export const get = query({
+    handler:async(ctx)=>{
+        const user = await ctx.auth.getUserIdentity();
+        if(!user){
+            throw new ConvexError("Unauthorized");
+        }
+
+        const shows = await ctx.db.query("shows").collect();
+        return shows;
     }
 })
