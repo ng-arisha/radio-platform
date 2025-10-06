@@ -1,4 +1,5 @@
-import { Power, Trash2Icon } from "lucide-react";
+import { EyeIcon, Power, Trash2Icon } from "lucide-react";
+import Link from "next/link";
 import EditStationModal from "./edit-station-modal";
 
 function StationTable({ stations }: { stations: StationType[] }) {
@@ -41,10 +42,13 @@ function StationTable({ stations }: { stations: StationType[] }) {
                 )}
               </td>
               <td>{new Date(station._creationTime).toLocaleDateString()}</td>
-              <td className="flex space-x-2 items-center">
+              <td className="flex space-x-1 items-center">
                 <EditStationModal station={station} />
+                <Link href={`/stations/${station._id}`} className="p-2 cursor-pointer text-gray-500 rounded-md">
+                    <EyeIcon className="" size={16} />
+                </Link>
                 <button className="p-2 cursor-pointer text-red-500 rounded-md">
-                    <Trash2Icon className="mr-1" size={16} />
+                    <Trash2Icon className="" size={16} />
                 </button>
               </td>
             </tr>
