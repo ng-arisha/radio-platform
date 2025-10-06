@@ -1,3 +1,4 @@
+import ShowList from "@/components/shows/show-list";
 import NewStationModal from "@/components/stations/new-station-modal";
 
 function ShowsPage() {
@@ -6,6 +7,9 @@ function ShowsPage() {
       <div className="flex justify-between items-center">
         <h1>Radio Shows</h1>
         <NewStationModal page="shows" />
+      </div>
+      <div className="mt-4">
+      <ShowList />
       </div>
     </div>
   );

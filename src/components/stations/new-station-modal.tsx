@@ -5,6 +5,7 @@ import { MapPinHouse, Plus, Radio, RadioTower, SunIcon } from "lucide-react";
 import { useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { api } from "../../../convex/_generated/api";
+import { Id } from "../../../convex/_generated/dataModel";
 import Button from "../shared/button";
 import Input from "../shared/input";
 
@@ -19,7 +20,9 @@ function NewStationModal({ page }: { page: string }) {
   const [showCode, setShowCode] = useState("");
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
+  const [selectedStation, setSelectedStation] = useState("");
   const create = useMutation(api.stations.create);
+  const newShow = useMutation(api.shows.create);
 
   const stations = useQuery(api.stations.get);
   const showModal = () => {
@@ -35,12 +38,13 @@ function NewStationModal({ page }: { page: string }) {
   };
 
   const handleNewStation = async () => {
-    if (!stationName || !address || !frequency) {
-      toast.error("Please provide all missing details");
-      return;
-    }
+    
     setIsLoading(true);
     if (page === "stations") {
+      if (!stationName || !address || !frequency) {
+        toast.error("Please provide all missing details");
+        return;
+      }
       const data = {
         name: stationName,
         address,
@@ -49,13 +53,32 @@ function NewStationModal({ page }: { page: string }) {
       };
       await create(data);
     }
+    if(page === "shows"){
+      // console.log({selectedStation});
+      // console.log({stationName,showCode,startTime,endTime,enabled});
+      if (!stationName || !showCode || !startTime || !endTime || !selectedStation) {
+        toast.error("Please provide all missing details");
+        return;
+      }
+      
+      const data = {
+        stationId: selectedStation as Id<"stations">,
+        name: stationName,
+        code: showCode,
+        startTime,
+        endTime,
+        jackpotEnabled: enabled
+      };
+      await newShow(data);
+
+    }
 
     setIsLoading(false);
     setAddress("");
     setStationName("");
     setFrequency("");
     closeModal();
-    toast.success("Station added successfully");
+    toast.success(`${page === "stations" ? "Station" : "Show"} created successfully`);
   };
   return (
     <div>
@@ -78,6 +101,8 @@ function NewStationModal({ page }: { page: string }) {
               </label>
               <select
                 id="station"
+                value={selectedStation}
+                onChange={(e) => setSelectedStation(e.target.value)}
                 className="w-full pl-3 pr-3 py-3 bg-gray-700 border border-gray-600 rounded-lg text-gray-200 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-transparent transition-all duration-200"
               >
                 <option value="">Select Station</option>
