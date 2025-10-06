@@ -1,4 +1,5 @@
 import NewStationModal from "@/components/stations/new-station-modal"
+import StationList from "@/components/stations/station-list"
 
 function StationsPage() {
     return (
@@ -7,6 +8,10 @@ function StationsPage() {
             <h1>Radio Stations</h1>
             <NewStationModal />
            </div>
+
+         <div className="mt-4">
+         <StationList />
+         </div>
         </div>
     )
 }
