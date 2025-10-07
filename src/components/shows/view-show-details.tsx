@@ -1,7 +1,8 @@
-import { useQuery } from "convex/react";
-import { Edit, Eye, X } from "lucide-react";
+import { useMutation, useQuery } from "convex/react";
+import { Edit, Eye, Sun, X } from "lucide-react";
 import { useRef, useState } from "react";
 import { api } from "../../../convex/_generated/api";
+import { Id } from "../../../convex/_generated/dataModel";
 import Button from "../shared/button";
 import Input from "../shared/input";
 import TextColumn from "../shared/text-column";
@@ -21,6 +22,9 @@ function ViewShowDetails({
   const [jackpotEnabled, setJackpotEnabled] = useState(show.jackpotEnabled);
   const [stationId, setStationId] = useState(show.stationId);
   const stations = useQuery(api.stations.get);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const updateShow = useMutation(api.shows.updateById);
   const closeModal = () => {
     if (viewShowDetails.current) {
       viewShowDetails.current.close();
@@ -30,6 +34,22 @@ function ViewShowDetails({
     if (viewShowDetails.current) {
       viewShowDetails.current.showModal();
     }
+  };
+
+  const handleUpdateShow = async () => {
+    setIsLoading(true);
+    const data = {
+      id: show._id as Id<"shows">,
+      name,
+      code,
+      startTime,
+      endTime,
+      jackpotEnabled,
+      stationId: stationId as Id<"stations">,
+    };
+    await updateShow(data);
+    setIsLoading(false);
+    closeModal();
   };
   return (
     <div>
@@ -87,24 +107,24 @@ function ViewShowDetails({
             </>
           ) : (
             <>
-             <div className="my-3">
-              <label className="block text-sm font-medium text-gray-300">
-                Select Station <span className="text-red-400">*</span>
-              </label>
-              <select
-                id="station"
-                value={stationId}
-                onChange={(e) => setStationId(e.target.value)}
-                className="w-full pl-3 pr-3 py-3 bg-gray-700 border border-gray-600 rounded-lg text-gray-200 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-transparent transition-all duration-200"
-              >
-                <option value="">Select Station</option>
-                {stations?.map((station) => (
-                  <option key={station._id} value={station._id}>
-                    {station.name}
-                  </option>
-                ))}
-              </select>
-            </div>
+              <div className="my-3">
+                <label className="block text-sm font-medium text-gray-300">
+                  Select Station <span className="text-red-400">*</span>
+                </label>
+                <select
+                  id="station"
+                  value={stationId}
+                  onChange={(e) => setStationId(e.target.value)}
+                  className="w-full pl-3 pr-3 py-3 bg-gray-700 border border-gray-600 rounded-lg text-gray-200 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-transparent transition-all duration-200"
+                >
+                  <option value="">Select Station</option>
+                  {stations?.map((station) => (
+                    <option key={station._id} value={station._id}>
+                      {station.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
               <div className="my-3">
                 <Input
                   value={name}
@@ -141,22 +161,30 @@ function ViewShowDetails({
                 </div>
               </div>
               <div className="flex items-center">
-            <input
-              type="checkbox"
-              id="enabled"
-              checked={jackpotEnabled}
-              onChange={(e) => setJackpotEnabled(e.target.checked)}
-              className="w-4 h-4 text-orange-600 rounded focus:ring-orange-500"
-            />
-            <label htmlFor="enabled" className="ml-2 text-sm text-gray-500">
-            Jackpot Enabled
-            </label>
-          </div>
-          <div className="flex justify-center items-center">
-            <Button variant="primary" className="w-full mt-4" onClick={closeModal}>
-              Update
-            </Button>
-          </div>
+                <input
+                  type="checkbox"
+                  id="enabled"
+                  checked={jackpotEnabled}
+                  onChange={(e) => setJackpotEnabled(e.target.checked)}
+                  className="w-4 h-4 text-orange-600 rounded focus:ring-orange-500"
+                />
+                <label htmlFor="enabled" className="ml-2 text-sm text-gray-500">
+                  Jackpot Enabled
+                </label>
+              </div>
+              <div className="flex justify-center items-center">
+                {isLoading ? (
+                  <Sun className="animate-spin text-orange-400" />
+                ) : (
+                  <Button
+                    variant="primary"
+                    className="w-full mt-4"
+                    onClick={handleUpdateShow}
+                  >
+                    Update
+                  </Button>
+                )}
+              </div>
             </>
           )}
           {/* <div className="flex justify-center items-center">

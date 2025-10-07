@@ -55,3 +55,50 @@ export const getByStationId = query({
         return shows;
     }
 })
+
+export const updateById = mutation({
+    args:{
+        id:v.id("shows"),
+        stationId:v.id("stations"),
+        name:v.string(),
+        code:v.string(),
+        startTime:v.string(),
+        endTime:v.string(),
+        jackpotEnabled:v.boolean()
+    },
+    handler:async(ctx,args)=>{
+        const user = await ctx.auth.getUserIdentity();
+        if(!user){
+            throw new ConvexError("Unauthorized");
+        }
+        const show = await ctx.db.get(args.id);
+        if(!show){
+            throw new ConvexError("Show not found");
+        }
+        await ctx.db.patch(args.id,{
+            stationId:args.stationId,
+            name:args.name,
+            code:args.code,
+            startTime:args.startTime,
+            endTime:args.endTime,
+            jackpotEnabled:args.jackpotEnabled
+        })
+        return true;
+    }
+})
+
+export const deleteShow = mutation({
+    args:{id:v.id("shows")},
+    handler:async(ctx,args)=>{
+        const user = await ctx.auth.getUserIdentity();
+        if(!user){
+            throw new ConvexError("Unauthorized");
+        }
+        const show = await ctx.db.get(args.id);
+        if(!show){
+            throw new ConvexError("Show not found");
+        }
+        await ctx.db.delete(args.id);
+        return true;
+    }
+})

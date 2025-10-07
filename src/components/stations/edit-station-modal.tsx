@@ -47,7 +47,7 @@ function EditStationModal({station}:{station:StationType}) {
         className="p-2 cursor-pointer text-green-500 mr-2 rounded-md"
         onClick={openModal}
       >
-        <Edit2 className="mr-1" size={16} />
+        <Edit2 className="" size={16} />
       </button>
       <dialog ref={editStationModal} className="modal modal-end">
         <div className="modal-box">

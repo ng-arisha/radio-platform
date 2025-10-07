@@ -29,6 +29,7 @@ function ShowTable({ shows }: { shows: ShowsType[] }) {
               <td>{show.code}</td>
               <td>{show.startTime}</td>
               <td>{show.endTime}</td>
+              <td>{new Date(show._creationTime).toLocaleDateString()}</td>
               <td>
                 {show.jackpotEnabled ? (
                   <p className="py-1 px-2 rounded-full bg-green-500/30 text-green-500 flex justify-center items-center w-fit">
@@ -42,7 +43,7 @@ function ShowTable({ shows }: { shows: ShowsType[] }) {
                   </p>
                 )}
               </td>
-              <td>{new Date(show._creationTime).toLocaleDateString()}</td>
+             
               <td className="flex space-x-1 items-center">
               <ViewShowDetails show={show} purpose="edit" />
                 <ViewShowDetails show={show} purpose="view" />
