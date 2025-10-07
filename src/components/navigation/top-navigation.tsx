@@ -7,7 +7,7 @@ function TopNavigation() {
       <div className="flex-1">
       <label
           htmlFor="my-drawer-2"
-          className="btn btn-primary drawer-button lg:hidden"
+          className="cursor-pointer text-gray-400 drawer-button lg:hidden"
         >
         <MenuIcon size={20} />
         </label>
