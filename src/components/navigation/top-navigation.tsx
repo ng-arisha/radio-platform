@@ -16,9 +16,7 @@ function TopNavigation() {
       </div>
       <div className="flex-none">
         <ul className="menu menu-horizontal px-1">
-          <li>
-            <a>Link</a>
-          </li>
+          
           <li>
           <UserButton/>
           </li>
