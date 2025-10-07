@@ -72,3 +72,19 @@ export const getById = query({
     return station;
   }
 })
+
+export const deleteById = mutation({
+  args:{id:v.id("stations")},
+  handler:async(ctx,args)=>{
+    const user = await ctx.auth.getUserIdentity();
+    if (!user) {
+      throw new ConvexError("Unauthorized");
+    }
+    const station = await ctx.db.get(args.id);
+    if(!station){
+      throw new ConvexError("Station not found");
+    }
+    await ctx.db.delete(args.id);
+    return true;
+  }
+})
