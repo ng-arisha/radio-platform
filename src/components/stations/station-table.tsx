@@ -1,8 +1,22 @@
-import { EyeIcon, Power, Trash2Icon } from "lucide-react";
+"use client";
+
+import { useMutation } from "convex/react";
+import { EyeIcon, Power, Sun, Trash2Icon } from "lucide-react";
 import Link from "next/link";
+import { useState } from "react";
+import { api } from "../../../convex/_generated/api";
+import { Id } from "../../../convex/_generated/dataModel";
 import EditStationModal from "./edit-station-modal";
 
 function StationTable({ stations }: { stations: StationType[] }) {
+  const deleteStation = useMutation(api.stations.deleteById);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleDeleteStation = async (stationId: string) => {
+    setIsLoading(true);
+    await deleteStation({ id: stationId as Id<"stations"> });
+    setIsLoading(false);
+  };
   return (
     <div className="overflow-x-auto rounded-box border border-gray-800 bg-gray-900/80">
       <table className="table">
@@ -44,12 +58,23 @@ function StationTable({ stations }: { stations: StationType[] }) {
               <td>{new Date(station._creationTime).toLocaleDateString()}</td>
               <td className="flex space-x-1 items-center">
                 <EditStationModal station={station} />
-                <Link href={`/stations/${station._id}`} className="p-2 cursor-pointer text-gray-500 rounded-md">
-                    <EyeIcon className="" size={16} />
+                <Link
+                  href={`/stations/${station._id}`}
+                  className="p-2 cursor-pointer text-gray-500 rounded-md"
+                >
+                  <EyeIcon className="" size={16} />
                 </Link>
-                <button className="p-2 cursor-pointer text-red-500 rounded-md">
+                {isLoading ? (
+                  <Sun className="animate-spin text-red-500" size={16} />
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => handleDeleteStation(station._id)}
+                    className="p-2 cursor-pointer text-red-500 rounded-md"
+                  >
                     <Trash2Icon className="" size={16} />
-                </button>
+                  </button>
+                )}
               </td>
             </tr>
           ))}
