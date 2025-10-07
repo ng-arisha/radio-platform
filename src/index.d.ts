@@ -16,4 +16,6 @@ declare type ShowsType = {
     endTime: string;
     name: string;
     jackpotEnabled:boolean
+    stationName?: string;
+    stationId: string;
 }

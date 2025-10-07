@@ -35,6 +35,10 @@ export const get = query({
         }
 
         const shows = await ctx.db.query("shows").collect();
+        for (const show of shows) {
+            const station = await ctx.db.get(show.stationId);
+            (show as any).stationName = station ? station.name : "Unknown Station";
+        }
         return shows;
     }
 })

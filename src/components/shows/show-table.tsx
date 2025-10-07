@@ -1,21 +1,22 @@
-import { Edit2, ThumbsDownIcon, ThumbsUpIcon, Trash2Icon } from "lucide-react"
+import { ThumbsDownIcon, ThumbsUpIcon, Trash2Icon } from "lucide-react";
+import ViewShowDetails from "./view-show-details";
 
-function ShowTable({shows}:{shows:ShowsType[]}) {
-    return (
-        <div className="overflow-x-auto rounded-box border border-gray-800 bg-gray-900/80">
+function ShowTable({ shows }: { shows: ShowsType[] }) {
+  return (
+    <div className="overflow-x-auto rounded-box border border-gray-800 bg-gray-900/80">
       <table className="table">
         {/* head */}
         <thead>
           <tr>
             <th className="text-gray-400 uppercase font-normal">#</th>
-            <th className="text-gray-400 uppercase font-normal">
-              Show Name
-            </th>
+            <th className="text-gray-400 uppercase font-normal">Show Name</th>
             <th className="text-gray-400 uppercase font-normal">Code</th>
             <th className="text-gray-400 uppercase font-normal">Start Time</th>
             <th className="text-gray-400 uppercase font-normal">End Time</th>
             <th className="text-gray-400 uppercase font-normal">Created At</th>
-            <th className="text-gray-400 uppercase font-normal">Jackpot Enabled?</th>
+            <th className="text-gray-400 uppercase font-normal">
+              Jackpot Enabled?
+            </th>
             <th className="text-gray-400 uppercase font-normal">Actions</th>
           </tr>
         </thead>
@@ -42,12 +43,11 @@ function ShowTable({shows}:{shows:ShowsType[]}) {
                 )}
               </td>
               <td>{new Date(show._creationTime).toLocaleDateString()}</td>
-              <td>
-                <button className="p-2 cursor-pointer text-green-500 mr-2 rounded-md">
-                    <Edit2 className="mr-1" size={16} />
-                </button>
+              <td className="flex space-x-1 items-center">
+              <ViewShowDetails show={show} purpose="edit" />
+                <ViewShowDetails show={show} purpose="view" />
                 <button className="p-2 cursor-pointer text-red-500 rounded-md">
-                    <Trash2Icon className="mr-1" size={16} />
+                  <Trash2Icon className="" size={16} />
                 </button>
               </td>
             </tr>
@@ -55,7 +55,7 @@ function ShowTable({shows}:{shows:ShowsType[]}) {
         </tbody>
       </table>
     </div>
-    )
+  );
 }
 
-export default ShowTable
+export default ShowTable;

@@ -1,5 +1,5 @@
 import { useMutation } from "convex/react";
-import { Edit2, LocationEditIcon, Radio } from "lucide-react";
+import { Edit2, LocationEditIcon, Radio, Sun } from "lucide-react";
 import { useRef, useState } from "react";
 import { api } from "../../../convex/_generated/api";
 import { Id } from "../../../convex/_generated/dataModel";
@@ -95,9 +95,15 @@ function EditStationModal({station}:{station:StationType}) {
                 </label>
             </div>
           <div className="flex justify-between items-center">
-            <Button onClick={handleUpdateStation} variant="primary">
-              Update
-            </Button>
+           {
+            isLoading ?  (
+                <Sun className="animate-spin text-orange-400" />
+            ):(
+                <Button onClick={handleUpdateStation} variant="primary">
+                Update
+              </Button>
+            )
+           }
             <Button onClick={closeModal} variant="secondary">
               Cancel
             </Button>
