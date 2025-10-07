@@ -1,7 +1,26 @@
-import { ThumbsDownIcon, ThumbsUpIcon, Trash2Icon } from "lucide-react";
+"use client";
+
+import { useMutation } from "convex/react";
+import {
+    SunIcon,
+    ThumbsDownIcon,
+    ThumbsUpIcon,
+    Trash2Icon,
+} from "lucide-react";
+import { useState } from "react";
+import { api } from "../../../convex/_generated/api";
+import { Id } from "../../../convex/_generated/dataModel";
 import ViewShowDetails from "./view-show-details";
 
 function ShowTable({ shows }: { shows: ShowsType[] }) {
+  const deleteShow = useMutation(api.shows.deleteShow);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  const handleDeleteShow = async (id: string) => {
+    setIsDeleting(true);
+    await deleteShow({ id: id as Id<"shows"> });
+    setIsDeleting(false);
+  };
   return (
     <div className="overflow-x-auto rounded-box border border-gray-800 bg-gray-900/80">
       <table className="table">
@@ -43,13 +62,21 @@ function ShowTable({ shows }: { shows: ShowsType[] }) {
                   </p>
                 )}
               </td>
-             
+
               <td className="flex space-x-1 items-center">
-              <ViewShowDetails show={show} purpose="edit" />
+                <ViewShowDetails show={show} purpose="edit" />
                 <ViewShowDetails show={show} purpose="view" />
-                <button className="p-2 cursor-pointer text-red-500 rounded-md">
-                  <Trash2Icon className="" size={16} />
-                </button>
+                {isDeleting ? (
+                  <SunIcon className="animate-spin text-red-500" size={16} />
+                ) : (
+                  <button
+                    onClick={() => handleDeleteShow(show._id)}
+                    type="button"
+                    className="p-2 cursor-pointer text-red-500 rounded-md"
+                  >
+                    <Trash2Icon className="" size={16} />
+                  </button>
+                )}
               </td>
             </tr>
           ))}
