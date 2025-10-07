@@ -1,7 +1,7 @@
 function HomePage() {
   return (
     <div>
-      <h1>Main Dashboard goes here</h1>
+      <h1>Dashboard</h1>
     </div>
   )
 }
