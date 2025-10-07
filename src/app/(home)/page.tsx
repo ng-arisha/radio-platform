@@ -1,7 +1,9 @@
+import DashboardSummary from "@/components/dashboard/dashboard-stat"
+
 function HomePage() {
   return (
     <div>
-      <h1>Dashboard</h1>
+     <DashboardSummary />
     </div>
   )
 }
