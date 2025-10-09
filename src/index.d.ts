@@ -19,3 +19,12 @@ declare type ShowsType = {
     stationName?: string;
     stationId: string;
 }
+
+declare type JwtPayloadType = {
+    sub:string;
+    email:string;
+    phoneNumber:string;
+    iat: number;
+    exp: number;
+    role:string;
+}

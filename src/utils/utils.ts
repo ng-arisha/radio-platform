@@ -1,5 +1,17 @@
 import { House, Radio, Tv } from "lucide-react";
 
+
+
+export const isClient = typeof window !== "undefined";
+
+export enum UserRole {
+  ADMIN = 'admin',
+  MEDIA_HOUSE = 'media-house',
+  STATION_ADMIN = 'station-admin',
+  PRESENTER = 'presenter',
+}
+
+
 export const sidebarLinks = [
     {
         label:"Home",
