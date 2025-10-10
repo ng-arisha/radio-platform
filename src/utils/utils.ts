@@ -1,4 +1,4 @@
-import { House, Radio, Tv } from "lucide-react";
+import { House, Radio, Tv, Users } from "lucide-react";
 
 
 
@@ -16,7 +16,8 @@ export const sidebarLinks = [
     {
         label:"Home",
         path:"/",
-        icon:House
+        icon:House,
+        
     },
     {
         label:"Stations",
@@ -27,7 +28,12 @@ export const sidebarLinks = [
         label:"Shows",
         path:"/shows",
         icon:Tv
-    }
+    },
+    {
+      label:"Users",
+      path:"/users",
+      icon:Users
+  }
 ];
 
 export const kpiData = {

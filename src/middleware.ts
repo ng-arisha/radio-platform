@@ -40,7 +40,9 @@ export function middleware(request: NextRequest) {
 
   if(!isPublicRoute){
     if(role === UserRole.ADMIN){
-      if(path === "/" || path.startsWith("/stations") || path.startsWith("/shows")){
+      const allowedPaths = ["/", "/stations", "/shows", "/users"];
+      const isAllowed = allowedPaths.some(allowedPath => path === allowedPath || path.startsWith(allowedPath + "/"));
+      if(isAllowed){
         return NextResponse.next();
       }
       return NextResponse.redirect(new URL("/", request.url));
