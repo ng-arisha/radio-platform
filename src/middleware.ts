@@ -24,6 +24,7 @@ export function middleware(request: NextRequest) {
   let decodedToken: JwtPayloadType | null = null;
   try {
     decodedToken = jwtDecode<JwtPayloadType>(token!);
+    console.log("Decoded Token:", decodedToken);
     const currentTime = Date.now() / 1000; // in seconds
     const isTokenExpred = decodedToken.exp < currentTime;
     if (isTokenExpred && !isPublicRoute) {

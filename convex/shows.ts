@@ -29,10 +29,7 @@ export const create = mutation({
 
 export const get = query({
     handler:async(ctx)=>{
-        const user = await ctx.auth.getUserIdentity();
-        if(!user){
-            throw new ConvexError("Unauthorized");
-        }
+        
 
         const shows = await ctx.db.query("shows").collect();
         for (const show of shows) {
@@ -46,10 +43,7 @@ export const get = query({
 export const getByStationId = query({
     args:{stationId:v.id("stations")},
     handler:async(ctx,args)=>{
-        const user = await ctx.auth.getUserIdentity();
-        if(!user){
-            throw new ConvexError("Unauthorized");
-        }
+        
 
         const shows = await ctx.db.query("shows").filter(q=>q.eq(q.field("stationId"),args.stationId)).collect();
         return shows;
@@ -67,10 +61,7 @@ export const updateById = mutation({
         jackpotEnabled:v.boolean()
     },
     handler:async(ctx,args)=>{
-        const user = await ctx.auth.getUserIdentity();
-        if(!user){
-            throw new ConvexError("Unauthorized");
-        }
+        
         const show = await ctx.db.get(args.id);
         if(!show){
             throw new ConvexError("Show not found");

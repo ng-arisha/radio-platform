@@ -1,4 +1,3 @@
-import { UserButton } from "@clerk/nextjs";
 import { MenuIcon } from "lucide-react";
 
 function TopNavigation() {
@@ -18,7 +17,7 @@ function TopNavigation() {
         <ul className="menu menu-horizontal px-1">
           
           <li>
-          <UserButton/>
+          {/* <UserButton/> */}
           </li>
         </ul>
       </div>

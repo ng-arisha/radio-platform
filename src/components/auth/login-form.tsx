@@ -1,8 +1,15 @@
 "use client";
 
-import { Radio } from "lucide-react";
+import { login } from "@/lib/auth/auth";
+import { AppDispatch, RootState } from "@/lib/store";
+import { UserRole } from "@/utils/utils";
+import { jwtDecode } from "jwt-decode";
+import { Radio, SunIcon } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
+import toast from "react-hot-toast";
+import { useDispatch, useSelector } from "react-redux";
 import Button from "../shared/button";
 import Input from "../shared/input";
 
@@ -10,8 +17,35 @@ function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleLogin = async()=>{
+  const loading = useSelector((state:RootState)=>state.auth.loading)
+  const dispatch = useDispatch<AppDispatch>();
+  const router = useRouter();
 
+  const handleLogin = async()=>{
+    if(email === "" || password === ""){
+      toast.error("Please fill in all fields");
+        return;
+    }
+    const data = {
+        email,
+        password
+    }
+    const res = await dispatch(login(data));
+    console.log(res);
+    if(login.fulfilled.match(res)){
+      if(!res.payload.access_token){
+        return;
+      }
+      console.log(res);
+        setEmail("");
+        setPassword("");
+        const decodedToken = jwtDecode<JwtPayloadType>(res.payload.access_token);
+        console.log(decodedToken);
+        const role = decodedToken.role;
+        if(role === UserRole.ADMIN){
+            router.push("/");
+        }
+    }
   }
   return (
     <div className="w-full max-w-xl">
@@ -58,12 +92,18 @@ function LoginForm() {
             </Link>
 
         </div>
-        <div className="mb-6">
-        <Button 
+        <div className="mb-6 flex justify-center items-center">
+        {
+          loading === 'pending' ? (
+            <SunIcon className="animate-spin text-white" size={24}/>
+          ):(
+            <Button 
         onClick={handleLogin}
         className="w-full" variant="primary" disabled={email === "" || password === ""}>
             Sign In
         </Button>
+          )
+        }
         </div>
       </form>
     </div>
