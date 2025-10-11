@@ -28,3 +28,9 @@ declare type JwtPayloadType = {
     exp: number;
     role:string;
 }
+
+declare type MediaHouseType = {
+    name:string;
+    address:string;
+    status:string;
+}
