@@ -1,12 +1,18 @@
 "use client";
 
 import { sidebarLinks } from "@/utils/utils";
-import { Radio } from "lucide-react";
+import { ChevronDown, ChevronRight, Radio } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useState } from "react";
 
 function SideNavigation() {
   const activePath = usePathname();
+  const [openDropdown, setOpenDropdown] = useState<string | null>(null);
+
+  const toggleDropdown = (label: string) => {
+    setOpenDropdown(openDropdown === label ? null : label);
+  };
   return (
     <div className="drawer-side">
       <label
@@ -22,17 +28,64 @@ function SideNavigation() {
         </p>
         </li>
         {/* Sidebar content here */}
-        {sidebarLinks.map(({ label, path, icon: Icon }) => (
-          <li key={path} className="">
-            <Link
-              href={path}
-              className={`px-2 flex space-x-2 items-center text-gray-100 ${path === activePath ? "border border-gray-300/50" : ""}`}
-            >
-              <Icon size={24} />
-              <span>{label}</span>
-            </Link>
-          </li>
-        ))}
+        {sidebarLinks.map(({ label, path, icon: Icon, children }) => {
+          const isActive = path === activePath || activePath.startsWith(path);
+          const isOpen = openDropdown === label;
+
+          if (children) {
+            return (
+              <li key={label}>
+                <button
+                  onClick={() => toggleDropdown(label)}
+                  className={`flex justify-between items-center w-full text-gray-100 px-2 py-2 rounded-lg ${
+                    isActive ? "bg-gray-700/50" : ""
+                  }`}
+                >
+                  <div className="flex items-center gap-2">
+                    <Icon size={22} />
+                    <span>{label}</span>
+                  </div>
+                  {isOpen ? (
+                    <ChevronDown size={18} />
+                  ) : (
+                    <ChevronRight size={18} />
+                  )}
+                </button>
+                {isOpen && (
+                  <ul className="pl-8 mt-1 space-y-1">
+                    {children.map((child) => (
+                      <li key={child.path}>
+                        <Link
+                          href={child.path}
+                          className={`block text-gray-300 hover:text-white px-2 py-1 rounded ${
+                            activePath === child.path ? "bg-gray-700/70" : ""
+                          }`}
+                        >
+                          {child.label}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </li>
+            );
+          }
+
+          // Non-dropdown link
+          return (
+            <li key={path}>
+              <Link
+                href={path}
+                className={`px-2 flex space-x-2 items-center text-gray-100 py-2 rounded-lg ${
+                  path === activePath ? "bg-gray-700/50" : ""
+                }`}
+              >
+                <Icon size={22} />
+                <span>{label}</span>
+              </Link>
+            </li>
+          );
+        })}
        
       </ul>
     </div>
