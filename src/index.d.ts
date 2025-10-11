@@ -34,3 +34,12 @@ declare type MediaHouseType = {
     address:string;
     status:string;
 }
+
+declare type UserType = {
+    _id:string;
+    fullName:string;
+    email:string;
+    status:string;
+    phoneNumber:string;
+    createdAt:string;
+}
