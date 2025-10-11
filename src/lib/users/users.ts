@@ -1,14 +1,17 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import toast from "react-hot-toast";
 
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL
 interface InitialUserState  {
     loading: "idle" | "pending" | "succeeded" | "failed";
+    addingUser: "idle" | "pending" | "succeeded" | "failed";
     mediahouseUsers: UserType[];
 }
 
 const initialState: InitialUserState = {
     loading: "idle",
+    addingUser: "idle",
     mediahouseUsers: [],
 };
 
@@ -85,14 +88,16 @@ const userSlice = createSlice({
 
         // create media house user
         builder.addCase(createMediaHouseUser.pending,(state)=>{
-            state.loading = "pending"
+            state.addingUser = "pending"
         })
         builder.addCase(createMediaHouseUser.fulfilled,(state,{payload})=>{
-            state.loading = "succeeded"
+            state.addingUser = "succeeded"
             state.mediahouseUsers.push(payload)
+            toast.success("User added successfully")
         })
         builder.addCase(createMediaHouseUser.rejected,(state,{payload})=>{
-            state.loading = "failed"
+            state.addingUser = "failed"
+            toast.error(payload as string || "Failed to add user")
         })
     }
 })
