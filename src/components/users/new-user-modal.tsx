@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Button from "../shared/button";
 import Input from "../shared/input";
 
-function NewUserModal() {
+function NewUserModal({path}:{path:string}) {
   const newUserModal = useRef<HTMLDialogElement>(null);
   const [fullName, setFullName] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
@@ -39,6 +39,7 @@ function NewUserModal() {
       fullName,
       email,
       phoneNumber,
+      path
     };
     const res = await dispatch(createMediaHouseUser(data));
     if (createMediaHouseUser.fulfilled.match(res)) {

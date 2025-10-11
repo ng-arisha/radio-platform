@@ -8,7 +8,7 @@ function MediaHouseAdmins() {
         <h1 className="text-lg text-gray-500 font-medium">
           Media House Admins Management
         </h1>
-        <NewUserModal />
+        <NewUserModal path="media-user" />
       </div>
       <UserList page="media-house-admins" />
     </div>

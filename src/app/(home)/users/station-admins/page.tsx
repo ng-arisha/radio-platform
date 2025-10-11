@@ -8,7 +8,7 @@ function StationAdminPage() {
           <h1 className="text-lg text-gray-500 font-medium">
             Station Admins Management
           </h1>
-          <NewUserModal />
+          <NewUserModal path="new-station-admin" />
         </div>
         <UserList page="station-admins" />
       </div>

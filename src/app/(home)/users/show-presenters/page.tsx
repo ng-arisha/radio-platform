@@ -8,7 +8,7 @@ function ShowPresentersPage() {
           <h1 className="text-lg text-gray-500 font-medium">
             Show Presenters Management
           </h1>
-          <NewUserModal />
+          <NewUserModal path="new-presenter" />
         </div>
         <UserList page="presenters" />
       </div>
