@@ -128,44 +128,72 @@ export const createMediaHouseUser = createAsyncThunk(
 );
 
 export const updateUser = createAsyncThunk(
-    "users/updateUser",
-    async (
-      data: {
-        id: string;
-        fullName: string;
-        email: string;
-        phoneNumber: string;
-        status: string;
-      },
-      { rejectWithValue, getState }
-    ) => {
-      try {
-        const state = getState() as { auth: { token: string } };
-        const response = await fetch(`${BASE_URL}/user/update-user/${data.id}`, {
-          method: "PATCH",
-          headers: {
-            "content-type": "application/json",
-            Authorization: `Bearer ${state.auth.token}`,
-          },
-          body: JSON.stringify({
-            fullName: data.fullName,
-            email: data.email,
-            phoneNumber: data.phoneNumber,
-            status: data.status,
-          }),
-        });
-        if (!response.ok) {
-          const errorData = await response.json();
-          return rejectWithValue(errorData.message);
-        }
-        const responseData = await response.json();
-        return responseData;
-      } catch (error) {
-        return rejectWithValue((error as Error).message);
+  "users/updateUser",
+  async (
+    data: {
+      id: string;
+      fullName: string;
+      email: string;
+      phoneNumber: string;
+      status: string;
+    },
+    { rejectWithValue, getState }
+  ) => {
+    try {
+      const state = getState() as { auth: { token: string } };
+      const response = await fetch(`${BASE_URL}/user/update-user/${data.id}`, {
+        method: "PATCH",
+        headers: {
+          "content-type": "application/json",
+          Authorization: `Bearer ${state.auth.token}`,
+        },
+        body: JSON.stringify({
+          fullName: data.fullName,
+          email: data.email,
+          phoneNumber: data.phoneNumber,
+          status: data.status,
+        }),
+      });
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message);
       }
+      const responseData = await response.json();
+      return responseData;
+    } catch (error) {
+      return rejectWithValue((error as Error).message);
     }
-  );
+  }
+);
 
+export const deleteUser = createAsyncThunk(
+  "users/deleteUser",
+  async (
+    data: {
+      id: string;
+    },
+    { rejectWithValue, getState }
+  ) => {
+    try {
+      const state = getState() as { auth: { token: string } };
+      const response = await fetch(`${BASE_URL}/user/delete-user/${data.id}`, {
+        method: "DELETE",
+        headers: {
+          "content-type": "application/json",
+          Authorization: `Bearer ${state.auth.token}`,
+        },
+      });
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message);
+      }
+      const responseData = await response.json();
+      return responseData;
+    } catch (error) {
+      return rejectWithValue((error as Error).message);
+    }
+  }
+);
 const userSlice = createSlice({
   name: "users",
   initialState,
@@ -249,7 +277,24 @@ const userSlice = createSlice({
       updateInArray(state.presenterUsers);
       toast.success("User updated successfully");
     });
-
+    // delete user
+    builder.addCase(deleteUser.pending, (state) => {
+      state.addingUser = "pending";
+    });
+    builder.addCase(deleteUser.fulfilled, (state, { payload }) => {
+      state.addingUser = "succeeded";
+      const deleteFromArray = (arr: UserType[]) => {
+        return arr.filter((user) => user._id !== payload._id);
+      };
+      state.mediahouseUsers = deleteFromArray(state.mediahouseUsers);
+      state.stationAdminUsers = deleteFromArray(state.stationAdminUsers);
+      state.presenterUsers = deleteFromArray(state.presenterUsers);
+      toast.success("User deleted successfully");
+    });
+    builder.addCase(deleteUser.rejected, (state, { payload }) => {
+      state.addingUser = "failed";
+      toast.error((payload as string) || "Failed to delete user");
+    });
   },
 });
 

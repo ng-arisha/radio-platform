@@ -1,4 +1,5 @@
-import { BatteryLow, Power, Trash2 } from "lucide-react";
+import { BatteryLow, Power } from "lucide-react";
+import DeleteUserDialogue from "./delete-user-dialog";
 import UserDetailsModal from "./user-details-modal";
 
 function UserTable({ users }: { users: UserType[] }) {
@@ -49,12 +50,7 @@ function UserTable({ users }: { users: UserType[] }) {
               <td className="flex space-x-1 items-center">
               <UserDetailsModal user={user} action="view" />
               <UserDetailsModal user={user} action="edit" />
-                <button
-                  type="button"
-                  className="p-2 cursor-pointer text-red-500 mr-2 rounded-md"
-                >
-                  <Trash2 className="" size={16} />
-                </button>
+                <DeleteUserDialogue name={user.fullName} userId={user._id} />
               </td>
             </tr>
           ))}
