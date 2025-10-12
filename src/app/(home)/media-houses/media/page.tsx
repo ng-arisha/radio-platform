@@ -1,3 +1,5 @@
+import MediaHousesList from "@/components/media/media-houses-list";
+
 function MediaPage() {
   return (
     <div>
@@ -6,6 +8,7 @@ function MediaPage() {
           Media House Management
         </h1>
       </div>
+      <MediaHousesList />
     </div>
   );
 }
