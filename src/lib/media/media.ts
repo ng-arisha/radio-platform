@@ -1,15 +1,18 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import toast from "react-hot-toast";
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 interface MediaHouseInterface {
   loading: "idle" | "pending" | "succeeded" | "failed";
+  addingMediaHouse: "idle" | "pending" | "succeeded" | "failed";
   mediaHouses: MediaHouseType[];
 }
 
 const initialState: MediaHouseInterface = {
   loading: "idle",
   mediaHouses: [],
+  addingMediaHouse: "idle",
 };
 
 export const getAllMediaHouses = createAsyncThunk(
@@ -23,6 +26,31 @@ export const getAllMediaHouses = createAsyncThunk(
           "content-type": "application/json",
           Authorization: `Bearer ${state.auth.token}`,
         },
+      });
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message);
+      }
+      const responseData = await response.json();
+      return responseData;
+    } catch (error) {
+      return rejectWithValue((error as Error).message);
+    }
+  }
+);
+
+export const newMedia = createAsyncThunk(
+  "media/newMedia",
+  async (data:{name:string; address:string; userId:string}, { rejectWithValue, getState }) => {
+    try {
+      const state = getState() as { auth: { token: string } };
+      const response = await fetch(`${BASE_URL}/media/new`, {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+          Authorization: `Bearer ${state.auth.token}`,
+        },
+        body:JSON.stringify(data)
       });
       if (!response.ok) {
         const errorData = await response.json();
@@ -51,6 +79,19 @@ const mediaSlice = createSlice({
     });
     builder.addCase(getAllMediaHouses.rejected, (state) => {
       state.loading = "failed";
+    });
+
+    // Create New Media House
+    builder.addCase(newMedia.pending, (state) => {
+      state.addingMediaHouse = "pending";
+    });
+    builder.addCase(newMedia.fulfilled, (state, action) => {
+      state.addingMediaHouse = "succeeded";
+      state.mediaHouses.push(action.payload);
+    });
+    builder.addCase(newMedia.rejected, (state,{payload}) => {
+      state.addingMediaHouse = "failed";
+      toast.error(payload as string);
     });
   },
 });
