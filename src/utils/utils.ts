@@ -1,4 +1,5 @@
-import { House, Radio, RadioTower, Tv, Users } from "lucide-react";
+import { Activity, AwardIcon, House, NotepadText, Radio, RadioTower, TrendingUp, Tv, Users } from "lucide-react";
+
 
 export const isClient = typeof window !== "undefined";
 
@@ -53,6 +54,29 @@ export const sidebarLinks = [
     ],
   },
 ];
+
+export const mediaDetailsTabs = [
+  {
+    title: "Overview",
+    Icon: TrendingUp
+  },
+  {
+    title:"Stations",
+    Icon: Radio
+  },
+  {
+    title:"Finance",
+    Icon: AwardIcon
+  },
+  {
+    title:"Reports",
+    Icon: NotepadText
+  },
+  {
+    title:"Activity Log",
+    Icon: Activity
+  }
+]
 
 export const kpiData = {
   revenueToday: 12500,

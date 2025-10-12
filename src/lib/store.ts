@@ -5,6 +5,7 @@ import createWebStorage from "redux-persist/es/storage/createWebStorage";
 import { authReducer } from "./auth/auth";
 import { mediaReducer } from "./media/media";
 import { userReducer } from "./users/users";
+import { utilReducer } from "./util/util";
 
 
 
@@ -38,7 +39,8 @@ export const store = configureStore({
     reducer:{
         auth:persistedAuthReducer,
         users:userReducer,
-        media: mediaReducer
+        media: mediaReducer,
+        util:utilReducer
     },
     middleware:(getDefaultMiddleware)=>getDefaultMiddleware({
         serializableCheck:{

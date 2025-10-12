@@ -1,3 +1,4 @@
+
 declare type StationType = {
     _id: string;
     _creationTime: number;
@@ -53,4 +54,9 @@ declare type ActivityItemType = {
     time: string;
     role: string;
     color: string;
+  }
+
+
+  declare type TabsType = {
+    title: string;
   }
