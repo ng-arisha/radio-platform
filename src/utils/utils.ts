@@ -1,4 +1,4 @@
-import { House, Radio, Tv, Users } from "lucide-react";
+import { House, Radio, RadioTower, Tv, Users } from "lucide-react";
 
 export const isClient = typeof window !== "undefined";
 
@@ -26,11 +26,27 @@ export const sidebarLinks = [
     icon: Tv,
   },
   {
+    label: "Media Houses",
+    path: "/media-houses",
+    icon: RadioTower,
+    children:[
+      { label: "Overview", path: "/media-houses" },
+      { label: "Media Houses", path: "/media-houses/media" },
+      { label: "Stations", path: "/media-houses/stations" },
+      { label: "Shows & Schedules", path: "/media-houses/shows" },
+      { label: "Finance", path: "/media-houses/finance" },
+      { label: "Allocations", path: "/media-houses/allocations" },
+      { label: "Reports", path: "/media-houses/reports" },
+      { label: "Activity Log", path: "/media-houses/activity" },
+      { label: "Settings", path: "/media-houses/settings" },
+    ]
+  },
+  {
     label: "Users",
     path: "/users",
     icon: Users,
     children: [
-      { label: "Summary", path: "/users" },
+      { label: "Overview", path: "/users" },
       { label: "Media House Admins", path: "/users/media-house-admins" },
       { label: "Station Admins", path: "/users/station-admins" },
       { label: "Show Presenters", path: "/users/show-presenters" },

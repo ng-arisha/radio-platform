@@ -30,9 +30,12 @@ declare type JwtPayloadType = {
 }
 
 declare type MediaHouseType = {
+    _id:string
     name:string;
     address:string;
     status:string;
+    createdAt:string;
+    user:UserType;
 }
 
 declare type UserType = {
