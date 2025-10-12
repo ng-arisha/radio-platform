@@ -1,4 +1,4 @@
-import { BatteryLow, Edit2, Power, Trash2 } from "lucide-react";
+import { BatteryLow, Power, Trash2 } from "lucide-react";
 import UserDetailsModal from "./user-details-modal";
 
 function UserTable({ users }: { users: UserType[] }) {
@@ -47,13 +47,8 @@ function UserTable({ users }: { users: UserType[] }) {
               </td>
               <td>{new Date(user.createdAt).toLocaleDateString()}</td>
               <td className="flex space-x-1 items-center">
-              <UserDetailsModal user={user} />
-                <button
-                  type="button"
-                  className="p-2 cursor-pointer text-green-500 mr-2 rounded-md"
-                >
-                  <Edit2 className="" size={16} />
-                </button>
+              <UserDetailsModal user={user} action="view" />
+              <UserDetailsModal user={user} action="edit" />
                 <button
                   type="button"
                   className="p-2 cursor-pointer text-red-500 mr-2 rounded-md"

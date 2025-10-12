@@ -127,6 +127,45 @@ export const createMediaHouseUser = createAsyncThunk(
   }
 );
 
+export const updateUser = createAsyncThunk(
+    "users/updateUser",
+    async (
+      data: {
+        id: string;
+        fullName: string;
+        email: string;
+        phoneNumber: string;
+        status: string;
+      },
+      { rejectWithValue, getState }
+    ) => {
+      try {
+        const state = getState() as { auth: { token: string } };
+        const response = await fetch(`${BASE_URL}/user/update-user/${data.id}`, {
+          method: "PATCH",
+          headers: {
+            "content-type": "application/json",
+            Authorization: `Bearer ${state.auth.token}`,
+          },
+          body: JSON.stringify({
+            fullName: data.fullName,
+            email: data.email,
+            phoneNumber: data.phoneNumber,
+            status: data.status,
+          }),
+        });
+        if (!response.ok) {
+          const errorData = await response.json();
+          return rejectWithValue(errorData.message);
+        }
+        const responseData = await response.json();
+        return responseData;
+      } catch (error) {
+        return rejectWithValue((error as Error).message);
+      }
+    }
+  );
+
 const userSlice = createSlice({
   name: "users",
   initialState,
@@ -191,6 +230,26 @@ const userSlice = createSlice({
       state.loading = "failed";
       state.presenterUsers = [];
     });
+
+    // update user
+    builder.addCase(updateUser.pending, (state) => {
+      state.addingUser = "pending";
+    });
+
+    builder.addCase(updateUser.fulfilled, (state, { payload }) => {
+      state.addingUser = "succeeded";
+      const updateInArray = (arr: UserType[]) => {
+        const index = arr.findIndex((user) => user._id === payload._id);
+        if (index !== -1) {
+          arr[index] = payload;
+        }
+      };
+      updateInArray(state.mediahouseUsers);
+      updateInArray(state.stationAdminUsers);
+      updateInArray(state.presenterUsers);
+      toast.success("User updated successfully");
+    });
+
   },
 });
 
