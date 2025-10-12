@@ -45,7 +45,7 @@ function UserList({ page }: { page: string }) {
       {loading === "pending" || users === undefined ? (
         <div className="h-full w-full flex flex-col justify-center items-center">
           <SunIcon className="animate-spin text-gray-100" size={24} />
-          <p>Loaing users...</p>
+          <p>Loading users...</p>
         </div>
       ) : users?.length === 0 ? (
         <div className="h-full w-full flex flex-col justify-center items-center">

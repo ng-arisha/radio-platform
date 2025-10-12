@@ -43,3 +43,11 @@ declare type UserType = {
     phoneNumber:string;
     createdAt:string;
 }
+declare type ActivityItemType = {
+    id: number;
+    name: string;
+    action: string;
+    time: string;
+    role: string;
+    color: string;
+  }

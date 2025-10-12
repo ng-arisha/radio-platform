@@ -125,3 +125,22 @@ export const insightCards = {
   topShow: "Morning Drive",
   topStation: "Radio Wave FM",
 };
+
+export const growthData = [
+  { date: 'Week 1', mediaHouse: 20, stationAdmins: 58, presenters: 950 },
+  { date: 'Week 2', mediaHouse: 21, stationAdmins: 60, presenters: 1020 },
+  { date: 'Week 3', mediaHouse: 22, stationAdmins: 62, presenters: 1095 },
+  { date: 'Week 4', mediaHouse: 23, stationAdmins: 64, presenters: 1150 },
+  { date: 'Week 5', mediaHouse: 24, stationAdmins: 65, presenters: 1191 }
+];
+
+export const activityData: ActivityItemType[] = [
+  { id: 1, name: 'John Mwangi', action: 'Joined', time: '2 mins ago', role: 'Presenter', color: '#10b981' },
+  { id: 2, name: 'Jane Otieno', action: 'Updated show', time: '10 mins ago', role: 'Station Admin', color: '#3b82f6' },
+  { id: 3, name: 'Radio Star FM Admin', action: 'Added new station', time: '1 hr ago', role: 'Media House Admin', color: '#8b5cf6' },
+  { id: 4, name: 'Peter Kamau', action: 'Logged in', time: '2 hrs ago', role: 'Presenter', color: '#10b981' },
+  { id: 5, name: 'Sarah Wanjiru', action: 'Created show', time: '3 hrs ago', role: 'Presenter', color: '#10b981' },
+  { id: 6, name: 'David Omondi', action: 'Updated profile', time: '4 hrs ago', role: 'Station Admin', color: '#3b82f6' },
+  { id: 7, name: 'Grace Akinyi', action: 'Logged in', time: '5 hrs ago', role: 'Presenter', color: '#10b981' },
+  { id: 8, name: 'Metro FM Admin', action: 'Invited user', time: '6 hrs ago', role: 'Media House Admin', color: '#8b5cf6' }
+];
