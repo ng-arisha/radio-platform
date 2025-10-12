@@ -7,12 +7,14 @@ interface MediaHouseInterface {
   loading: "idle" | "pending" | "succeeded" | "failed";
   addingMediaHouse: "idle" | "pending" | "succeeded" | "failed";
   mediaHouses: MediaHouseType[];
+  mediaHouse: MediaHouseType | null;
 }
 
 const initialState: MediaHouseInterface = {
   loading: "idle",
   mediaHouses: [],
   addingMediaHouse: "idle",
+  mediaHouse: null,
 };
 
 export const getAllMediaHouses = createAsyncThunk(
@@ -21,6 +23,30 @@ export const getAllMediaHouses = createAsyncThunk(
     try {
       const state = getState() as { auth: { token: string } };
       const response = await fetch(`${BASE_URL}/media/all`, {
+        method: "GET",
+        headers: {
+          "content-type": "application/json",
+          Authorization: `Bearer ${state.auth.token}`,
+        },
+      });
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message);
+      }
+      const responseData = await response.json();
+      return responseData;
+    } catch (error) {
+      return rejectWithValue((error as Error).message);
+    }
+  }
+);
+
+export const getSingleMediaHouse = createAsyncThunk(
+  "media/getSingleMediaHouse",
+  async (data:{id:string}, { rejectWithValue, getState }) => {
+    try {
+      const state = getState() as { auth: { token: string } };
+      const response = await fetch(`${BASE_URL}/media/${data.id}`, {
         method: "GET",
         headers: {
           "content-type": "application/json",
@@ -93,6 +119,19 @@ const mediaSlice = createSlice({
       state.addingMediaHouse = "failed";
       toast.error(payload as string);
     });
+
+    // Get Single Media House
+    builder.addCase(getSingleMediaHouse.pending, (state) => {
+      state.loading = "pending";
+    });
+    builder.addCase(getSingleMediaHouse.fulfilled, (state, action) => {
+      state.loading = "succeeded";
+      state.mediaHouse = action.payload;
+    });
+    builder.addCase(getSingleMediaHouse.rejected, (state) => {
+      state.loading = "failed";
+    });
+
   },
 });
 
