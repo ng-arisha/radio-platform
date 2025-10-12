@@ -1,4 +1,5 @@
 import { Edit, Eye, Power, Trash2 } from "lucide-react";
+import Link from "next/link";
 
 function MediaHouseTable({ mediaHouses }: { mediaHouses: MediaHouseType[] }) {
   return (
@@ -46,12 +47,12 @@ function MediaHouseTable({ mediaHouses }: { mediaHouses: MediaHouseType[] }) {
               </td>
               <td>{new Date(media.createdAt).toLocaleDateString()}</td>
               <td className="flex space-x-1 items-center">
-                <button
-                  type="button"
+                <Link
+                  href={`/media-houses/media/${media._id}`}
                   className="p-2 cursor-pointer text-green-500 mr-2 rounded-md"
                 >
                   <Eye className="" size={16} />
-                </button>
+                </Link>
                 <button
                   type="button"
                   className="p-2 cursor-pointer text-green-500 mr-2 rounded-md"
