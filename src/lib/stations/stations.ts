@@ -1,4 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import toast from "react-hot-toast";
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
@@ -78,8 +79,9 @@ const stationSlice = createSlice({
             state.loading = "succeeded"
             state.mediaStations.push(action.payload)
         });
-        builder.addCase(newStation.rejected,(state)=>{
+        builder.addCase(newStation.rejected,(state,{payload})=>{
             state.loading = "failed"
+            toast.error(payload as string)
         });
 
         // Get Media Stations

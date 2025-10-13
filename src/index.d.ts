@@ -1,13 +1,13 @@
 
-declare type StationType = {
-    _id: string;
-    _creationTime: number;
-    userId: string;
-    name: string;
-    address: string;
-    frequency: string;
-    enabled: boolean;
-}
+// declare type StationType = {
+//     _id: string;
+//     _creationTime: number;
+//     userId: string;
+//     name: string;
+//     address: string;
+//     frequency: string;
+//     enabled: boolean;
+// }
 
 declare type ShowsType = {
     _id: string;

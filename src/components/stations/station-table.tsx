@@ -43,7 +43,7 @@ function StationTable({ stations }: { stations: StationType[] }) {
               <td>{station.address}</td>
               <td>{station.frequency}</td>
               <td>
-                {station.enabled ? (
+                {station.status ==="active" ? (
                   <p className="py-1 px-2 rounded-full bg-green-500/30 text-green-500 flex justify-center items-center w-fit">
                     <Power className="mr-1" size={16} />
                     <span>Enabled</span>
@@ -55,7 +55,7 @@ function StationTable({ stations }: { stations: StationType[] }) {
                   </p>
                 )}
               </td>
-              <td>{new Date(station._creationTime).toLocaleDateString()}</td>
+              <td>{new Date(station.createdAt).toLocaleDateString()}</td>
               <td className="flex space-x-1 items-center">
                 <EditStationModal station={station} />
                 <Link
