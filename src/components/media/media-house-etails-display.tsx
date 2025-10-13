@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 import MediaDetailsOverview from "./media-details-overview";
 import MediaDetailsTabs from "./media-details-tabs";
 import MediaHouseDetails from "./media-house-details";
+import StationsList from "./stations/stations-list";
 
 function MediaHouseParentDisplay() {
     const selectedTab = useSelector((state: RootState) => state.util.selectedTab); 
@@ -18,6 +19,11 @@ function MediaHouseParentDisplay() {
         {
             selectedTab === 'Overview' && (
                 <MediaDetailsOverview />
+            )
+        }
+        {
+            selectedTab === "Stations" && (
+                <StationsList />
             )
         }
         

@@ -60,3 +60,13 @@ declare type ActivityItemType = {
   declare type TabsType = {
     title: string;
   }
+
+  declare type StationType = {
+    _id:string;
+    name:string;
+    address:string;
+    frequency:string;
+    status:string;
+    createdAt:string;
+    user:UserType;
+  }
