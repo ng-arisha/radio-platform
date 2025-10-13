@@ -188,3 +188,13 @@ export const activityData: ActivityItemType[] = [
   { id: 7, name: 'Grace Akinyi', action: 'Logged in', time: '5 hrs ago', role: 'Presenter', color: '#10b981' },
   { id: 8, name: 'Metro FM Admin', action: 'Invited user', time: '6 hrs ago', role: 'Media House Admin', color: '#8b5cf6' }
 ];
+
+export const mockKPIData = {
+  totalRevenue: { value: 156800, change: 12.5, trend: 'up', sparkline: [140, 142, 145, 150, 152, 156] },
+  netRevenue: { value: 124300, change: 10.2, trend: 'up', sparkline: [110, 115, 118, 120, 122, 124] },
+  totalPayouts: { value: 18500, change: -5.3, trend: 'down', sparkline: [22, 21, 20, 19, 19, 18] },
+  bonusesAllocated: { value: 12, amount: 8200, change: 25, trend: 'up' },
+  activeStations: { value: 5, change: 0, trend: 'stable' },
+  pendingPayouts: { value: 23, amount: 4500, change: 15, trend: 'up' },
+  targetAchievement: { value: 78, target: 200000, achieved: 156800 }
+};
