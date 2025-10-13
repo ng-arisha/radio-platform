@@ -1,11 +1,9 @@
-import MediaDetailsTabs from "@/components/media/media-details-tabs"
-import MediaHouseDetails from "@/components/media/media-house-details"
+import MediaHouseParentDisplay from "@/components/media/media-house-etails-display"
 
 function MediaHouseDetailsPage() {
     return (
         <div>
-            <MediaDetailsTabs />
-            <MediaHouseDetails />
+            <MediaHouseParentDisplay />
         </div>
     )
 }

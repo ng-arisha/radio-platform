@@ -1,4 +1,4 @@
-import { Activity, AwardIcon, House, NotepadText, Radio, RadioTower, TrendingUp, Tv, Users } from "lucide-react";
+import { Activity, AwardIcon, House, Info, NotepadText, Radio, RadioTower, TrendingUp, Tv, Users } from "lucide-react";
 
 
 export const isClient = typeof window !== "undefined";
@@ -59,6 +59,10 @@ export const mediaDetailsTabs = [
   {
     title: "Overview",
     Icon: TrendingUp
+  },
+  {
+    title:"About",
+    Icon: Info
   },
   {
     title:"Stations",
