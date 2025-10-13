@@ -47,6 +47,43 @@ export const newStation = createAsyncThunk(
   }
 );
 
+export const editStation = createAsyncThunk(
+    "stations/editStation",
+    async (
+      data: {
+        id:string
+        name: string;
+        address: string;
+        frequency: string;
+        userId: string;
+        mediaHouseId: string;
+      },
+      { rejectWithValue, getState }
+    ) => {
+      const state = getState() as { auth: { token: string } };
+      const response = await fetch(`${BASE_URL}/station/edit/${data.id}`, {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+          Authorization: `Bearer ${state.auth.token}`,
+        },
+        body: JSON.stringify({
+            name: data.name,
+            address: data.address,
+            frequency: data.frequency,
+            userId: data.userId,
+            mediaHouseId: data.mediaHouseId,
+        }),
+      });
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message);
+      }
+      const responseData = await response.json();
+      return responseData;
+    }
+  );
+
 export const getMediaStations = createAsyncThunk(
   "stations/getMediaStations",
   async (data: { id: string }, { rejectWithValue, getState }) => {
@@ -96,6 +133,24 @@ const stationSlice = createSlice({
         });
         builder.addCase(getMediaStations.rejected,(state)=>{
             state.loading = "failed"
+        });
+
+        // Edit Station
+        builder.addCase(editStation.pending,(state)=>{
+            state.addingStation = "pending"
+        });
+        builder.addCase(editStation.fulfilled,(state,action)=>{
+            state.addingStation = "succeeded"
+            const index = state.mediaStations.findIndex(station=>station._id === action.payload._id);
+            if(index !== -1){
+                state.mediaStations[index] = action.payload;
+            }
+            toast.success("Station updated successfully")
+        });
+
+        builder.addCase(editStation.rejected,(state,{payload})=>{
+            state.addingStation = "failed"
+            toast.error(payload as string)
         });
     }
 })

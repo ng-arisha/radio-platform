@@ -1,4 +1,4 @@
-import { Activity, AwardIcon, House, Info, NotepadText, Radio, RadioTower, TrendingUp, Tv, Users } from "lucide-react";
+import { Activity, AwardIcon, House, Info, NotepadText, Radio, RadioTower, TrendingUp, Users } from "lucide-react";
 
 
 export const isClient = typeof window !== "undefined";
@@ -16,16 +16,16 @@ export const sidebarLinks = [
     path: "/",
     icon: House,
   },
-  {
-    label: "Stations",
-    path: "/stations",
-    icon: Radio,
-  },
-  {
-    label: "Shows",
-    path: "/shows",
-    icon: Tv,
-  },
+  // {
+  //   label: "Stations",
+  //   path: "/stations",
+  //   icon: Radio,
+  // },
+  // {
+  //   label: "Shows",
+  //   path: "/shows",
+  //   icon: Tv,
+  // },
   {
     label: "Media Houses",
     path: "/media-houses",
