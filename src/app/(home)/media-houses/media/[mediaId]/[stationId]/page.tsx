@@ -9,6 +9,7 @@ import { useParams } from "next/navigation";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
+
 function StationDetails() {
   const param = useParams<{ stationId: string }>();
 
@@ -20,7 +21,7 @@ function StationDetails() {
     dispatch(stationDetails({id: param.stationId}));
   }, [param.stationId]);
 
- 
+  
   return (
     <div>
       <div className="flex justify-between items-center">
@@ -47,15 +48,7 @@ function StationDetails() {
 
       <h2 className="py-3 text-gray-400 font-medium">Shows under {station ? station.name: 'this'} station</h2>
 
-      {/* {
-       station?.shows.length === 0 ? (
-            <div className="h-24 w-full flex flex-col justify-center items-center">
-            <p className="text-red-500">There is no active show for this station</p>
-            </div>
-        ): (
-            <ShowTable shows={shows!} />
-        )
-      } */}
+     
     </div>
   );
 }

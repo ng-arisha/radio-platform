@@ -62,7 +62,7 @@ export const editStation = createAsyncThunk(
     ) => {
       const state = getState() as { auth: { token: string } };
       const response = await fetch(`${BASE_URL}/station/edit/${data.id}`, {
-        method: "POST",
+        method: "PATCH",
         headers: {
           "content-type": "application/json",
           Authorization: `Bearer ${state.auth.token}`,
@@ -74,6 +74,30 @@ export const editStation = createAsyncThunk(
             userId: data.userId,
             mediaHouseId: data.mediaHouseId,
         }),
+      });
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message);
+      }
+      const responseData = await response.json();
+      return responseData;
+    }
+  );
+
+  export const stationDetails = createAsyncThunk(
+    "stations/stationDetails",
+    async (
+     data:{ id:string},
+      { rejectWithValue, getState }
+    ) => {
+      const state = getState() as { auth: { token: string } };
+      const response = await fetch(`${BASE_URL}/station/station/${data.id}`, {
+        method: "GET",
+        headers: {
+          "content-type": "application/json",
+          Authorization: `Bearer ${state.auth.token}`,
+        },
+       
       });
       if (!response.ok) {
         const errorData = await response.json();
@@ -150,6 +174,19 @@ const stationSlice = createSlice({
 
         builder.addCase(editStation.rejected,(state,{payload})=>{
             state.addingStation = "failed"
+            toast.error(payload as string)
+        });
+
+        // Station Details
+        builder.addCase(stationDetails.pending,(state)=>{
+            state.loading = "pending"
+        });
+        builder.addCase(stationDetails.fulfilled,(state,action)=>{
+            state.loading = "succeeded"
+            state.station = action.payload
+        });
+        builder.addCase(stationDetails.rejected,(state,{payload})=>{
+            state.loading = "failed"
             toast.error(payload as string)
         });
     }

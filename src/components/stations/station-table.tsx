@@ -3,6 +3,7 @@
 import { useMutation } from "convex/react";
 import { EyeIcon, Power, Sun, Trash2Icon } from "lucide-react";
 import Link from "next/link";
+import { useParams } from "next/navigation";
 import { useState } from "react";
 import { api } from "../../../convex/_generated/api";
 import { Id } from "../../../convex/_generated/dataModel";
@@ -11,6 +12,7 @@ import EditStationModal from "./edit-station-modal";
 function StationTable({ stations }: { stations: StationType[] }) {
   const deleteStation = useMutation(api.stations.deleteById);
   const [isLoading, setIsLoading] = useState(false);
+  const param = useParams<{ mediaId: string }>();
 
   const handleDeleteStation = async (stationId: string) => {
     setIsLoading(true);
@@ -59,7 +61,7 @@ function StationTable({ stations }: { stations: StationType[] }) {
               <td className="flex space-x-1 items-center">
                 <EditStationModal station={station} />
                 <Link
-                  href={`/stations/${station._id}`}
+                  href={`/media-houses/media/${param.mediaId}/${station._id}`}
                   className="p-2 cursor-pointer text-gray-500 rounded-md"
                 >
                   <EyeIcon className="" size={16} />

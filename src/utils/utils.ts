@@ -32,7 +32,7 @@ export const sidebarLinks = [
     icon: RadioTower,
     children:[
       { label: "Overview", path: "/media-houses" },
-      { label: "Media Houses", path: "/media-houses/media" },
+      { label: "All", path: "/media-houses/media" },
       { label: "Stations", path: "/media-houses/stations" },
       { label: "Shows & Schedules", path: "/media-houses/shows" },
       { label: "Finance", path: "/media-houses/finance" },

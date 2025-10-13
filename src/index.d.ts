@@ -69,4 +69,5 @@ declare type ActivityItemType = {
     status:string;
     createdAt:string;
     user:UserType;
+    shows:ShowsType[];
   }
