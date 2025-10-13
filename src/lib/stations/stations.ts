@@ -5,12 +5,14 @@ const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 interface InitialStationType {
   loading: "idle" | "pending" | "succeeded" | "failed";
+  addingStation: "idle" | "pending" | "succeeded" | "failed";
   mediaStations: StationType[];
   station: StationType | null;
 }
 
 const initialState: InitialStationType = {
   loading: "idle",
+  addingStation: "idle",
   mediaStations: [],
   station: null,
 };
@@ -73,14 +75,14 @@ const stationSlice = createSlice({
     extraReducers:(builder)=>{
             // New Media Station
         builder.addCase(newStation.pending,(state)=>{
-            state.loading = "pending"
+            state.addingStation = "pending"
         });
         builder.addCase(newStation.fulfilled,(state,action)=>{
-            state.loading = "succeeded"
+            state.addingStation = "succeeded"
             state.mediaStations.push(action.payload)
         });
         builder.addCase(newStation.rejected,(state,{payload})=>{
-            state.loading = "failed"
+            state.addingStation = "failed"
             toast.error(payload as string)
         });
 

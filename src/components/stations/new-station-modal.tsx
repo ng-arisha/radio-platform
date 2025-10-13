@@ -1,9 +1,14 @@
 "use client";
 
+import { newStation } from "@/lib/stations/stations";
+import { AppDispatch, RootState } from "@/lib/store";
+import { getStationAdminUsers } from "@/lib/users/users";
 import { useMutation, useQuery } from "convex/react";
 import { MapPinHouse, Plus, Radio, RadioTower, SunIcon } from "lucide-react";
-import { useRef, useState } from "react";
+import { useParams } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
+import { useDispatch, useSelector } from "react-redux";
 import { api } from "../../../convex/_generated/api";
 import { Id } from "../../../convex/_generated/dataModel";
 import Button from "../shared/button";
@@ -16,6 +21,7 @@ function NewStationModal({ page }: { page: string }) {
   const [frequency, setFrequency] = useState("");
   const [enabled, setEnabled] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [selectedUser, setSelectedUser] = useState("");
 
   const [showCode, setShowCode] = useState("");
   const [startTime, setStartTime] = useState("");
@@ -23,6 +29,15 @@ function NewStationModal({ page }: { page: string }) {
   const [selectedStation, setSelectedStation] = useState("");
   const create = useMutation(api.stations.create);
   const newShow = useMutation(api.shows.create);
+  const stationUsers = useSelector((state:RootState)=>state.users.stationAdminUsers);
+  const dispatch = useDispatch<AppDispatch>();
+  const params = useParams<{ mediaId: string }>();
+  const loading = useSelector((state:RootState)=>state.stations.addingStation);
+
+  useEffect(() => {
+    dispatch(getStationAdminUsers())
+  }, [page,dispatch]);
+
 
   const stations = useQuery(api.stations.get);
   const showModal = () => {
@@ -49,9 +64,14 @@ function NewStationModal({ page }: { page: string }) {
         name: stationName,
         address,
         frequency,
-        enabled,
+        userId:selectedUser,
+        mediaHouseId: params.mediaId,
       };
-      await create(data);
+      const res = await dispatch(newStation(data));
+      if (res.type === "stations/newStation/rejected") {
+        
+        return;
+      }
     }
     if(page === "shows"){
       // console.log({selectedStation});
@@ -114,6 +134,28 @@ function NewStationModal({ page }: { page: string }) {
               </select>
             </div>
           )}
+          {
+            page === "stations" && (
+              <div className="my-3">
+              <label className="block text-sm font-medium text-gray-300">
+                Select Adminstrator <span className="text-red-400">*</span>
+              </label>
+              <select
+                id="adminstrator"
+                value={selectedUser}
+                onChange={(e) => setSelectedUser(e.target.value)}
+                className="w-full pl-3 pr-3 py-3 bg-gray-700 border border-gray-600 rounded-lg text-gray-200 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-transparent transition-all duration-200"
+              >
+                <option value="">Select User</option>
+                {stationUsers?.map((user) => (
+                  <option key={user._id} value={user._id}>
+                    {user.fullName}
+                  </option>
+                ))}
+              </select>
+            </div>
+            )
+          }
           <div className="my-3">
             <Input
               value={stationName}
@@ -203,7 +245,7 @@ function NewStationModal({ page }: { page: string }) {
             </label>
           </div>
           <div className="flex justify-between items-cente mt-6">
-            {isLoading ? (
+            {loading === 'pending' ? (
               <SunIcon className="text-gray-100 animate-spin" size={20} />
             ) : (
               <Button onClick={handleNewStation} variant="primary">
