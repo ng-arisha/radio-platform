@@ -1,6 +1,7 @@
 import { mockKPIData } from "@/utils/utils"
 import MediaKpiCard from "./media-kpi-card"
 import RevenueChart from "./revenue-chart"
+import RevenueTable from "./revenue-table"
 
 function MediaDetailsOverview() {
     return (
@@ -58,6 +59,7 @@ function MediaDetailsOverview() {
         </div>
 
         <RevenueChart />
+        <RevenueTable />
         </div>
     )
 }
