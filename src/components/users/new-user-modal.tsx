@@ -60,7 +60,7 @@ function NewUserModal({path}:{path:string}) {
       <dialog className="modal modal-end" ref={newUserModal}>
         <div className="modal-box">
           <div className="flex justify-between items-center py-6">
-            <h3 className="font-medium text-sm">Add New Media House Admin</h3>
+            <h3 className="font-medium text-sm">Add New Platform User</h3>
             <span className="text-red-500">
               <X size={20} className="cursor-pointer" onClick={closeModal} />
             </span>
