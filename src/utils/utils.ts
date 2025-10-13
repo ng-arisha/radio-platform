@@ -198,3 +198,11 @@ export const mockKPIData = {
   pendingPayouts: { value: 23, amount: 4500, change: 15, trend: 'up' },
   targetAchievement: { value: 78, target: 200000, achieved: 156800 }
 };
+
+export const mockRevenueData = [
+  { station: 'Star FM', gross: 45200, awarded: 5400, net: 39800, presenter: 3980, mediaHouse: 7960, platform: 1990, shows: 12 },
+  { station: 'Capital Radio', gross: 38600, awarded: 4200, net: 34400, presenter: 3440, mediaHouse: 6880, platform: 1720, shows: 10 },
+  { station: 'Kiss FM', gross: 42800, awarded: 4800, net: 38000, presenter: 3800, mediaHouse: 7600, platform: 1900, shows: 15 },
+  { station: 'Classic FM', gross: 18200, awarded: 1800, net: 16400, presenter: 1640, mediaHouse: 3280, platform: 820, shows: 8 },
+  { station: 'Metro FM', gross: 12000, awarded: 1300, net: 10700, presenter: 1070, mediaHouse: 2140, platform: 535, shows: 6 }
+];
