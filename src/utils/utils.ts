@@ -1,4 +1,4 @@
-import { Activity, AwardIcon, House, Info, NotepadText, Radio, RadioTower, TrendingUp, Users } from "lucide-react";
+import { Activity, ArrowUpRight, AwardIcon, Building2, CreditCard, DollarSign, House, Info, NotepadText, Radio, RadioTower, Target, TrendingUp, Users } from "lucide-react";
 
 
 export const isClient = typeof window !== "undefined";
@@ -207,3 +207,20 @@ export const mockRevenueData = [
   { station: 'Metro FM', gross: 12000, awarded: 1300, net: 10700, presenter: 1070, mediaHouse: 2140, platform: 535, shows: 6 }
 ];
 
+export const masterKpiData = [
+  { label: 'Total Platform Revenue', value: 'TZs 45.2M', change: 12.5, trend: 'up', icon: DollarSign, color: 'blue' },
+  { label: 'Total Allocated', value: 'TZs 38.5M', change: 8.3, trend: 'up', icon: CreditCard, color: 'green' },
+  { label: 'Total Payouts', value: 'TZs 32.1M', change: 5.2, trend: 'up', icon: ArrowUpRight, color: 'purple' },
+  { label: 'Net Balance', value: 'TZs 13.1M', change: 15.7, trend: 'up', icon: Building2, color: 'emerald' },
+  { label: 'Active Media Houses', value: '24', change: 4.3, trend: 'up', icon: Building2, color: 'cyan' },
+  { label: 'Utilization Rate', value: '83.4%', change: -2.1, trend: 'down', icon: Target, color: 'amber' }
+];
+
+export const revenueData = [
+  { date: 'Jan', gross: 3800, net: 3400 },
+  { date: 'Feb', gross: 4200, net: 3800 },
+  { date: 'Mar', gross: 3900, net: 3500 },
+  { date: 'Apr', gross: 4500, net: 4100 },
+  { date: 'May', gross: 4800, net: 4400 },
+  { date: 'Jun', gross: 5200, net: 4800 }
+];
