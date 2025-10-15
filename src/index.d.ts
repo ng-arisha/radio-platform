@@ -71,3 +71,29 @@ declare type ActivityItemType = {
     user:UserType;
     shows:ShowsType[];
   }
+
+  declare type MasterSummaryType = {
+    label: string;
+    value: string;
+    change:number;
+    trend:'up' | 'down';
+    icon: string;
+    color:string;
+  }
+
+  declare type FinanceAllocationsType = {
+    _id:string;
+    allocated:number;
+    utilized:number;
+    revenue:number;
+    status:string;
+    createdAt:string;
+    media:MediaHouseType
+  }
+
+  declare type MediaHousePerformanceType = {
+    mediaHouse: string;
+    allocated: number;
+    utilized: number;
+    revenue: number;
+  }
