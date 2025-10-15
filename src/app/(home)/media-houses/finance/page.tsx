@@ -1,5 +1,6 @@
+import AllocationVsUtilization from "@/components/finance/master/allocation-vs-utilization";
 import MasterDashboard from "@/components/finance/master/master-dashboard";
-import RevenueChart from "@/components/finance/master/revenue-chart";
+import MediaHouseAllocations from "@/components/finance/master/media-house-allocations";
 
 
 function FinancePage() {
@@ -14,7 +15,9 @@ function FinancePage() {
         </p>
       </div>
       <MasterDashboard />
-      <RevenueChart />
+      <AllocationVsUtilization />
+      <MediaHouseAllocations />
+      {/* <RevenueChart /> */}
     </div>
   );
 }
