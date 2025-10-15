@@ -2,6 +2,13 @@ import { Activity, AwardIcon, House, Info, NotepadText, Radio, RadioTower, Trend
 
 
 export const isClient = typeof window !== "undefined";
+
+export enum UserRole {
+  ADMIN = "admin",
+  MEDIA_HOUSE = "media-house",
+  STATION_ADMIN = "station-admin",
+  PRESENTER = "presenter",
+}
 export const formatCurrency=(amount:number)=>{
   return new Intl.NumberFormat('en-TZ',{
       style:'currency',
@@ -10,7 +17,6 @@ export const formatCurrency=(amount:number)=>{
       maximumFractionDigits:0
   }).format(amount);
 }
-
 export const formatDate =(dateString:string)=>{
   const date = new Date(dateString);
   return date.toLocaleDateString('en-US',{
@@ -20,13 +26,6 @@ export const formatDate =(dateString:string)=>{
       hour:'2-digit',
       minute:'2-digit'
   });
-}
-
-export enum UserRole {
-  ADMIN = "admin",
-  MEDIA_HOUSE = "media-house",
-  STATION_ADMIN = "station-admin",
-  PRESENTER = "presenter",
 }
 
 export const sidebarLinks = [
@@ -50,15 +49,15 @@ export const sidebarLinks = [
     path: "/media-houses",
     icon: RadioTower,
     children:[
-      { label: "Overview", path: "/media-houses" },
+      // { label: "Overview", path: "/media-houses" },
       { label: "All", path: "/media-houses/media" },
       { label: "Stations", path: "/media-houses/stations" },
-      { label: "Shows & Schedules", path: "/media-houses/shows" },
+      // { label: "Shows & Schedules", path: "/media-houses/shows" },
       { label: "Finance", path: "/media-houses/finance" },
-      { label: "Allocations", path: "/media-houses/allocations" },
-      { label: "Reports", path: "/media-houses/reports" },
-      { label: "Activity Log", path: "/media-houses/activity" },
-      { label: "Settings", path: "/media-houses/settings" },
+      // { label: "Allocations", path: "/media-houses/allocations" },
+      // { label: "Reports", path: "/media-houses/reports" },
+      // { label: "Activity Log", path: "/media-houses/activity" },
+      // { label: "Settings", path: "/media-houses/settings" },
     ]
   },
   {

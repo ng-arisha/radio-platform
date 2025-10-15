@@ -3,9 +3,10 @@
 import { getFinanceAllocations } from "@/lib/stats/stats";
 import { AppDispatch, RootState } from "@/lib/store";
 import { formatCurrency, formatDate } from "@/utils/utils";
-import { Eye, Plus, SunIcon } from "lucide-react";
+import { Eye, SunIcon } from "lucide-react";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import AllocateFundsModal from "./allocate-funds-modal";
 
 function MediaHouseAllocations() {
     const loading = useSelector((state:RootState)=>state.stats.loadingAllocations)
@@ -30,9 +31,7 @@ function MediaHouseAllocations() {
             <div className="bg-gray-900 rounded-lg p-6 mb-6 border border-gray-700">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-semibold">Media House Allocations</h3>
-              <button onClick={()=>console.log("Clicked")} className="bg-blue-600 hover:bg-blue-700 text-white rounded-lg px-4 py-2 flex items-center gap-2 transition">
-                <Plus size={18} /> Allocate Funds
-              </button>
+             <AllocateFundsModal />
             </div>
             <div className="overflow-x-auto">
               <table className="w-full">
