@@ -3,7 +3,6 @@
 import { useQuery } from "convex/react";
 import { SunIcon } from "lucide-react";
 import { api } from "../../../convex/_generated/api";
-import StationTable from "./station-table";
 
 function StationList() {
   const stations = useQuery(api.stations.get);
@@ -19,7 +18,8 @@ function StationList() {
           <p className="text-red-500">No stations found.</p>
         </div>
       ) : (
-        <StationTable stations={stations!} />
+        // <StationTable stations={stations!} />
+        <div></div>
       )}
     </div>
   );
