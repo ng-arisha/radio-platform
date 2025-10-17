@@ -188,6 +188,8 @@ export const insightCards = {
   topStation: "Radio Wave FM",
 };
 
+export const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
+
 export const growthData = [
   { date: 'Week 1', mediaHouse: 20, stationAdmins: 58, presenters: 950 },
   { date: 'Week 2', mediaHouse: 21, stationAdmins: 60, presenters: 1020 },

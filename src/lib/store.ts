@@ -3,6 +3,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import { FLUSH, PAUSE, PERSIST, persistReducer, persistStore, PURGE, REGISTER, REHYDRATE } from "redux-persist";
 import createWebStorage from "redux-persist/es/storage/createWebStorage";
 import { authReducer } from "./auth/auth";
+import { financeReducer } from "./finance/finance";
 import { mediaReducer } from "./media/media";
 import { stationReducer } from "./stations/stations";
 import { statsReducer } from "./stats/stats";
@@ -44,7 +45,8 @@ export const store = configureStore({
         media: mediaReducer,
         util:utilReducer,
         stations:stationReducer,
-        stats:statsReducer
+        stats:statsReducer,
+        finance:financeReducer
     },
     middleware:(getDefaultMiddleware)=>getDefaultMiddleware({
         serializableCheck:{
