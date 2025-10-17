@@ -27,6 +27,9 @@ function StationTable({ stations }: { stations: StationType[] }) {
           <tr>
             <th className="text-gray-400 uppercase font-normal">#</th>
             <th className="text-gray-400 uppercase font-normal">
+              Media House
+            </th>
+            <th className="text-gray-400 uppercase font-normal">
               Station Name
             </th>
             <th className="text-gray-400 uppercase font-normal">Address</th>
@@ -41,6 +44,7 @@ function StationTable({ stations }: { stations: StationType[] }) {
           {stations.map((station, index) => (
             <tr key={station._id}>
               <th>{index + 1}</th>
+              <td>{station.media.name}</td>
               <td>{station.name}</td>
               <td>{station.address}</td>
               <td>{station.frequency}</td>

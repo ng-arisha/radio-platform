@@ -1,14 +1,23 @@
 "use client";
 
-import { useQuery } from "convex/react";
+import { getAllStations } from "@/lib/stations/stations";
+import { AppDispatch, RootState } from "@/lib/store";
 import { SunIcon } from "lucide-react";
-import { api } from "../../../convex/_generated/api";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import StationTable from "./station-table";
 
 function StationList() {
-  const stations = useQuery(api.stations.get);
+  const stations = useSelector((state:RootState)=> state.stations.allStations);
+  const loading = useSelector((state:RootState)=> state.stations.loading);
+  const dispatch = useDispatch<AppDispatch>();
+
+  useEffect(() => {
+    dispatch(getAllStations())
+  }, []);
   return (
     <div>
-      {stations === undefined ? (
+      {loading === 'pending' ? (
         <div className="h-full w-full flex flex-col justify-center items-center">
           <SunIcon className="animate-spin text-gray-100" size={24} />
           <p>Loaing stations...</p>
@@ -18,8 +27,8 @@ function StationList() {
           <p className="text-red-500">No stations found.</p>
         </div>
       ) : (
-        // <StationTable stations={stations!} />
-        <div></div>
+        <StationTable stations={stations!} />
+       
       )}
     </div>
   );

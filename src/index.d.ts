@@ -70,6 +70,7 @@ declare type ActivityItemType = {
     createdAt:string;
     user:UserType;
     shows:ShowsType[];
+    media:MediaHouseType
   }
 
   declare type MasterSummaryType = {
