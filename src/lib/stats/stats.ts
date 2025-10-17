@@ -10,6 +10,7 @@ interface InitialStatState {
     financeAllocations: FinanceAllocationsType[];
     mediaHousePerformance:MediaHousePerformanceType[];
     mediaSummary: MasterSummaryType[];
+    mediaStationsAllocation: FinanceAllocationsType[];
 }
 
 
@@ -21,6 +22,7 @@ const initialState: InitialStatState = {
     mediaHousePerformance:[],
     loadingMediaHousePerformance: "idle",
     mediaSummary: [],
+    mediaStationsAllocation: []
    
 }
 
@@ -81,6 +83,26 @@ export const getFinanceAllocations = createAsyncThunk("stats/getFinanceAllocatio
         }
         const data = await response.json();
         return data;
+
+    }
+)
+
+export const getMediaStationsAllocation = createAsyncThunk("stats/getMediaStationsAllocation",
+    async(data:{id:string},{rejectWithValue, getState})=>{
+        const state = getState() as {auth:{token:string}}
+        const response = await fetch(`${BASE_URL}/finance/station-details/${data.id}`,{
+            method:"GET",
+            headers:{
+                "content-type":"application/json",
+                Authorization:`Bearer ${state.auth.token}`
+            }
+        });
+        if(!response.ok){
+            const errorResponse = await response.json();
+            return rejectWithValue(errorResponse.message)
+        }
+        const responseData = await response.json();
+        return responseData;
 
     }
 )
@@ -163,6 +185,20 @@ const statsSlice = createSlice({
         });
         builder.addCase(getMediaSummary.rejected,(state,action)=>{
             state.loading = "failed"
+            toast.error(action.payload as string)
+            
+        });
+
+        // get media stations allocation
+        builder.addCase(getMediaStationsAllocation.pending,(state)=>{
+            state.loadingAllocations = "pending"
+        });
+        builder.addCase(getMediaStationsAllocation.fulfilled,(state,action)=>{
+            state.loadingAllocations = "succeeded"
+            state.mediaStationsAllocation = action.payload
+        });
+        builder.addCase(getMediaStationsAllocation.rejected,(state,action)=>{
+            state.loadingAllocations = "failed"
             toast.error(action.payload as string)
             
         });

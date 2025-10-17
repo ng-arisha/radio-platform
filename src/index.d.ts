@@ -90,6 +90,7 @@ declare type ActivityItemType = {
     status:string;
     createdAt:string;
     media:MediaHouseType
+    station?:StationType
   }
 
   declare type MediaHousePerformanceType = {
