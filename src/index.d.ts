@@ -89,7 +89,7 @@ declare type ActivityItemType = {
     revenue:number;
     status:string;
     createdAt:string;
-    media:MediaHouseType
+    media?:MediaHouseType
     station?:StationType
   }
 

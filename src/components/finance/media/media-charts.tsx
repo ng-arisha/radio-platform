@@ -6,6 +6,7 @@ import { SunIcon } from "lucide-react";
 import { useParams } from "next/navigation";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import MediaHouseAloocationTable from "../master/media-house-allocation-table";
 import AllocationVsUtilizationStations from "./allocation-vs-utilization-stations";
 import MediaPieChart from "./media-pie-chart";
 
@@ -58,6 +59,12 @@ function MediaCharts() {
       <MediaPieChart allocationDistribution={allocationDistribution} />
       <div className="my-3">
         <AllocationVsUtilizationStations utilizationData={utilizationData} />
+      </div>
+      <div className="my-3 bg-gray-900 rounded-lg p-6 mb-6 border border-gray-700">
+        <h3 className="text-lg font-semibold">Station Allocations</h3>
+        <div>
+          <MediaHouseAloocationTable mediaHouses={allocations} />
+        </div>
       </div>
     </div>
   );

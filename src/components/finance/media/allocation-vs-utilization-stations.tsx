@@ -7,7 +7,7 @@ interface UtilizationData {
 }
 function AllocationVsUtilizationStations({utilizationData}: {utilizationData: UtilizationData[]}) {
     return (
-        <div className="bg-gray-700 rounded-lg shadow-lg p-6 border border-gray-600">
+        <div className="bg-gray-900/90 rounded-lg shadow-lg p-6 border border-gray-600">
             <h2 className="text-lg font-bold text-white mb-6">Utilization Rate by Station</h2>
             <ResponsiveContainer width="100%" height={300}>
               <BarChart data={utilizationData}>
