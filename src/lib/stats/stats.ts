@@ -9,6 +9,7 @@ interface InitialStatState {
     dashboardSummary: MasterSummaryType[];
     financeAllocations: FinanceAllocationsType[];
     mediaHousePerformance:MediaHousePerformanceType[];
+    mediaSummary: MasterSummaryType[];
 }
 
 
@@ -19,6 +20,7 @@ const initialState: InitialStatState = {
     loadingAllocations: "idle",
     mediaHousePerformance:[],
     loadingMediaHousePerformance: "idle",
+    mediaSummary: [],
    
 }
 
@@ -39,6 +41,26 @@ export const getDashboardSummary = createAsyncThunk("stats/getDashboardSummary",
         }
         const data = await response.json();
         return data;
+
+    }
+)
+
+export const getMediaSummary = createAsyncThunk("stats/getMediaSummary",
+    async(data:{id:string},{rejectWithValue, getState})=>{
+        const state = getState() as {auth:{token:string}}
+        const response = await fetch(`${BASE_URL}/finance/stations-stats/${data.id}`,{
+            method:"GET",
+            headers:{
+                "content-type":"application/json",
+                Authorization:`Bearer ${state.auth.token}`
+            }
+        });
+        if(!response.ok){
+            const errorResponse = await response.json();
+            return rejectWithValue(errorResponse.message)
+        }
+        const responseData = await response.json();
+        return responseData;
 
     }
 )
@@ -127,6 +149,20 @@ const statsSlice = createSlice({
         });
         builder.addCase(getMediaHousePerformance.rejected,(state,action)=>{
             state.loadingMediaHousePerformance = "failed"
+            toast.error(action.payload as string)
+            
+        });
+
+        // get media summary
+        builder.addCase(getMediaSummary.pending,(state)=>{
+            state.loading = "pending"
+        });
+        builder.addCase(getMediaSummary.fulfilled,(state,action)=>{
+            state.loading = "succeeded"
+            state.mediaSummary = action.payload
+        });
+        builder.addCase(getMediaSummary.rejected,(state,action)=>{
+            state.loading = "failed"
             toast.error(action.payload as string)
             
         });

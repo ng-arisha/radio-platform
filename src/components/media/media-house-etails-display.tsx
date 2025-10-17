@@ -1,6 +1,7 @@
 "use client";
 import { RootState } from "@/lib/store";
 import { useSelector } from "react-redux";
+import FinanceTab from "../finance/media/finance-tab";
 import MediaDetailsOverview from "./media-details-overview";
 import MediaDetailsTabs from "./media-details-tabs";
 import MediaHouseDetails from "./media-house-details";
@@ -24,6 +25,11 @@ function MediaHouseParentDisplay() {
         {
             selectedTab === "Stations" && (
                 <StationsList />
+            )
+        }
+        {
+            selectedTab === "Finance" && (
+                <FinanceTab />
             )
         }
         
