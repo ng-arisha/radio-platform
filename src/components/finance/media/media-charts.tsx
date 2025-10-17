@@ -6,6 +6,7 @@ import { SunIcon } from "lucide-react";
 import { useParams } from "next/navigation";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import AllocationVsUtilizationStations from "./allocation-vs-utilization-stations";
 import MediaPieChart from "./media-pie-chart";
 
 function MediaCharts() {
@@ -36,14 +37,28 @@ function MediaCharts() {
       </div>
     );
   }
-  const allocationDistribution = allocations.map(a =>({
-    name: a.station?.name || 'Unassigned',
+  const allocationDistribution = allocations.map((a) => ({
+    name: a.station?.name || "Unassigned",
     value: a.allocated,
-    percentage: ((a.allocated / allocations.reduce((sum, item) => sum + item.allocated, 0)) * 100).toFixed(2)
-  }))
+    percentage: (
+      (a.allocated /
+        allocations.reduce((sum, item) => sum + item.allocated, 0)) *
+      100
+    ).toFixed(2),
+  }));
+
+  const utilizationData = allocations.map((a) => ({
+    name: a.station?.name || "Unassigned",
+    allocated: a.allocated,
+    utilized: a.utilized,
+    percentage: ((a.utilized / a.allocated) * 100).toFixed(2),
+  }));
   return (
     <div className="mt-6">
-        <MediaPieChart allocationDistribution={allocationDistribution} />
+      <MediaPieChart allocationDistribution={allocationDistribution} />
+      <div className="my-3">
+        <AllocationVsUtilizationStations utilizationData={utilizationData} />
+      </div>
     </div>
   );
 }
