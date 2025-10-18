@@ -1,4 +1,4 @@
-import { Activity, AwardIcon, House, Info, NotepadText, Radio, RadioTower, TrendingUp, Users } from "lucide-react";
+import { AwardIcon, House, Info, Radio, RadioTower, TrendingUp, Tv, Users } from "lucide-react";
 
 
 export const isClient = typeof window !== "undefined";
@@ -90,14 +90,41 @@ export const mediaDetailsTabs = [
     title:"Finance",
     Icon: AwardIcon
   },
+  // {
+  //   title:"Reports",
+  //   Icon: NotepadText
+  // },
+  // {
+  //   title:"Activity Log",
+  //   Icon: Activity
+  // }
+]
+
+export const stationDetailsTabs = [
   {
-    title:"Reports",
-    Icon: NotepadText
+    title: "Overview",
+    Icon: TrendingUp
   },
   {
-    title:"Activity Log",
-    Icon: Activity
-  }
+    title:"About",
+    Icon: Info
+  },
+  {
+    title:"Shows",
+    Icon: Tv
+  },
+  {
+    title:"Finance",
+    Icon: AwardIcon
+  },
+  // {
+  //   title:"Reports",
+  //   Icon: NotepadText
+  // },
+  // {
+  //   title:"Activity Log",
+  //   Icon: Activity
+  // }
 ]
 
 export const kpiData = {

@@ -1,9 +1,9 @@
 "use client";
 
-import { newStation } from "@/lib/stations/stations";
+import { getMediaStations, newStation } from "@/lib/stations/stations";
 import { AppDispatch, RootState } from "@/lib/store";
 import { getStationAdminUsers } from "@/lib/users/users";
-import { useMutation, useQuery } from "convex/react";
+import { useMutation } from "convex/react";
 import { MapPinHouse, Plus, Radio, RadioTower, SunIcon } from "lucide-react";
 import { useParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
@@ -27,19 +27,21 @@ function NewStationModal({ page }: { page: string }) {
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
   const [selectedStation, setSelectedStation] = useState("");
-  const create = useMutation(api.stations.create);
+ 
   const newShow = useMutation(api.shows.create);
   const stationUsers = useSelector((state:RootState)=>state.users.stationAdminUsers);
   const dispatch = useDispatch<AppDispatch>();
   const params = useParams<{ mediaId: string }>();
   const loading = useSelector((state:RootState)=>state.stations.addingStation);
+  
 
   useEffect(() => {
     dispatch(getStationAdminUsers())
+    dispatch(getMediaStations({id: params.mediaId}))
   }, [page,dispatch]);
 
 
-  const stations = useQuery(api.stations.get);
+  const stations = useSelector((state:RootState)=>state.stations.mediaStations);
   const showModal = () => {
     if (newStationModal.current) {
       newStationModal.current.showModal();
