@@ -44,6 +44,14 @@ function LoginForm() {
         const role = decodedToken.role;
         if(role === UserRole.ADMIN){
             router.push("/");
+        }else if(role === UserRole.PRESENTER){
+          if(decodedToken.show){
+            // navigate to that show
+          }else{
+            router.push("/un-authorized");
+          }
+         
+
         }
     }
   }

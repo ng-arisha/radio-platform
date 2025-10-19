@@ -1,14 +1,17 @@
 "use client";
 
-import { sidebarLinks } from "@/utils/utils";
+import { RootState } from "@/lib/store";
+import { sidebarLinks, UserRole } from "@/utils/utils";
 import { ChevronDown, ChevronRight, Radio } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
+import { useSelector } from "react-redux";
 
 function SideNavigation() {
   const activePath = usePathname();
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
+  const tokenUser = useSelector((state: RootState) => state.auth.tokenuser);
 
   const toggleDropdown = (label: string) => {
     setOpenDropdown(openDropdown === label ? null : label);
@@ -28,7 +31,7 @@ function SideNavigation() {
         </p>
         </li>
         {/* Sidebar content here */}
-        {sidebarLinks.map(({ label, path, icon: Icon, children }) => {
+        {(tokenUser && tokenUser.role === UserRole.ADMIN) && sidebarLinks.map(({ label, path, icon: Icon, children }) => {
           const isActive = path === activePath || activePath.startsWith(path);
           const isOpen = openDropdown === label;
 

@@ -1,13 +1,5 @@
 
-// declare type StationType = {
-//     _id: string;
-//     _creationTime: number;
-//     userId: string;
-//     name: string;
-//     address: string;
-//     frequency: string;
-//     enabled: boolean;
-// }
+
 
 declare type ShowsType = {
     _id: string;
@@ -25,6 +17,9 @@ declare type JwtPayloadType = {
     sub:string;
     email:string;
     phoneNumber:string;
+    show?:string;
+    station?:string;
+    media?:string;
     iat: number;
     exp: number;
     role:string;

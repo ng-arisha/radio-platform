@@ -2,11 +2,7 @@
 
 import StationParentDisplay from "@/components/media/stations/station-parent-display";
 
-
 function StationDetails() {
-  
-
-  
   return (
     <div>
       <StationParentDisplay />

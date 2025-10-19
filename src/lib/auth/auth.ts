@@ -1,18 +1,21 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 import Cookie from "js-cookie";
+import { jwtDecode } from "jwt-decode";
 import toast from "react-hot-toast";
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
-interface InitialUthState {
+interface InitialAuthState {
   loading: "idle" | "pending" | "succeeded" | "failed";
   token: string | null;
+  tokenuser:JwtPayloadType | null
 }
 
-const initialState: InitialUthState = {
+const initialState: InitialAuthState = {
   loading: "idle",
   token: null,
+  tokenuser:null
 };
 
 export const login = createAsyncThunk(
@@ -37,7 +40,28 @@ export const login = createAsyncThunk(
 const authSlice = createSlice({
   name: "auth",
   initialState,
-  reducers: {},
+  reducers: {
+    setUserFromToken: (state) => {
+      const token = state.token || Cookie.get("token");
+      if (token) {
+        try {
+          const decodedToken = jwtDecode<JwtPayloadType>(token);
+          state.tokenuser = decodedToken;
+        } catch (error) {
+          console.log("Error decoding token:", error);
+          state.tokenuser = null;
+        }
+      } else {
+        state.tokenuser = null;
+      }
+    },
+    logout: (state) => {
+      state.token = null;
+      state.tokenuser = null;
+      Cookie.remove("token");
+      toast.success("Logged out successfully");
+    }
+  },
   extraReducers: (builder) => {
     // handle login
     builder.addCase(login.pending, (state) => {
@@ -64,4 +88,4 @@ const authSlice = createSlice({
 });
 
 export const authReducer = authSlice.reducer;
-export const {} = authSlice.actions;
+export const {setUserFromToken,logout} = authSlice.actions;
