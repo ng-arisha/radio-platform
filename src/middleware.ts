@@ -46,6 +46,18 @@ export function middleware(request: NextRequest) {
         return NextResponse.next();
       }
       return NextResponse.redirect(new URL("/", request.url));
+    }else if(role === UserRole.PRESENTER){
+      if(decodedToken?.show){
+        const allowedPaths = ["/shows/"+decodedToken.show+"/dashboard",];
+      const isAllowed = allowedPaths.some(allowedPath => path === allowedPath || path.startsWith(allowedPath + "/"));
+      if(isAllowed){
+        return NextResponse.next();
+      }
+      return NextResponse.redirect(new URL(`/shows/${decodedToken.show}/dashboard`, request.url));
+      }
+      return NextResponse.redirect(new URL("/un-authorized", request.url));
+      
+
     }
   }
 }
