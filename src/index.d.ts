@@ -94,3 +94,14 @@ declare type ActivityItemType = {
     utilized: number;
     revenue: number;
   }
+
+  declare type ShowType = {
+    _id:string;
+    name:string;
+    code:string;
+    startTime:string;
+    endTime:string;
+    jackpotEnabled:boolean;
+    status:string;
+    createdAt:string;
+  }
