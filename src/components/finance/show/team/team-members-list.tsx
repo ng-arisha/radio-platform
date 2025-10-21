@@ -22,16 +22,19 @@ function TeamMembersList() {
   return (
     <div>
       {loading === "pending" ? (
-        <div className=""></div>
+         <div className="h-24 flex flex-col justify-center items-center text-gray-300">
+         <SunIcon className="animate-spin" size={32} />
+         <p className="mt-2">Loading show transactions...</p>
+       </div>
       ) : presenters.length === 0 ? (
         <div className="h-24 flex flex-col justify-center items-center text-gray-300">
-        <SunIcon className="animate-spin" size={32} />
-        <p className="mt-2">Loading show presenter...</p>
+        
+        <p className="mt-2 text-red-500">There are no Team members</p>
     </div>
       ) : (
         <div className="space-y-6">
           <div className="flex items-center justify-between">
-            <h2 className="text-2xl font-bold text-white">Team Members</h2>
+            <h2 className="text-2xl font-medium text-white">Team Members</h2>
             
           </div>
           <div className="bg-gray-700 rounded-lg border border-gray-600 overflow-hidden">

@@ -116,3 +116,13 @@ declare type ActivityItemType = {
     createdAt:string;
     
   }
+
+  declare type TransactionsType = {
+    _id:string;
+    amount:number;
+    type:string;
+    username:string;
+    phoneNumber:string
+    createdAt:string;
+    transactionCode:string;
+  }

@@ -1,6 +1,6 @@
 "use client";
 
-import { getShowPromotions } from "@/lib/shows/shows";
+import { getShowTransactions } from "@/lib/shows/shows";
 import { AppDispatch, RootState } from "@/lib/store";
 import { formatCurrency, formatDate } from "@/utils/utils";
 import { SunIcon } from "lucide-react";
@@ -8,36 +8,39 @@ import { useParams } from "next/navigation";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-function PromotionList() {
+function TransactionsList() {
   const dispatch = useDispatch<AppDispatch>();
   const loading = useSelector((state: RootState) => state.shows.loading);
-  const promotions = useSelector(
-    (state: RootState) => state.shows.showPromotions
+  const showTransactions = useSelector(
+    (state: RootState) => state.shows.showTransactions
   );
   const params = useParams<{ showId: string }>();
 
   useEffect(() => {
-    dispatch(getShowPromotions({ id: params.showId }));
-  }, [dispatch]);
+    dispatch(getShowTransactions({ id: params.showId }));
+  }, [dispatch, params.showId]);
   return (
     <div>
       {loading === "pending" ? (
         <div className="h-24 flex flex-col justify-center items-center text-gray-300">
           <SunIcon className="animate-spin" size={32} />
-          <p className="mt-2">Loading show promotions...</p>
+          <p className="mt-2">Loading show transactions...</p>
         </div>
-      ) : promotions.length === 0 ? (
+      ) : showTransactions.length === 0 ? (
         <div className="h-24 flex flex-col justify-center items-center text-gray-300">
           <p className="mt-2 text-red-500">
-            There are no promotions allocated to this show
+            There are no transactions in this show
           </p>
         </div>
       ) : (
         <div className="space-y-6">
           <div className="flex items-center justify-between">
             <h2 className="text-2xl font-medium text-white">
-              Live Show Promotions
+              Transaction History
             </h2>
+            {/* <button className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition">
+          Export CSV
+        </button> */}
           </div>
 
           <div className="bg-gray-700 rounded-lg border border-gray-600 overflow-hidden">
@@ -45,51 +48,52 @@ function PromotionList() {
               <thead className="bg-gray-800">
                 <tr>
                   <th className="text-left p-4 text-gray-300 font-semibold">
-                    Bonus Name
+                    Transaction ID
+                  </th>
+                  <th className="text-left p-4 text-gray-300 font-semibold">
+                   Phone Number
                   </th>
                   <th className="text-left p-4 text-gray-300 font-semibold">
                     Amount
                   </th>
                   <th className="text-left p-4 text-gray-300 font-semibold">
-                    Status
+                    Type
                   </th>
                   <th className="text-left p-4 text-gray-300 font-semibold">
-                    Created At
-                  </th>
-                  <th className="text-left p-4 text-gray-300 font-semibold">
-                    Expiry
-                  </th>
-                  <th className="text-left p-4 text-gray-300 font-semibold">
-                    Actions
+                    Date
                   </th>
                 </tr>
               </thead>
               <tbody>
-                {promotions.map((bonus) => (
+                {showTransactions.map((tx) => (
                   <tr
-                    key={bonus._id}
+                    key={tx._id}
                     className="border-t border-gray-600 hover:bg-gray-600 transition"
                   >
-                    <td className="p-4 text-white font-medium">{bonus.name}</td>
-                    <td className="p-4 text-green-400 font-bold">
-                      {" "}
-                      {formatCurrency(bonus.amount)}
+                    <td className="p-4 text-white font-mono">
+                      {tx.transactionCode.slice(0, 9).toUpperCase()}
+                    </td>
+                    <td className="p-4 text-white font-normal">
+                      {formatCurrency(tx.amount)}
+                    </td>
+                    <td className="p-4 text-white font-normal">
+                      {tx.phoneNumber}
                     </td>
                     <td className="p-4">
-                      <span className="px-3 py-1 bg-green-500/20 bg-opacity-20 text-green-400 rounded-full text-sm">
-                        {bonus.status}
+                      <span
+                        className={`px-3 py-1 rounded-full text-sm ${
+                          tx.type === "Bonus".toLocaleLowerCase()
+                            ? "bg-orange-500/20 bg-opacity-20 text-orange-400"
+                            : tx.type === "Revenue".toLocaleLowerCase()
+                              ? "bg-green-500/20 bg-opacity-20 text-green-400"
+                              : "bg-blue-500/20 bg-opacity-20 text-blue-400"
+                        }`}
+                      >
+                        {tx.type}
                       </span>
                     </td>
                     <td className="p-4 text-gray-300">
-                      {formatDate(bonus.createdAt)}
-                    </td>
-                    <td className="p-4 text-gray-300">
-                      {formatDate(bonus.expiryDate)}
-                    </td>
-                    <td className="p-4">
-                      <button className="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700 transition text-sm">
-                        Stop
-                      </button>
+                      {formatDate(tx.createdAt)}
                     </td>
                   </tr>
                 ))}
@@ -102,4 +106,4 @@ function PromotionList() {
   );
 }
 
-export default PromotionList;
+export default TransactionsList;

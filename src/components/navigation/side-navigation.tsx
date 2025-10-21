@@ -36,12 +36,12 @@ function SideNavigation() {
     },
     {
       name: "Commissions",
-      path: `/shows/${tokenUser?.show}/commissions`,
+      path: `/show/${tokenUser?.show}/commissions`,
       icon: <DollarSign />,
     },
     {
       name: "Transactions",
-      path: `/show/${tokenUser?.show}/transactions`,
+      path: `/shows/${tokenUser?.show}/transactions`,
       icon: <CreditCard />,
     },
     {
