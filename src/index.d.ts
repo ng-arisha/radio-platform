@@ -96,3 +96,13 @@ declare type ActivityItemType = {
     createdAt:string;
     station:StationType
   }
+
+  declare type PresenterType = {
+    _id:string;
+    fullName:string;
+    email:string;
+    phoneNumber:string;
+    status:string;
+    createdAt:string;
+    show:ShowType
+  }

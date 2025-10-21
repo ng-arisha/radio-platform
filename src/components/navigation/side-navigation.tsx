@@ -25,10 +25,10 @@ function SideNavigation() {
   const links = [
     {
       name: "Dashboard",
-      path: `/show/${tokenUser?.show}/dashboard`,
+      path: `/shows/${tokenUser?.show}/dashboard`,
       icon: <TrendingUp />,
     },
-    { name: "Team", path: `/show/${tokenUser?.show}/team`, icon: <Users /> },
+    { name: "Team Members", path: `/shows/${tokenUser?.show}/team`, icon: <Users /> },
     {
       name: "Promotions",
       path: `/show/${tokenUser?.show}/promotions`,

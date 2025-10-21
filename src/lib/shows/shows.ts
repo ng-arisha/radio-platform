@@ -10,6 +10,7 @@ interface InitialShowState {
   showStats:{label:string,value:string,icon:string,color:string}[];
   showRevenue:{time:string,revenue:number}[];
   showTransactionsdata:{time:string,revenue:number}[];
+  showPresnters: PresenterType[];
 }
 
 const initialState: InitialShowState = {
@@ -21,6 +22,7 @@ const initialState: InitialShowState = {
   loadingRevenue: "idle",
   loadingShosTransactionsdata: "idle",
   showTransactionsdata:[],
+  showPresnters: [],
 };
 
 export const getShowDetails = createAsyncThunk(
@@ -101,6 +103,25 @@ export const getShowRevenue = createAsyncThunk("shows/getShowRevenue",
   }
 )
 
+export const getShowPresenters = createAsyncThunk("shows/getShowPresenters",
+  async (data: { id: string }, { rejectWithValue, getState }) => {
+    const state = getState() as { auth: { token: string } };
+    const response = await fetch(`${BASE_URL}/transaction/team-members/${data.id}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${state.auth.token}`,
+      },
+    });
+    if (!response.ok) {
+      const errorData = await response.json();
+      return rejectWithValue(errorData.message);
+    }
+    const revenueData = await response.json();
+    return revenueData;
+  }
+)
+
 const showSlice = createSlice({
   name: "show",
   initialState,
@@ -153,6 +174,19 @@ const showSlice = createSlice({
     });
     builder.addCase(getShowTransactionsdata.rejected, (state) => {
       state.loadingShosTransactionsdata = "failed";
+    });
+
+    // Get Show Presenters
+    builder.addCase(getShowPresenters.pending, (state) => {
+      // You can add loading state if needed
+      state.loading = "pending";
+    });
+    builder.addCase(getShowPresenters.fulfilled, (state, action) => {
+      state.loading = "succeeded";
+      state.showPresnters = action.payload;
+    });
+    builder.addCase(getShowPresenters.rejected, (state) => {
+      state.loading = "failed";
     });
   },
 });
