@@ -8,10 +8,14 @@ import {
   CreditCard,
   DollarSign,
   Gift,
+  Home,
   Radio,
+  Receipt,
+  Settings,
   TrendingUp,
   Trophy,
   Users,
+  Wallet,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -22,13 +26,54 @@ function SideNavigation() {
   const activePath = usePathname();
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const tokenUser = useSelector((state: RootState) => state.auth.tokenuser);
-  const links = [
+  const stationLinks = [
+    {
+      name: "Dashboard",
+      path: `/stations/${tokenUser?.station}/dashboard`,
+      icon: <Home />,
+    },
+    {
+      name: "Shows Management",
+      path: `/stations/${tokenUser?.station}/shows`,
+      icon: <Radio />,
+    },
+    {
+      name: "Presenters",
+      path: `/stations/${tokenUser?.station}/presenters`,
+      icon: <Users />,
+    },
+    {
+      name: "Promotions",
+      path: `/stations/${tokenUser?.station}/promotions`,
+      icon: <Gift />,
+    },
+    {
+      name: "Finance",
+      path: `/stations/${tokenUser?.station}/finance`,
+      icon: <Wallet />,
+    },
+    {
+      name: "Transactions",
+      path: `/stations/${tokenUser?.station}/transactions`,
+      icon: <Receipt />,
+    },
+    {
+      name: "Settings",
+      path: `/stations/${tokenUser?.station}/settings`,
+      icon: <Settings />,
+    },
+  ];
+  const showLinks = [
     {
       name: "Dashboard",
       path: `/shows/${tokenUser?.show}/dashboard`,
       icon: <TrendingUp />,
     },
-    { name: "Team Members", path: `/shows/${tokenUser?.show}/team`, icon: <Users /> },
+    {
+      name: "Team Members",
+      path: `/shows/${tokenUser?.show}/team`,
+      icon: <Users />,
+    },
     {
       name: "Promotions",
       path: `/shows/${tokenUser?.show}/promotions`,
@@ -131,7 +176,26 @@ function SideNavigation() {
 
         {tokenUser &&
           tokenUser.role === UserRole.PRESENTER &&
-          links.map(({ name, path, icon }) => {
+          showLinks.map(({ name, path, icon }) => {
+            const isActive = path === activePath;
+            return (
+              <li key={path}>
+                <Link
+                  href={path}
+                  className={`px-2 flex space-x-2 items-center text-gray-100 py-2 rounded-lg ${
+                    isActive ? "bg-gray-700/50" : ""
+                  }`}
+                >
+                  {icon}
+                  <span>{name}</span>
+                </Link>
+              </li>
+            );
+          })}
+
+        {tokenUser &&
+          tokenUser.role === UserRole.STATION_ADMIN &&
+          stationLinks.map(({ name, path, icon }) => {
             const isActive = path === activePath;
             return (
               <li key={path}>

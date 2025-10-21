@@ -58,6 +58,21 @@ export function middleware(request: NextRequest) {
       return NextResponse.redirect(new URL("/un-authorized", request.url));
       
 
+    }else if(role === UserRole.STATION_ADMIN){
+      if(decodedToken?.station){
+        const allowedPaths = ["/stations/"+decodedToken.station];
+      const isAllowed = allowedPaths.some(allowedPath => path === allowedPath || path.startsWith(allowedPath + "/"));
+      if(isAllowed){
+        return NextResponse.next();
+      }
+      return NextResponse.redirect(new URL(`/stations/${decodedToken.station}/dashboard`, request.url));
+      }
+      if(path === "/un-authorized"){
+        return NextResponse.next();
+      }
+      return NextResponse.redirect(new URL("/un-authorized", request.url));
+      
+
     }
   }
 }

@@ -51,6 +51,13 @@ function LoginForm() {
         } else {
           router.push("/un-authorized");
         }
+      }else if (role === UserRole.STATION_ADMIN) {
+        if (decodedToken.station) {
+          // navigate to that show
+          router.push(`/stations/${decodedToken.station}/dashboard`);
+        } else {
+          router.push("/un-authorized");
+        }
       }
     }
   };
