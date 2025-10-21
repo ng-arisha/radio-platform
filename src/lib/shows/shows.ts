@@ -4,8 +4,12 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 interface InitialShowState {
   loading: "idle" | "pending" | "succeeded" | "failed";
   loadingStats: "idle" | "pending" | "succeeded" | "failed";
+  loadingRevenue: "idle" | "pending" | "succeeded" | "failed";
+  loadingShosTransactionsdata: "idle" | "pending" | "succeeded" | "failed";
   show: ShowType | null;
   showStats:{label:string,value:string,icon:string,color:string}[];
+  showRevenue:{time:string,revenue:number}[];
+  showTransactionsdata:{time:string,revenue:number}[];
 }
 
 const initialState: InitialShowState = {
@@ -13,6 +17,10 @@ const initialState: InitialShowState = {
   loadingStats: "idle",
   show: null,
   showStats:[],
+  showRevenue:[],
+  loadingRevenue: "idle",
+  loadingShosTransactionsdata: "idle",
+  showTransactionsdata:[],
 };
 
 export const getShowDetails = createAsyncThunk(
@@ -54,6 +62,45 @@ export const getShowStats = createAsyncThunk("shows/getShowStats",
   }
 )
 
+export const getShowTransactionsdata = createAsyncThunk("shows/getShowTransactionsdata",
+  async (data: { id: string }, { rejectWithValue, getState }) => {
+    const state = getState() as { auth: { token: string } };
+    const response = await fetch(`${BASE_URL}/transaction/transactions/${data.id}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${state.auth.token}`,
+      },
+    });
+    if (!response.ok) {
+      const errorData = await response.json();
+      return rejectWithValue(errorData.message);
+    }
+    const transactionsData = await response.json();
+    console.log("transactionsData",transactionsData);
+    return transactionsData;
+  }
+)
+
+export const getShowRevenue = createAsyncThunk("shows/getShowRevenue",
+  async (data: { id: string }, { rejectWithValue, getState }) => {
+    const state = getState() as { auth: { token: string } };
+    const response = await fetch(`${BASE_URL}/transaction/revenue-data/${data.id}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${state.auth.token}`,
+      },
+    });
+    if (!response.ok) {
+      const errorData = await response.json();
+      return rejectWithValue(errorData.message);
+    }
+    const revenueData = await response.json();
+    return revenueData;
+  }
+)
+
 const showSlice = createSlice({
   name: "show",
   initialState,
@@ -82,6 +129,30 @@ const showSlice = createSlice({
     });
     builder.addCase(getShowStats.rejected, (state) => {
       state.loadingStats = "failed";
+    });
+
+    // Get Show Revenue
+    builder.addCase(getShowRevenue.pending, (state) => {
+      state.loadingRevenue = "pending";
+    });
+    builder.addCase(getShowRevenue.fulfilled, (state, action) => {
+      state.loadingRevenue = "succeeded";
+      state.showRevenue = action.payload;
+    });
+    builder.addCase(getShowRevenue.rejected, (state) => {
+      state.loadingRevenue = "failed";
+    });
+
+    // Get Show Transactions Data
+    builder.addCase(getShowTransactionsdata.pending, (state) => {
+      state.loadingShosTransactionsdata = "pending";
+    });
+    builder.addCase(getShowTransactionsdata.fulfilled, (state, action) => {
+      state.loadingShosTransactionsdata = "succeeded";
+      state.showTransactionsdata = action.payload;
+    });
+    builder.addCase(getShowTransactionsdata.rejected, (state) => {
+      state.loadingShosTransactionsdata = "failed";
     });
   },
 });

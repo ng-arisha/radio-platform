@@ -1,4 +1,4 @@
-import ShowList from "@/components/shows/show-list";
+
 import NewStationModal from "@/components/stations/new-station-modal";
 
 function ShowsPage() {
@@ -9,7 +9,7 @@ function ShowsPage() {
         <NewStationModal page="shows" />
       </div>
       <div className="mt-4">
-      <ShowList />
+      {/* <ShowList /> */}
       </div>
     </div>
   );

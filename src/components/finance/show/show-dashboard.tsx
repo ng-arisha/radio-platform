@@ -1,5 +1,6 @@
 "use client";
 
+import RevenueGraph from "./revenue-graph";
 import ShowInfo from "./show-info";
 import ShowStats from "./show-stats";
 
@@ -10,6 +11,7 @@ function ShowDashboard() {
         <div>
             <ShowInfo />
             <ShowStats />
+            <RevenueGraph />
         </div>
     )
 }
