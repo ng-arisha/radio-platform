@@ -31,12 +31,12 @@ function SideNavigation() {
     { name: "Team Members", path: `/shows/${tokenUser?.show}/team`, icon: <Users /> },
     {
       name: "Promotions",
-      path: `/show/${tokenUser?.show}/promotions`,
+      path: `/shows/${tokenUser?.show}/promotions`,
       icon: <Gift />,
     },
     {
       name: "Commissions",
-      path: `/show/${tokenUser?.show}/commissions`,
+      path: `/shows/${tokenUser?.show}/commissions`,
       icon: <DollarSign />,
     },
     {

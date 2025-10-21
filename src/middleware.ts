@@ -48,7 +48,7 @@ export function middleware(request: NextRequest) {
       return NextResponse.redirect(new URL("/", request.url));
     }else if(role === UserRole.PRESENTER){
       if(decodedToken?.show){
-        const allowedPaths = ["/shows/"+decodedToken.show+"/dashboard","/shows/"+decodedToken.show+"/team"];
+        const allowedPaths = ["/shows/"+decodedToken.show];
       const isAllowed = allowedPaths.some(allowedPath => path === allowedPath || path.startsWith(allowedPath + "/"));
       if(isAllowed){
         return NextResponse.next();

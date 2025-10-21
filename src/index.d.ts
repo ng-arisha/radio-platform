@@ -106,3 +106,13 @@ declare type ActivityItemType = {
     createdAt:string;
     show:ShowType
   }
+
+  declare type PromotionType = {
+    _id:string;
+    name:string;
+    amount:number;
+    status:string;
+    expiryDate:string;
+    createdAt:string;
+    
+  }

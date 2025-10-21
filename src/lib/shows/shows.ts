@@ -7,22 +7,24 @@ interface InitialShowState {
   loadingRevenue: "idle" | "pending" | "succeeded" | "failed";
   loadingShosTransactionsdata: "idle" | "pending" | "succeeded" | "failed";
   show: ShowType | null;
-  showStats:{label:string,value:string,icon:string,color:string}[];
-  showRevenue:{time:string,revenue:number}[];
-  showTransactionsdata:{time:string,revenue:number}[];
+  showStats: { label: string; value: string; icon: string; color: string }[];
+  showRevenue: { time: string; revenue: number }[];
+  showTransactionsdata: { time: string; revenue: number }[];
   showPresnters: PresenterType[];
+  showPromotions: PromotionType[];
 }
 
 const initialState: InitialShowState = {
   loading: "idle",
   loadingStats: "idle",
   show: null,
-  showStats:[],
-  showRevenue:[],
+  showStats: [],
+  showRevenue: [],
   loadingRevenue: "idle",
   loadingShosTransactionsdata: "idle",
-  showTransactionsdata:[],
+  showTransactionsdata: [],
   showPresnters: [],
+  showPromotions: [],
 };
 
 export const getShowDetails = createAsyncThunk(
@@ -45,16 +47,20 @@ export const getShowDetails = createAsyncThunk(
   }
 );
 
-export const getShowStats = createAsyncThunk("shows/getShowStats",
+export const getShowStats = createAsyncThunk(
+  "shows/getShowStats",
   async (data: { id: string }, { rejectWithValue, getState }) => {
     const state = getState() as { auth: { token: string } };
-    const response = await fetch(`${BASE_URL}/transaction/show-stats/${data.id}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${state.auth.token}`,
-      },
-    });
+    const response = await fetch(
+      `${BASE_URL}/transaction/show-stats/${data.id}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${state.auth.token}`,
+        },
+      }
+    );
     if (!response.ok) {
       const errorData = await response.json();
       return rejectWithValue(errorData.message);
@@ -62,32 +68,82 @@ export const getShowStats = createAsyncThunk("shows/getShowStats",
     const statsData = await response.json();
     return statsData;
   }
-)
+);
 
-export const getShowTransactionsdata = createAsyncThunk("shows/getShowTransactionsdata",
+export const getShowTransactionsdata = createAsyncThunk(
+  "shows/getShowTransactionsdata",
   async (data: { id: string }, { rejectWithValue, getState }) => {
     const state = getState() as { auth: { token: string } };
-    const response = await fetch(`${BASE_URL}/transaction/transactions/${data.id}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${state.auth.token}`,
-      },
-    });
+    const response = await fetch(
+      `${BASE_URL}/transaction/transactions/${data.id}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${state.auth.token}`,
+        },
+      }
+    );
     if (!response.ok) {
       const errorData = await response.json();
       return rejectWithValue(errorData.message);
     }
     const transactionsData = await response.json();
-    console.log("transactionsData",transactionsData);
+    console.log("transactionsData", transactionsData);
     return transactionsData;
   }
-)
+);
 
-export const getShowRevenue = createAsyncThunk("shows/getShowRevenue",
+export const getShowRevenue = createAsyncThunk(
+  "shows/getShowRevenue",
   async (data: { id: string }, { rejectWithValue, getState }) => {
     const state = getState() as { auth: { token: string } };
-    const response = await fetch(`${BASE_URL}/transaction/revenue-data/${data.id}`, {
+    const response = await fetch(
+      `${BASE_URL}/transaction/revenue-data/${data.id}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${state.auth.token}`,
+        },
+      }
+    );
+    if (!response.ok) {
+      const errorData = await response.json();
+      return rejectWithValue(errorData.message);
+    }
+    const revenueData = await response.json();
+    return revenueData;
+  }
+);
+
+export const getShowPresenters = createAsyncThunk(
+  "shows/getShowPresenters",
+  async (data: { id: string }, { rejectWithValue, getState }) => {
+    const state = getState() as { auth: { token: string } };
+    const response = await fetch(
+      `${BASE_URL}/transaction/team-members/${data.id}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${state.auth.token}`,
+        },
+      }
+    );
+    if (!response.ok) {
+      const errorData = await response.json();
+      return rejectWithValue(errorData.message);
+    }
+    const revenueData = await response.json();
+    return revenueData;
+  }
+);
+export const getShowPromotions = createAsyncThunk(
+  "shows/getShowPromotions",
+  async (data: { id: string }, { rejectWithValue, getState }) => {
+    const state = getState() as { auth: { token: string } };
+    const response = await fetch(`${BASE_URL}/promotion/active/${data.id}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -101,26 +157,7 @@ export const getShowRevenue = createAsyncThunk("shows/getShowRevenue",
     const revenueData = await response.json();
     return revenueData;
   }
-)
-
-export const getShowPresenters = createAsyncThunk("shows/getShowPresenters",
-  async (data: { id: string }, { rejectWithValue, getState }) => {
-    const state = getState() as { auth: { token: string } };
-    const response = await fetch(`${BASE_URL}/transaction/team-members/${data.id}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${state.auth.token}`,
-      },
-    });
-    if (!response.ok) {
-      const errorData = await response.json();
-      return rejectWithValue(errorData.message);
-    }
-    const revenueData = await response.json();
-    return revenueData;
-  }
-)
+);
 
 const showSlice = createSlice({
   name: "show",
@@ -178,7 +215,6 @@ const showSlice = createSlice({
 
     // Get Show Presenters
     builder.addCase(getShowPresenters.pending, (state) => {
-      // You can add loading state if needed
       state.loading = "pending";
     });
     builder.addCase(getShowPresenters.fulfilled, (state, action) => {
@@ -186,6 +222,18 @@ const showSlice = createSlice({
       state.showPresnters = action.payload;
     });
     builder.addCase(getShowPresenters.rejected, (state) => {
+      state.loading = "failed";
+    });
+
+    // Get Show Promotions
+    builder.addCase(getShowPromotions.pending, (state) => {
+      state.loading = "pending";
+    });
+    builder.addCase(getShowPromotions.fulfilled, (state, action) => {
+      state.loading = "succeeded";
+      state.showPromotions = action.payload;
+    });
+    builder.addCase(getShowPromotions.rejected, (state) => {
       state.loading = "failed";
     });
   },
