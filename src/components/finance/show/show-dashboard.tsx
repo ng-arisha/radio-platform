@@ -1,6 +1,7 @@
 "use client";
 
 import ShowInfo from "./show-info";
+import ShowStats from "./show-stats";
 
 
 function ShowDashboard() {
@@ -8,6 +9,7 @@ function ShowDashboard() {
     return (
         <div>
             <ShowInfo />
+            <ShowStats />
         </div>
     )
 }
