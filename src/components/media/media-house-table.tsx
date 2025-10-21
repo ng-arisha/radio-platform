@@ -26,7 +26,7 @@ function MediaHouseTable({ mediaHouses }: { mediaHouses: MediaHouseType[] }) {
               <th>{index + 1}</th>
               <td>{media.name}</td>
               <td>{media.address}</td>
-              <td>{media.user.fullName}</td>
+              <td>{media.user? media.user.fullName : "Not Assigned"}</td>
               <td>
                 {media.status === "deleted" ? (
                   <p className="py-1 px-2 rounded-full bg-orange-700/30 text-orange-700 flex justify-center items-center w-fit">

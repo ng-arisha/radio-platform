@@ -1,17 +1,7 @@
 
 
 
-declare type ShowsType = {
-    _id: string;
-    _creationTime: number;   
-    code: string;
-    startTime: string;
-    endTime: string;
-    name: string;
-    jackpotEnabled:boolean
-    stationName?: string;
-    stationId: string;
-}
+
 
 declare type JwtPayloadType = {
     sub:string;
@@ -104,4 +94,5 @@ declare type ActivityItemType = {
     jackpotEnabled:boolean;
     status:string;
     createdAt:string;
+    station:StationType
   }

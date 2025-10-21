@@ -3,7 +3,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 interface InitialShowState {
   loading: "idle" | "pending" | "succeeded" | "failed";
-  show: ShowsType | null;
+  show: ShowType | null;
 }
 
 const initialState: InitialShowState = {

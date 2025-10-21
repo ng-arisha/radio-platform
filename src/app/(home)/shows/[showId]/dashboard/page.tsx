@@ -1,7 +1,9 @@
+import ShowDashboard from "@/components/finance/show/show-dashboard"
+
 function ShowDashboardPage() {
     return (
         <div>
-            <h1>Show Dashboard</h1>
+            <ShowDashboard />
         </div>
     )
 }

@@ -28,6 +28,38 @@ export const formatDate =(dateString:string)=>{
   });
 }
 
+export function getRemainingShowTime(startTime: string, endTime: string): string {
+  const now = new Date();
+
+  // Create full date strings for today with start and end times
+  const [startHours, startMinutes] = startTime.split(':').map(Number);
+  const [endHours, endMinutes] = endTime.split(':').map(Number);
+
+  const start = new Date(now);
+  start.setHours(startHours, startMinutes, 0, 0);
+
+  const end = new Date(now);
+  end.setHours(endHours, endMinutes, 0, 0);
+
+  // If show already ended
+  if (now > end) return 'Show has ended';
+
+  // If show not started yet
+  if (now < start) return 'Show has not started yet';
+
+  // Remaining time in ms
+  const diffMs = end.getTime() - now.getTime();
+
+  // Convert to readable time
+  const hours = Math.floor(diffMs / (1000 * 60 * 60));
+  const minutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+  const seconds = Math.floor((diffMs % (1000 * 60)) / 1000);
+
+  return `${hours.toString().padStart(2, '0')}:${minutes
+    .toString()
+    .padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+}
+
 export const sidebarLinks = [
   {
     label: "Home",

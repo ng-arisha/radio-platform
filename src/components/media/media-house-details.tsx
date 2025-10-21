@@ -61,13 +61,19 @@ function MediaHouseDetails() {
           <h1 className="text-lg font-medium text-gray-500 pb-3 pt-6">
             Media House Adminstrator information
           </h1>
-          <Card className="py-4 px-6 grid grid-cols-1 md:grid-cols-4 gap-4">
+          {mediaHouse.user ? (
+            <Card className="py-4 px-6 grid grid-cols-1 md:grid-cols-4 gap-4">
               <TextColumn label="Full Name" value={mediaHouse.user.fullName} />
-                <TextColumn label="Email Address" value={mediaHouse.user.email} />
-                <TextColumn label="Phone Number" value={mediaHouse.user.phoneNumber} />
-                <div className="flex flex-col justify-start items-start">
-              <h1 className="text-gray-500 font-normal">Media House Status</h1>
-              {mediaHouse.user.status === "pending" ? (
+              <TextColumn label="Email Address" value={mediaHouse.user.email} />
+              <TextColumn
+                label="Phone Number"
+                value={mediaHouse.user.phoneNumber}
+              />
+              <div className="flex flex-col justify-start items-start">
+                <h1 className="text-gray-500 font-normal">
+                  Media House Status
+                </h1>
+                {mediaHouse.user.status === "pending" ? (
                   <p className="py-1 px-2 rounded-full bg-yellow-500/30 text-yellow-500 flex justify-center items-center w-fit">
                     <UserMinusIcon className="mr-1" size={16} />
                     <span>Pending</span>
@@ -83,8 +89,13 @@ function MediaHouseDetails() {
                     <span>Active</span>
                   </p>
                 )}
-            </div>
-          </Card>
+              </div>
+            </Card>
+          ) : (
+            <p className="text-red-500">
+              No adminstrator assigned to this media house
+            </p>
+          )}
         </div>
       )}
     </div>
