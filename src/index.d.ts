@@ -132,3 +132,14 @@ declare type ActivityItemType = {
     transactionCode:string;
   }
 
+  declare type AllocationType = {
+    _id:string;
+    allocated:number;
+    utilized:number;
+    revenue:number;
+    status:string;
+    type:string;
+    show:ShowType;
+    createdAt:string;
+  }
+
