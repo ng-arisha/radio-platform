@@ -130,6 +130,7 @@ declare type ActivityItemType = {
     phoneNumber:string
     createdAt:string;
     transactionCode:string;
+    show?:ShowType;
   }
 
   declare type AllocationType = {
