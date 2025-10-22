@@ -9,6 +9,7 @@ interface InitialStationType {
   mediaStations: StationType[];
   allStations: StationType[];
   station: StationType | null;
+  stationDashboard:{label:string;value:string;icon:string;color:string}[]
 }
 
 const initialState: InitialStationType = {
@@ -17,6 +18,7 @@ const initialState: InitialStationType = {
   mediaStations: [],
   allStations: [],
   station: null,
+  stationDashboard:[]
 };
 
 export const newStation = createAsyncThunk(
@@ -90,6 +92,7 @@ export const stationDetails = createAsyncThunk(
   "stations/stationDetails",
   async (data: { id: string }, { rejectWithValue, getState }) => {
     const state = getState() as { auth: { token: string } };
+    console.log(`Tone: ${state.auth.token}`);
     const response = await fetch(`${BASE_URL}/station/station/${data.id}`, {
       method: "GET",
       headers: {
@@ -130,6 +133,26 @@ export const getAllStations = createAsyncThunk(
   async (_, { rejectWithValue, getState }) => {
     const state = getState() as { auth: { token: string } };
     const response = await fetch(`${BASE_URL}/station/all`, {
+      method: "GET",
+      headers: {
+        "content-type": "application/json",
+        Authorization: `Bearer ${state.auth.token}`,
+      },
+    });
+    if (!response.ok) {
+      const errorData = await response.json();
+      return rejectWithValue(errorData.message);
+    }
+    const responseData = await response.json();
+    return responseData;
+  }
+);
+
+export const getStationDashBoard = createAsyncThunk(
+  "stations/ggetStationDashBoard",
+  async (data:{id:string}, { rejectWithValue, getState }) => {
+    const state = getState() as { auth: { token: string } };
+    const response = await fetch(`${BASE_URL}/station/station-dashboard/${data.id}`, {
       method: "GET",
       headers: {
         "content-type": "application/json",
@@ -217,6 +240,19 @@ const stationSlice = createSlice({
       state.allStations = action.payload;
     });
     builder.addCase(getAllStations.rejected, (state, { payload }) => {
+      state.loading = "failed";
+      toast.error(payload as string);
+    });
+
+    // Get Station Dashboard
+    builder.addCase(getStationDashBoard.pending, (state) => {
+      state.loading = "pending";
+    });
+    builder.addCase(getStationDashBoard.fulfilled, (state, action) => {
+      state.loading = "succeeded";
+      state.stationDashboard = action.payload;
+    });
+    builder.addCase(getStationDashBoard.rejected, (state, { payload }) => {
       state.loading = "failed";
       toast.error(payload as string);
     });

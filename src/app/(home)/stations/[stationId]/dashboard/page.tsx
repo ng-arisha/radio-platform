@@ -1,9 +1,11 @@
-function StationDashboard() {
+import StationDashboard from "@/components/stations/station-dashboard/station-dashboard"
+
+function StationDashboardPage() {
     return (
         <div>
-            <h1>Station Dashboard</h1>
+           <StationDashboard />
         </div>
     )
 }
 
-export default StationDashboard
+export default StationDashboardPage

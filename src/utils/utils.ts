@@ -28,6 +28,25 @@ export const formatDate =(dateString:string)=>{
   });
 }
 
+export function getCurrentDateTime() {
+  const now = new Date();
+
+  const dateOptions: Intl.DateTimeFormatOptions = {
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  };
+
+  const formattedDate = now.toLocaleDateString('en-US', dateOptions);
+
+  const hours = now.getHours().toString().padStart(2, '0');
+  const minutes = now.getMinutes().toString().padStart(2, '0');
+  const formattedTime = `${hours}:${minutes} EAT`;
+
+  return { formattedDate, formattedTime };
+}
+
 export function getRemainingShowTime(startTime: string, endTime: string): string {
   const now = new Date();
 
