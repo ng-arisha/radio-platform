@@ -115,6 +115,8 @@ declare type ActivityItemType = {
     name:string;
     amount:number;
     status:string;
+    type?:string;
+    show:ShowType
     expiryDate:string;
     createdAt:string;
     

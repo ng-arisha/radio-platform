@@ -4,10 +4,18 @@ import toast from "react-hot-toast";
 
 interface InitialPromotionsState {
     loading: "idle" | "pending" | "succeeded" | "failed";
+    loadingPromotions: "idle" | "pending" | "succeeded" | "failed";
+    stationPromotions: PromotionType[];
+    stationPromotionPieData:{name:string,value:number,color:string}[];
+    loadingPromotionPieData: "idle" | "pending" | "succeeded" | "failed";
 }
 
 const initialState: InitialPromotionsState = {
     loading: "idle",
+    loadingPromotions: "idle",
+    stationPromotions: [],
+    stationPromotionPieData: [],
+    loadingPromotionPieData: "idle",
 }
 
 
@@ -21,6 +29,46 @@ export const createNewPromotion = createAsyncThunk("promotions/createNewPromotio
                 Authorization: `Bearer ${state.auth.token}`
             },
             body: JSON.stringify(data)
+        });
+        if(!response.ok){
+            const errorResponse = await response.json();
+            return rejectWithValue(errorResponse.message);
+        }
+        const promotion = await response.json();
+        return promotion;
+    }
+)
+
+export const getStationPromotions = createAsyncThunk("promotions/getStationPromotions",
+    async(data:{id:string},{rejectWithValue,getState})=>{
+        const state = getState() as { auth: { token: string } };
+        const response = await fetch(`${BASE_URL}/promotion/station-promotions/${data.id}`,{
+            method: "Get",
+            headers:{
+                "content-type":"application/json",
+                Authorization: `Bearer ${state.auth.token}`
+            },
+            
+        });
+        if(!response.ok){
+            const errorResponse = await response.json();
+            return rejectWithValue(errorResponse.message);
+        }
+        const promotion = await response.json();
+        return promotion;
+    }
+)
+
+export const getStationPromotionsPiedata = createAsyncThunk("promotions/getStationPromotionsPiedata",
+    async(data:{id:string},{rejectWithValue,getState})=>{
+        const state = getState() as { auth: { token: string } };
+        const response = await fetch(`${BASE_URL}/promotion/promotions-pie-data/${data.id}`,{
+            method: "Get",
+            headers:{
+                "content-type":"application/json",
+                Authorization: `Bearer ${state.auth.token}`
+            },
+            
         });
         if(!response.ok){
             const errorResponse = await response.json();
@@ -48,6 +96,34 @@ const promotionSlice = createSlice({
         });
         builder.addCase(createNewPromotion.rejected,(state,{payload})=>{
             state.loading = "failed";
+            toast.error(payload as string);
+        });
+
+        // get station promotions
+        builder.addCase(getStationPromotions.pending,(state)=>{
+            state.loadingPromotions = "pending";
+        });
+        builder.addCase(getStationPromotions.fulfilled,(state,{payload})=>{
+            state.loadingPromotions = "succeeded";
+            state.stationPromotions = payload;
+        });
+        builder.addCase(getStationPromotions.rejected,(state,{payload})=>{
+            state.loadingPromotions = "failed";
+            state.stationPromotions = [];
+            toast.error(payload as string);
+        });
+
+        // get station promotions pie data
+        builder.addCase(getStationPromotionsPiedata.pending,(state)=>{
+            state.loadingPromotionPieData = "pending";
+        });
+        builder.addCase(getStationPromotionsPiedata.fulfilled,(state,{payload})=>{
+            state.loadingPromotionPieData = "succeeded";
+            state.stationPromotionPieData = payload;
+        });
+        builder.addCase(getStationPromotionsPiedata.rejected,(state,{payload})=>{
+            state.loadingPromotionPieData = "failed";
+            state.stationPromotionPieData = [];
             toast.error(payload as string);
         });
     }
