@@ -9,7 +9,9 @@ interface InitialStationType {
   mediaStations: StationType[];
   allStations: StationType[];
   station: StationType | null;
-  stationDashboard:{label:string;value:string;icon:string;color:string}[]
+  stationDashboard:{label:string;value:string;icon:string;color:string}[];
+  stationPiedata:{name:string;value:number;color:string}[];
+  loadingPieData: "idle" | "pending" | "succeeded" | "failed";
 }
 
 const initialState: InitialStationType = {
@@ -18,7 +20,9 @@ const initialState: InitialStationType = {
   mediaStations: [],
   allStations: [],
   station: null,
-  stationDashboard:[]
+  stationDashboard:[],
+  stationPiedata:[],
+  loadingPieData: "idle",
 };
 
 export const newStation = createAsyncThunk(
@@ -168,6 +172,26 @@ export const getStationDashBoard = createAsyncThunk(
   }
 );
 
+export const getStationPiedata = createAsyncThunk(
+  "stations/getStationPiedata",
+  async (data:{id:string}, { rejectWithValue, getState }) => {
+    const state = getState() as { auth: { token: string } };
+    const response = await fetch(`${BASE_URL}/station/station-pie-data/${data.id}`, {
+      method: "GET",
+      headers: {
+        "content-type": "application/json",
+        Authorization: `Bearer ${state.auth.token}`,
+      },
+    });
+    if (!response.ok) {
+      const errorData = await response.json();
+      return rejectWithValue(errorData.message);
+    }
+    const responseData = await response.json();
+    return responseData;
+  }
+);
+
 const stationSlice = createSlice({
   name: "stations",
   initialState,
@@ -254,6 +278,20 @@ const stationSlice = createSlice({
     });
     builder.addCase(getStationDashBoard.rejected, (state, { payload }) => {
       state.loading = "failed";
+      toast.error(payload as string);
+    });
+
+    // 
+    // Get Station Pie data
+    builder.addCase(getStationPiedata.pending, (state) => {
+      state.loadingPieData = "pending";
+    });
+    builder.addCase(getStationPiedata.fulfilled, (state, action) => {
+      state.loadingPieData = "succeeded";
+      state.stationPiedata = action.payload;
+    });
+    builder.addCase(getStationPiedata.rejected, (state, { payload }) => {
+      state.loadingPieData = "failed";
       toast.error(payload as string);
     });
   },
