@@ -97,12 +97,12 @@ export const createMediaHouseUser = createAsyncThunk(
       fullName: string;
       email: string;
       phoneNumber: string;
+      showId?: string;
       path: string;
     },
     { rejectWithValue, getState }
   ) => {
-    try {
-      const state = getState() as { auth: { token: string } };
+    const state = getState() as { auth: { token: string } };
       const response = await fetch(`${BASE_URL}/user/${data.path}`, {
         method: "POST",
         headers: {
@@ -113,6 +113,7 @@ export const createMediaHouseUser = createAsyncThunk(
           fullName: data.fullName,
           email: data.email,
           phoneNumber: data.phoneNumber,
+          showId: data.showId,
         }),
       });
       if (!response.ok) {
@@ -121,9 +122,6 @@ export const createMediaHouseUser = createAsyncThunk(
       }
       const responseData = await response.json();
       return responseData;
-    } catch (error) {
-      return rejectWithValue((error as Error).message);
-    }
   }
 );
 
