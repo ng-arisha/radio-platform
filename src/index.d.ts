@@ -94,7 +94,9 @@ declare type ActivityItemType = {
     jackpotEnabled:boolean;
     status:string;
     createdAt:string;
-    station:StationType
+    station:StationType;
+    dailyRevenue?:number;
+    users:string[];
   }
 
   declare type PresenterType = {
@@ -126,3 +128,4 @@ declare type ActivityItemType = {
     createdAt:string;
     transactionCode:string;
   }
+

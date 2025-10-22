@@ -13,6 +13,7 @@ interface InitialShowState {
   showPresnters: PresenterType[];
   showPromotions: PromotionType[];
   showTransactions:TransactionsType[];
+  stationShows:ShowType[];
 }
 
 const initialState: InitialShowState = {
@@ -27,6 +28,7 @@ const initialState: InitialShowState = {
   showPresnters: [],
   showPromotions: [],
   showTransactions:[],
+  stationShows:[]
 };
 
 export const getShowDetails = createAsyncThunk(
@@ -181,6 +183,26 @@ export const getShowTransactions = createAsyncThunk(
   }
 );
 
+export const getShowInStation = createAsyncThunk(
+  "shows/getShowInStation",
+  async (data: { id: string }, { rejectWithValue, getState }) => {
+    const state = getState() as { auth: { token: string } };
+    const response = await fetch(`${BASE_URL}/show/shows/${data.id}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${state.auth.token}`,
+      },
+    });
+    if (!response.ok) {
+      const errorData = await response.json();
+      return rejectWithValue(errorData.message);
+    }
+    const revenueData = await response.json();
+    return revenueData;
+  }
+);
+
 const showSlice = createSlice({
   name: "show",
   initialState,
@@ -268,6 +290,18 @@ const showSlice = createSlice({
       state.showTransactions = action.payload;
     });
     builder.addCase(getShowTransactions.rejected, (state) => {
+      state.loading = "failed";
+    });
+
+    // Get Shows in Station
+    builder.addCase(getShowInStation.pending, (state) => {
+      state.loading = "pending";
+    });
+    builder.addCase(getShowInStation.fulfilled, (state, action) => {
+      state.loading = "succeeded";
+      state.stationShows = action.payload;
+    });
+    builder.addCase(getShowInStation.rejected, (state) => {
       state.loading = "failed";
     });
   },

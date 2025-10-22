@@ -1,6 +1,6 @@
 import { LucideIcon } from "lucide-react"
 
-function Input({label, type, placeholder, value, onChange,Icon,required}:{label: string, type: string, placeholder?: string, value: string | number, onChange: (e: string) => void,Icon?:LucideIcon,required?:boolean}) {
+function Input({label, type, placeholder, value, onChange,Icon,required}:{label?: string, type: string, placeholder?: string, value: string | number, onChange: (e: string) => void,Icon?:LucideIcon,required?:boolean}) {
     return (
         <div className="space-y-2">
       {label && (

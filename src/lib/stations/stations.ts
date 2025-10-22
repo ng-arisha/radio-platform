@@ -12,6 +12,8 @@ interface InitialStationType {
   stationDashboard:{label:string;value:string;icon:string;color:string}[];
   stationPiedata:{name:string;value:number;color:string}[];
   loadingPieData: "idle" | "pending" | "succeeded" | "failed";
+  stationBarData:{showName:string;revenue:number}[];
+  loadingBarData: "idle" | "pending" | "succeeded" | "failed";
 }
 
 const initialState: InitialStationType = {
@@ -23,6 +25,8 @@ const initialState: InitialStationType = {
   stationDashboard:[],
   stationPiedata:[],
   loadingPieData: "idle",
+  stationBarData:[],
+  loadingBarData: "idle",
 };
 
 export const newStation = createAsyncThunk(
@@ -191,6 +195,25 @@ export const getStationPiedata = createAsyncThunk(
     return responseData;
   }
 );
+export const getStationBardata = createAsyncThunk(
+  "stations/getStationBardata",
+  async (data:{id:string}, { rejectWithValue, getState }) => {
+    const state = getState() as { auth: { token: string } };
+    const response = await fetch(`${BASE_URL}/station/station-bar-data/${data.id}`, {
+      method: "GET",
+      headers: {
+        "content-type": "application/json",
+        Authorization: `Bearer ${state.auth.token}`,
+      },
+    });
+    if (!response.ok) {
+      const errorData = await response.json();
+      return rejectWithValue(errorData.message);
+    }
+    const responseData = await response.json();
+    return responseData;
+  }
+);
 
 const stationSlice = createSlice({
   name: "stations",
@@ -292,6 +315,19 @@ const stationSlice = createSlice({
     });
     builder.addCase(getStationPiedata.rejected, (state, { payload }) => {
       state.loadingPieData = "failed";
+      toast.error(payload as string);
+    });
+
+    // Get Station Bar data
+    builder.addCase(getStationBardata.pending, (state) => {
+      state.loadingBarData = "pending";
+    });
+    builder.addCase(getStationBardata.fulfilled, (state, action) => {
+      state.loadingBarData = "succeeded";
+      state.stationBarData = action.payload;
+    });
+    builder.addCase(getStationBardata.rejected, (state, { payload }) => {
+      state.loadingBarData = "failed";
       toast.error(payload as string);
     });
   },
