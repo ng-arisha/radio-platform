@@ -5,6 +5,7 @@ import createWebStorage from "redux-persist/es/storage/createWebStorage";
 import { authReducer } from "./auth/auth";
 import { financeReducer } from "./finance/finance";
 import { mediaReducer } from "./media/media";
+import { promotionReducer } from "./promotions/promotion";
 import { showReducer } from "./shows/shows";
 import { stationReducer } from "./stations/stations";
 import { statsReducer } from "./stats/stats";
@@ -48,7 +49,8 @@ export const store = configureStore({
         stations:stationReducer,
         stats:statsReducer,
         finance:financeReducer,
-        shows:showReducer
+        shows:showReducer,
+        promotions: promotionReducer
     },
     middleware:(getDefaultMiddleware)=>getDefaultMiddleware({
         serializableCheck:{
