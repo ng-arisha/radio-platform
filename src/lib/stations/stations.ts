@@ -14,6 +14,7 @@ interface InitialStationType {
   loadingPieData: "idle" | "pending" | "succeeded" | "failed";
   stationBarData:{showName:string;revenue:number}[];
   loadingBarData: "idle" | "pending" | "succeeded" | "failed";
+  stationPresenters:UserType[];
 }
 
 const initialState: InitialStationType = {
@@ -27,6 +28,7 @@ const initialState: InitialStationType = {
   loadingPieData: "idle",
   stationBarData:[],
   loadingBarData: "idle",
+  stationPresenters:[],
 };
 
 export const newStation = createAsyncThunk(
@@ -215,6 +217,26 @@ export const getStationBardata = createAsyncThunk(
   }
 );
 
+export const getStationPresenters = createAsyncThunk(
+  "stations/getStationPresenters",
+  async (data:{id:string}, { rejectWithValue, getState }) => {
+    const state = getState() as { auth: { token: string } };
+    const response = await fetch(`${BASE_URL}/station/station-presenters/${data.id}`, {
+      method: "GET",
+      headers: {
+        "content-type": "application/json",
+        Authorization: `Bearer ${state.auth.token}`,
+      },
+    });
+    if (!response.ok) {
+      const errorData = await response.json();
+      return rejectWithValue(errorData.message);
+    }
+    const responseData = await response.json();
+    return responseData;
+  }
+);
+
 const stationSlice = createSlice({
   name: "stations",
   initialState,
@@ -328,6 +350,19 @@ const stationSlice = createSlice({
     });
     builder.addCase(getStationBardata.rejected, (state, { payload }) => {
       state.loadingBarData = "failed";
+      toast.error(payload as string);
+    });
+
+    // Get Station Presenters
+    builder.addCase(getStationPresenters.pending, (state) => {
+      state.loading = "pending";
+    });
+    builder.addCase(getStationPresenters.fulfilled, (state, action) => {
+      state.loading = "succeeded";
+      state.stationPresenters = action.payload;
+    });
+    builder.addCase(getStationPresenters.rejected, (state, { payload }) => {
+      state.loading = "failed";
       toast.error(payload as string);
     });
   },

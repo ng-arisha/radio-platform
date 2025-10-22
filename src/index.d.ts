@@ -31,6 +31,7 @@ declare type UserType = {
     status:string;
     phoneNumber:string;
     createdAt:string;
+    showName?:string;
 }
 declare type ActivityItemType = {
     id: number;

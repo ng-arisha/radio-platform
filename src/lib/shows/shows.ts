@@ -1,5 +1,6 @@
 import { BASE_URL } from "@/utils/utils";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import toast from "react-hot-toast";
 
 interface InitialShowState {
   loading: "idle" | "pending" | "succeeded" | "failed";
@@ -41,6 +42,27 @@ export const getShowDetails = createAsyncThunk(
         "Content-Type": "application/json",
         Authorization: `Bearer ${state.auth.token}`,
       },
+    });
+    if (!response.ok) {
+      const errorData = await response.json();
+      return rejectWithValue(errorData.message);
+    }
+    const showData = await response.json();
+    return showData;
+  }
+);
+
+export const createNewShow = createAsyncThunk(
+  "shows/createNewShow",
+  async (data: { name: string,code:string,startTime:string,endTime:string,stationId:string }, { rejectWithValue, getState }) => {
+    const state = getState() as { auth: { token: string } };
+    const response = await fetch(`${BASE_URL}/show/new`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${state.auth.token}`,
+      },
+      body: JSON.stringify(data),
     });
     if (!response.ok) {
       const errorData = await response.json();
@@ -302,6 +324,20 @@ const showSlice = createSlice({
       state.stationShows = action.payload;
     });
     builder.addCase(getShowInStation.rejected, (state) => {
+      state.loading = "failed";
+    });
+
+// handle new show
+    builder.addCase(createNewShow.pending, (state) => {
+      state.loading = "pending";
+    });
+    builder.addCase(createNewShow.fulfilled, (state, action) => {
+      state.loading = "succeeded";
+      // Optionally, you can push the new show to stationShows or handle it as needed
+      state.stationShows.push(action.payload);
+      toast.success("New show created successfully!");
+    });
+    builder.addCase(createNewShow.rejected, (state) => {
       state.loading = "failed";
     });
   },
