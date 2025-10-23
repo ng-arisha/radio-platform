@@ -7,6 +7,7 @@ interface InitialShowState {
   loadingStats: "idle" | "pending" | "succeeded" | "failed";
   loadingRevenue: "idle" | "pending" | "succeeded" | "failed";
   loadingShosTransactionsdata: "idle" | "pending" | "succeeded" | "failed";
+  updatingShow: "idle" | "pending" | "succeeded" | "failed";
   show: ShowType | null;
   showStats: { label: string; value: string; icon: string; color: string }[];
   showRevenue: { time: string; revenue: number }[];
@@ -20,6 +21,7 @@ interface InitialShowState {
 const initialState: InitialShowState = {
   loading: "idle",
   loadingStats: "idle",
+  updatingShow: "idle",
   show: null,
   showStats: [],
   showRevenue: [],
@@ -63,6 +65,33 @@ export const createNewShow = createAsyncThunk(
         Authorization: `Bearer ${state.auth.token}`,
       },
       body: JSON.stringify(data),
+    });
+    if (!response.ok) {
+      const errorData = await response.json();
+      return rejectWithValue(errorData.message);
+    }
+    const showData = await response.json();
+    return showData;
+  }
+);
+
+export const updateShow = createAsyncThunk(
+  "shows/updateShow",
+  async (data: {id:string, name: string,code:string,startTime:string,endTime:string }, { rejectWithValue, getState }) => {
+    const state = getState() as { auth: { token: string } };
+    const response = await fetch(`${BASE_URL}/show/update-show/${data.id}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${state.auth.token}`,
+      },
+      body: JSON.stringify({
+        name: data.name,
+        code: data.code,
+        startTime: data.startTime,
+        endTime: data.endTime,
+        
+      }),
     });
     if (!response.ok) {
       const errorData = await response.json();
@@ -339,6 +368,25 @@ const showSlice = createSlice({
     });
     builder.addCase(createNewShow.rejected, (state) => {
       state.loading = "failed";
+    });
+
+    // handle update show
+    builder.addCase(updateShow.pending, (state) => {
+      state.updatingShow = "pending";
+    });
+    builder.addCase(updateShow.fulfilled, (state, action) => {
+      state.updatingShow = "succeeded";
+      // Update the show in stationShows
+      const index = state.stationShows.findIndex(
+        (show) => show._id === action.payload._id
+      );
+      if (index !== -1) {
+        state.stationShows[index] = action.payload;
+      }
+      toast.success("Show updated successfully!");
+    });
+    builder.addCase(updateShow.rejected, (state) => {
+      state.updatingShow = "failed";
     });
   },
 });

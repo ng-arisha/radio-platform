@@ -4,18 +4,17 @@ import { getShowInStation } from "@/lib/shows/shows";
 import { AppDispatch, RootState } from "@/lib/store";
 import { formatCurrency } from "@/utils/utils";
 import {
-    Clock,
-    DollarSign,
-    Edit,
-    Eye,
-    Power,
-    Radio,
-    SunIcon,
-    Users,
+  Clock,
+  DollarSign,
+  Power,
+  Radio,
+  SunIcon,
+  Users
 } from "lucide-react";
 import { useParams } from "next/navigation";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import ViewShowDetails from "./view-show-details";
 
 function ShowList() {
   const dispatch = useDispatch<AppDispatch>();
@@ -139,18 +138,9 @@ function ShowList() {
 
                       <td className="px-6 py-4">
                         <div className="flex items-center justify-center gap-2">
-                          <button
-                            className="p-2 text-blue-400 hover:bg-blue-900 rounded-lg transition-colors"
-                            title="View Details"
-                          >
-                            <Eye size={18} />
-                          </button>
-                          <button
-                            className="p-2 text-yellow-400 hover:bg-yellow-900 rounded-lg transition-colors"
-                            title="Edit Show"
-                          >
-                            <Edit size={18} />
-                          </button>
+                         {/* view details */}
+                         <ViewShowDetails show={show} purpose="view" />
+                         <ViewShowDetails show={show} purpose="edit" />
                           <button
                             className={`p-2 rounded-lg transition-colors ${
                               show.status === "Active"
