@@ -2,7 +2,7 @@
 
 import { getStationPromotions } from "@/lib/promotions/promotion";
 import { AppDispatch, RootState } from "@/lib/store";
-import { formatDate } from "@/utils/utils";
+import { formatCurrency, formatDate } from "@/utils/utils";
 import { Edit, SunIcon, Trash2 } from "lucide-react";
 import { useParams } from "next/navigation";
 import { useEffect } from "react";
@@ -89,7 +89,7 @@ function StationPromotions() {
                           {promo.show.name}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-white">
-                          KES {promo.amount.toLocaleString()}
+                          {formatCurrency(promo.amount)}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <span
