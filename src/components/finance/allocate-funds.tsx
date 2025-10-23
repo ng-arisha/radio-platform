@@ -1,11 +1,24 @@
 "use client";
 
+import { getShowInStation } from "@/lib/shows/shows";
+import { AppDispatch, RootState } from "@/lib/store";
 import { DollarSign, X } from "lucide-react";
-import { useRef } from "react";
+import { useParams } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import Button from "../shared/button";
+import Input from "../shared/input";
 
 function AllocateFundsModal() {
+  const params = useParams<{ stationId: string }>();
     const newStationModal = useRef<HTMLDialogElement>(null);
+    const [allocated, setAllocated] = useState<number>(0);
+    const [selectedShow, setSelectedShow] = useState("");
+    const dispatch = useDispatch<AppDispatch>();
+  const shows = useSelector((state: RootState) => state.shows.stationShows);
+  useEffect(() => {
+    dispatch(getShowInStation({ id: params.stationId }));
+  }, [dispatch, params.stationId]);
     
       const openModal = () => {
         if (newStationModal.current) {
@@ -18,6 +31,15 @@ function AllocateFundsModal() {
           newStationModal.current.close();
         }
       };
+
+      const handleAllocateFunds = async () => {
+        if (!allocated || !selectedShow) {
+          // handle error
+          return;
+        }
+        // allocate funds logic here
+      }
+      
     return (
         <div>
         <Button className="flex space-x-1 items-center" onClick={openModal}>
@@ -32,15 +54,42 @@ function AllocateFundsModal() {
               </h1>
               <button
                 onClick={closeModal}
-                className="btn btn-sm btn-circle btn-ghost"
+                className="btn btn-sm btn-circle btn-ghost text-red-500"
               >
                 <X />
               </button>
             </div>
-            <h3 className="font-bold text-lg">Hello!</h3>
-            <p className="py-4">
-              Press ESC key or click the button below to close
-            </p>
+            {/* inputs */}
+            <div className="mb-6">
+            <Input
+            label="Amount to Allocate"
+            type="number"
+            value={allocated}
+            onChange={(e) => setAllocated(Number(e))}
+            Icon={DollarSign}
+            />
+            </div>
+            <div className="mb-6">
+            <label className="block text-sm font-medium mb-2 text-gray-300">
+              Show to be Allocated <span className="text-red-400 ">*</span>
+            </label>
+            <select
+              id="adminstrator"
+              value={selectedShow}
+              onChange={(e) => setSelectedShow(e.target.value)}
+              className="w-full pl-3 pr-3 py-3 bg-gray-700 border border-gray-600 rounded-lg text-gray-200 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-transparent transition-all duration-200"
+            >
+              <option value="">Select Show</option>
+              {shows?.map((show) => (
+                <option key={show._id} value={show._id}>
+                  {show.name}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="flex justify-center items-center w-full">
+              <Button onClick={handleAllocateFunds} variant="primary" className="w-full">Allocate Funds</Button>
+          </div>
           </div>
         </dialog>
       </div>
