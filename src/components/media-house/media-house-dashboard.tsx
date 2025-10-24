@@ -2,6 +2,7 @@
 
 import { getMediaHouseDahsboardData } from "@/lib/media/media";
 import { AppDispatch, RootState } from "@/lib/store";
+import { formatCurrency } from "@/utils/utils";
 import { DollarSign, Radio, SunIcon, TrendingUp, Users } from "lucide-react";
 import { useParams } from "next/navigation";
 import { useEffect } from "react";
@@ -43,7 +44,9 @@ function MediaHouseDahboard() {
                   <p
                     className={`text-2xl font-bold text-${dataItem.color}-400`}
                   >
-                    {dataItem.value}
+                    {
+                        (dataItem.icon === "DollarSign" || dataItem.icon === "TrendUp" ) ? formatCurrency(Number(dataItem.value)) : dataItem.value
+                    }
                   </p>
                 </div>
                 <div

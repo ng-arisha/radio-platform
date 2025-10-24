@@ -9,8 +9,12 @@ interface MediaHouseInterface {
   addingMediaHouse: "idle" | "pending" | "succeeded" | "failed";
   mediaHouses: MediaHouseType[];
   mediaHouse: MediaHouseType | null;
-  mediaHouseDashboarddata: {label:string,value:string,icon:string,color:string}[];
+  mediaHouseDashboarddata: {label:string,value:string | number,icon:string,color:string}[];
   loadingDashboardData: "idle" | "pending" | "succeeded" | "failed";
+  mediaPieData: {name:string,value:number,color:string}[];
+  loadingPieData: "idle" | "pending" | "succeeded" | "failed";
+  mediaRevenueByStation:{name:string,value:number}[];
+  loadingRevenueByStation: "idle" | "pending" | "succeeded" | "failed";
 }
 
 const initialState: MediaHouseInterface = {
@@ -20,6 +24,10 @@ const initialState: MediaHouseInterface = {
   mediaHouse: null,
   mediaHouseDashboarddata: [],
   loadingDashboardData: "idle",
+  mediaPieData: [],
+  loadingPieData: "idle",
+  mediaRevenueByStation: [],
+  loadingRevenueByStation: "idle",
 };
 
 export const getAllMediaHouses = createAsyncThunk(
@@ -76,6 +84,54 @@ export const getMediaHouseDahsboardData = createAsyncThunk(
     try {
       const state = getState() as { auth: { token: string } };
       const response = await fetch(`${BASE_URL}/media/media-dashboard/${data.id}`, {
+        method: "GET",
+        headers: {
+          "content-type": "application/json",
+          Authorization: `Bearer ${state.auth.token}`,
+        },
+      });
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message);
+      }
+      const responseData = await response.json();
+      return responseData;
+    } catch (error) {
+      return rejectWithValue((error as Error).message);
+    }
+  }
+);
+
+export const getMediaHousePieData = createAsyncThunk(
+  "media/getMediaHousePieData",
+  async (data:{id:string}, { rejectWithValue, getState }) => {
+    try {
+      const state = getState() as { auth: { token: string } };
+      const response = await fetch(`${BASE_URL}/media/media-pie-data/${data.id}`, {
+        method: "GET",
+        headers: {
+          "content-type": "application/json",
+          Authorization: `Bearer ${state.auth.token}`,
+        },
+      });
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message);
+      }
+      const responseData = await response.json();
+      return responseData;
+    } catch (error) {
+      return rejectWithValue((error as Error).message);
+    }
+  }
+);
+
+export const getMediaRevenueByStation = createAsyncThunk(
+  "media/getMediaRevenueByStation",
+  async (data:{id:string}, { rejectWithValue, getState }) => {
+    try {
+      const state = getState() as { auth: { token: string } };
+      const response = await fetch(`${BASE_URL}/media/media-station-data/${data.id}`, {
         method: "GET",
         headers: {
           "content-type": "application/json",
@@ -173,6 +229,32 @@ const mediaSlice = createSlice({
     });
     builder.addCase(getMediaHouseDahsboardData.rejected, (state) => {
       state.loadingDashboardData = "failed";
+    });
+
+    // Get Media House Pie Data
+    builder.addCase(getMediaHousePieData.pending, (state) => {
+      state.loadingPieData = "pending";
+    });
+    builder.addCase(getMediaHousePieData.fulfilled, (state, action) => {
+      state.loadingPieData = "succeeded";
+      console.log(action.payload);
+      state.mediaPieData = action.payload;
+    });
+    builder.addCase(getMediaHousePieData.rejected, (state) => {
+      state.loadingPieData = "failed";
+    });
+
+    // Get Media Revenue By Station
+    builder.addCase(getMediaRevenueByStation.pending, (state) => {
+      state.loadingRevenueByStation = "pending";
+    });
+    builder.addCase(getMediaRevenueByStation.fulfilled, (state, action) => {
+      state.loadingRevenueByStation = "succeeded";
+      console.log(action.payload);
+      state.mediaRevenueByStation = action.payload;
+    });
+    builder.addCase(getMediaRevenueByStation.rejected, (state) => {
+      state.loadingRevenueByStation = "failed";
     });
   },
 });

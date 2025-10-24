@@ -1,15 +1,20 @@
-import MediaHouseDahboard from "@/components/media-house/media-house-dashboard"
-import MediaHouseInfo from "@/components/media-house/media-house-info"
+import MediaHouseDahboard from "@/components/media-house/media-house-dashboard";
+import MediaHouseInfo from "@/components/media-house/media-house-info";
+import MediaHouseRevenueByStation from "@/components/media-house/media-house-revenue-by-station";
+import MediaPieChart from "@/components/media-house/media-pie-chart";
 
 function MediaDashboardPage() {
-    return (
-        <div>
-            <MediaHouseInfo />
+  return (
+    <div>
+      <MediaHouseInfo />
 
-            <MediaHouseDahboard />
-           
-        </div>
-    )
+      <MediaHouseDahboard />
+
+      <MediaPieChart />
+
+      <MediaHouseRevenueByStation />
+    </div>
+  );
 }
 
-export default MediaDashboardPage
+export default MediaDashboardPage;
