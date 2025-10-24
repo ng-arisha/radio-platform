@@ -17,6 +17,7 @@ interface MediaHouseInterface {
   loadingRevenueByStation: "idle" | "pending" | "succeeded" | "failed";
   mediaRevenueByShow:{name:string,value:number}[];
   loadingRevenueByShow: "idle" | "pending" | "succeeded" | "failed";
+  stationSummary: StationUmmaryType[];
 }
 
 const initialState: MediaHouseInterface = {
@@ -32,6 +33,7 @@ const initialState: MediaHouseInterface = {
   loadingRevenueByStation: "idle",
   mediaRevenueByShow: [],
   loadingRevenueByShow: "idle",
+  stationSummary: [],
 };
 
 export const getAllMediaHouses = createAsyncThunk(
@@ -179,6 +181,30 @@ export const getMediaRevenueByShow = createAsyncThunk(
   }
 );
 
+export const getStationSummary = createAsyncThunk(
+  "media/getStationSummary",
+  async (data:{id:string}, { rejectWithValue, getState }) => {
+    try {
+      const state = getState() as { auth: { token: string } };
+      const response = await fetch(`${BASE_URL}/media/media-house-stations/${data.id}`, {
+        method: "GET",
+        headers: {
+          "content-type": "application/json",
+          Authorization: `Bearer ${state.auth.token}`,
+        },
+      });
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message);
+      }
+      const responseData = await response.json();
+      return responseData;
+    } catch (error) {
+      return rejectWithValue((error as Error).message);
+    }
+  }
+);
+
 export const newMedia = createAsyncThunk(
   "media/newMedia",
   async (data:{name:string; address:string; userId:string}, { rejectWithValue, getState }) => {
@@ -297,6 +323,19 @@ const mediaSlice = createSlice({
     });
     builder.addCase(getMediaRevenueByShow.rejected, (state) => {
       state.loadingRevenueByShow = "failed";
+    });
+
+    // Get Station Summary
+    builder.addCase(getStationSummary.pending, (state) => {
+       state.loading = "pending";
+    });
+    builder.addCase(getStationSummary.fulfilled, (state, action) => {
+      state.loading = "succeeded";
+      console.log(action.payload);
+      state.stationSummary = action.payload;
+    });
+    builder.addCase(getStationSummary.rejected, (state) => {
+      state.loading = "failed";
     });
 
   },

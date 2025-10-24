@@ -110,7 +110,7 @@ function NewStationModal({ page }: { page: string }) {
           {page === "stations" ? "Add Station" : "Add Show"}
         </span>
       </Button>
-      <dialog ref={newStationModal} className="modal">
+      <dialog ref={newStationModal} className="modal modal-end">
         <div className="modal-box">
           <h3 className="font-normal text-lg pb-3">
             {page === "stations" ? "Add New Station" : "Add New Show"}

@@ -143,4 +143,17 @@ declare type ActivityItemType = {
     show:ShowType;
     createdAt:string;
   }
-
+declare type StationUmmaryType ={
+  id:string;
+  name:string;
+  frequency:string;
+  admin:string;
+  revenue:number;
+  budget:number;
+  status:string;
+  activeShows:number;
+  utilization:number;
+  address:string;
+  contact:string;
+  email:string;
+}
