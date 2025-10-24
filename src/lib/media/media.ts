@@ -15,6 +15,8 @@ interface MediaHouseInterface {
   loadingPieData: "idle" | "pending" | "succeeded" | "failed";
   mediaRevenueByStation:{name:string,value:number}[];
   loadingRevenueByStation: "idle" | "pending" | "succeeded" | "failed";
+  mediaRevenueByShow:{name:string,value:number}[];
+  loadingRevenueByShow: "idle" | "pending" | "succeeded" | "failed";
 }
 
 const initialState: MediaHouseInterface = {
@@ -28,6 +30,8 @@ const initialState: MediaHouseInterface = {
   loadingPieData: "idle",
   mediaRevenueByStation: [],
   loadingRevenueByStation: "idle",
+  mediaRevenueByShow: [],
+  loadingRevenueByShow: "idle",
 };
 
 export const getAllMediaHouses = createAsyncThunk(
@@ -132,6 +136,31 @@ export const getMediaRevenueByStation = createAsyncThunk(
     try {
       const state = getState() as { auth: { token: string } };
       const response = await fetch(`${BASE_URL}/media/media-station-data/${data.id}`, {
+        method: "GET",
+        headers: {
+          "content-type": "application/json",
+          Authorization: `Bearer ${state.auth.token}`,
+        },
+      });
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message);
+      }
+      const responseData = await response.json();
+      return responseData;
+    } catch (error) {
+      return rejectWithValue((error as Error).message);
+    }
+  }
+);
+
+
+export const getMediaRevenueByShow = createAsyncThunk(
+  "media/getMediaRevenueByShow",
+  async (data:{id:string}, { rejectWithValue, getState }) => {
+    try {
+      const state = getState() as { auth: { token: string } };
+      const response = await fetch(`${BASE_URL}/media/media-show-revenue-data/${data.id}`, {
         method: "GET",
         headers: {
           "content-type": "application/json",
@@ -256,6 +285,20 @@ const mediaSlice = createSlice({
     builder.addCase(getMediaRevenueByStation.rejected, (state) => {
       state.loadingRevenueByStation = "failed";
     });
+
+    // Get Media Revenue By Show
+    builder.addCase(getMediaRevenueByShow.pending, (state) => {
+      state.loadingRevenueByShow = "pending";
+    });
+    builder.addCase(getMediaRevenueByShow.fulfilled, (state, action) => {
+      state.loadingRevenueByShow = "succeeded";
+      console.log(action.payload);
+      state.mediaRevenueByShow = action.payload;
+    });
+    builder.addCase(getMediaRevenueByShow.rejected, (state) => {
+      state.loadingRevenueByShow = "failed";
+    });
+
   },
 });
 
