@@ -9,6 +9,8 @@ interface MediaHouseInterface {
   addingMediaHouse: "idle" | "pending" | "succeeded" | "failed";
   mediaHouses: MediaHouseType[];
   mediaHouse: MediaHouseType | null;
+  mediaHouseDashboarddata: {label:string,value:string,icon:string,color:string}[];
+  loadingDashboardData: "idle" | "pending" | "succeeded" | "failed";
 }
 
 const initialState: MediaHouseInterface = {
@@ -16,6 +18,8 @@ const initialState: MediaHouseInterface = {
   mediaHouses: [],
   addingMediaHouse: "idle",
   mediaHouse: null,
+  mediaHouseDashboarddata: [],
+  loadingDashboardData: "idle",
 };
 
 export const getAllMediaHouses = createAsyncThunk(
@@ -48,6 +52,30 @@ export const getSingleMediaHouse = createAsyncThunk(
     try {
       const state = getState() as { auth: { token: string } };
       const response = await fetch(`${BASE_URL}/media/${data.id}`, {
+        method: "GET",
+        headers: {
+          "content-type": "application/json",
+          Authorization: `Bearer ${state.auth.token}`,
+        },
+      });
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message);
+      }
+      const responseData = await response.json();
+      return responseData;
+    } catch (error) {
+      return rejectWithValue((error as Error).message);
+    }
+  }
+);
+
+export const getMediaHouseDahsboardData = createAsyncThunk(
+  "media/getMediaHouseDahsboardData",
+  async (data:{id:string}, { rejectWithValue, getState }) => {
+    try {
+      const state = getState() as { auth: { token: string } };
+      const response = await fetch(`${BASE_URL}/media/media-dashboard/${data.id}`, {
         method: "GET",
         headers: {
           "content-type": "application/json",
@@ -128,11 +156,24 @@ const mediaSlice = createSlice({
     builder.addCase(getSingleMediaHouse.fulfilled, (state, action) => {
       state.loading = "succeeded";
       state.mediaHouse = action.payload;
+      console.log(action.payload);
     });
     builder.addCase(getSingleMediaHouse.rejected, (state) => {
       state.loading = "failed";
     });
 
+    // Get Media House Dashboard Data
+    builder.addCase(getMediaHouseDahsboardData.pending, (state) => {
+      state.loadingDashboardData = "pending";
+    });
+    builder.addCase(getMediaHouseDahsboardData.fulfilled, (state, action) => {
+      state.loadingDashboardData = "succeeded";
+      console.log(action.payload);
+      state.mediaHouseDashboarddata = action.payload;
+    });
+    builder.addCase(getMediaHouseDahsboardData.rejected, (state) => {
+      state.loadingDashboardData = "failed";
+    });
   },
 });
 

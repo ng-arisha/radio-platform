@@ -58,6 +58,13 @@ function LoginForm() {
         } else {
           router.push("/un-authorized");
         }
+      }else if (role === UserRole.MEDIA_HOUSE) {
+        if (decodedToken.media) {
+          // navigate to that show
+          router.push(`/media/${decodedToken.media}/dashboard`);
+        } else {
+          router.push("/un-authorized");
+        }
       }
     }
   };

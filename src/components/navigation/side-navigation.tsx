@@ -26,6 +26,45 @@ function SideNavigation() {
   const activePath = usePathname();
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const tokenUser = useSelector((state: RootState) => state.auth.tokenuser);
+
+  const mediaHouseLinks = [
+    {
+      name: "Dashboard",
+      path: `/media/${tokenUser?.media}/dashboard`,
+      icon: <Home />,
+    },
+    {
+      name: "Stations",
+      path: `/media/${tokenUser?.media}/stations`,
+      icon: <Radio />,
+    },
+    {
+      name: "Users",
+      path: `/media/${tokenUser?.media}/users`,
+      icon: <Users />,
+    },
+    {
+      name: "Finance & Budget",
+      path: `/media/${tokenUser?.media}/finance`,
+      icon: <Gift />,
+    },
+    
+    {
+      name: "Transactions",
+      path: `/media/${tokenUser?.media}/transactions`,
+      icon: <Receipt />,
+    },
+    {
+      name: "Reports",
+      path: `/media/${tokenUser?.media}/reports`,
+      icon: <Settings />,
+    },
+    {
+      name: "Settings",
+      path: `/media/${tokenUser?.station}/settings`,
+      icon: <Settings />,
+    },
+  ];
   const stationLinks = [
     {
       name: "Dashboard",
@@ -199,6 +238,25 @@ function SideNavigation() {
             const isActive = path === activePath;
             return (
               <li key={path}>
+                <Link
+                  href={path}
+                  className={`px-2 flex space-x-2 items-center text-gray-100 py-2 rounded-lg ${
+                    isActive ? "bg-gray-700/50" : ""
+                  }`}
+                >
+                  {icon}
+                  <span>{name}</span>
+                </Link>
+              </li>
+            );
+          })}
+
+        {tokenUser &&
+          tokenUser.role === UserRole.MEDIA_HOUSE &&
+          mediaHouseLinks.map(({ name, path, icon },index) => {
+            const isActive = path === activePath;
+            return (
+              <li key={index}>
                 <Link
                   href={path}
                   className={`px-2 flex space-x-2 items-center text-gray-100 py-2 rounded-lg ${
