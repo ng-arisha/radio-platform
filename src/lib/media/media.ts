@@ -18,6 +18,8 @@ interface MediaHouseInterface {
   mediaRevenueByShow:{name:string,value:number}[];
   loadingRevenueByShow: "idle" | "pending" | "succeeded" | "failed";
   stationSummary: StationUmmaryType[];
+  mediaStationAdmins: UserType[];
+  mediaShowPresenters: UserType[];
 }
 
 const initialState: MediaHouseInterface = {
@@ -34,6 +36,8 @@ const initialState: MediaHouseInterface = {
   mediaRevenueByShow: [],
   loadingRevenueByShow: "idle",
   stationSummary: [],
+  mediaStationAdmins: [],
+  mediaShowPresenters: [],
 };
 
 export const getAllMediaHouses = createAsyncThunk(
@@ -205,6 +209,56 @@ export const getStationSummary = createAsyncThunk(
   }
 );
 
+
+export const getMediaStationAdmins = createAsyncThunk(
+  "media/getMediaStationAdmins",
+  async (data:{id:string}, { rejectWithValue, getState }) => {
+    try {
+      const state = getState() as { auth: { token: string } };
+      const response = await fetch(`${BASE_URL}/media/media-house-station-admins/${data.id}`, {
+        method: "GET",
+        headers: {
+          "content-type": "application/json",
+          Authorization: `Bearer ${state.auth.token}`,
+        },
+      });
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message);
+      }
+      const responseData = await response.json();
+      return responseData;
+    } catch (error) {
+      return rejectWithValue((error as Error).message);
+    }
+  }
+);
+
+
+export const getMediaStationShowPresenters = createAsyncThunk(
+  "media/getMediaStationShowPresenters",
+  async (data:{id:string}, { rejectWithValue, getState }) => {
+    try {
+      const state = getState() as { auth: { token: string } };
+      const response = await fetch(`${BASE_URL}/media/media-house-show-presenters/${data.id}`, {
+        method: "GET",
+        headers: {
+          "content-type": "application/json",
+          Authorization: `Bearer ${state.auth.token}`,
+        },
+      });
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message);
+      }
+      const responseData = await response.json();
+      return responseData;
+    } catch (error) {
+      return rejectWithValue((error as Error).message);
+    }
+  }
+);
+
 export const newMedia = createAsyncThunk(
   "media/newMedia",
   async (data:{name:string; address:string; userId:string}, { rejectWithValue, getState }) => {
@@ -338,6 +392,31 @@ const mediaSlice = createSlice({
       state.loading = "failed";
     });
 
+    // Get Media Station Admins
+    builder.addCase(getMediaStationAdmins.pending, (state) => {
+       state.loading = "pending";
+    });
+    builder.addCase(getMediaStationAdmins.fulfilled, (state, action) => {
+      state.loading = "succeeded";
+      console.log(action.payload);
+      state.mediaStationAdmins = action.payload;
+    });
+    builder.addCase(getMediaStationAdmins.rejected, (state) => {
+      state.loading = "failed";
+    });
+
+    // Get Media Show Presenters
+    builder.addCase(getMediaStationShowPresenters.pending, (state) => {
+       state.loading = "pending";
+    });
+    builder.addCase(getMediaStationShowPresenters.fulfilled, (state, action) => {
+      state.loading = "succeeded";
+      console.log(action.payload);
+      state.mediaShowPresenters = action.payload;
+    });
+    builder.addCase(getMediaStationShowPresenters.rejected, (state) => {
+      state.loading = "failed";
+    });
   },
 });
 
