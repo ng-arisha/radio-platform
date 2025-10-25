@@ -20,6 +20,9 @@ interface MediaHouseInterface {
   stationSummary: StationUmmaryType[];
   mediaStationAdmins: UserType[];
   mediaShowPresenters: UserType[];
+  mediaFinanceSummary: {label:string,value:number,icon:string,color:string}[];
+  mediaStationFinancedata: MediaStationFinancedataType[];
+  loadingFinanceData: "idle" | "pending" | "succeeded" | "failed";
 }
 
 const initialState: MediaHouseInterface = {
@@ -38,6 +41,9 @@ const initialState: MediaHouseInterface = {
   stationSummary: [],
   mediaStationAdmins: [],
   mediaShowPresenters: [],
+  mediaFinanceSummary: [],
+  mediaStationFinancedata: [],
+  loadingFinanceData: "idle",
 };
 
 export const getAllMediaHouses = createAsyncThunk(
@@ -259,6 +265,55 @@ export const getMediaStationShowPresenters = createAsyncThunk(
   }
 );
 
+export const getMediaFinanceSummary = createAsyncThunk(
+  "media/getMediaFinanceSummary",
+  async (data:{id:string}, { rejectWithValue, getState }) => {
+    try {
+      const state = getState() as { auth: { token: string } };
+      const response = await fetch(`${BASE_URL}/media/media-finance-summary/${data.id}`, {
+        method: "GET",
+        headers: {
+          "content-type": "application/json",
+          Authorization: `Bearer ${state.auth.token}`,
+        },
+      });
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message);
+      }
+      const responseData = await response.json();
+      return responseData;
+    } catch (error) {
+      return rejectWithValue((error as Error).message);
+    }
+  }
+);
+
+
+export const getMediaStationFinanceData = createAsyncThunk(
+  "media/getMediaStationFinanceData",
+  async (data:{id:string}, { rejectWithValue, getState }) => {
+    try {
+      const state = getState() as { auth: { token: string } };
+      const response = await fetch(`${BASE_URL}/media/media-station-finance-data/${data.id}`, {
+        method: "GET",
+        headers: {
+          "content-type": "application/json",
+          Authorization: `Bearer ${state.auth.token}`,
+        },
+      });
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message);
+      }
+      const responseData = await response.json();
+      return responseData;
+    } catch (error) {
+      return rejectWithValue((error as Error).message);
+    }
+  }
+);
+
 export const newMedia = createAsyncThunk(
   "media/newMedia",
   async (data:{name:string; address:string; userId:string}, { rejectWithValue, getState }) => {
@@ -416,6 +471,32 @@ const mediaSlice = createSlice({
     });
     builder.addCase(getMediaStationShowPresenters.rejected, (state) => {
       state.loading = "failed";
+    });
+
+    // Get Media Finance Summary
+    builder.addCase(getMediaFinanceSummary.pending, (state) => {
+       state.loading = "pending";
+    });
+    builder.addCase(getMediaFinanceSummary.fulfilled, (state, action) => {
+      state.loading = "succeeded";
+      console.log(action.payload);
+      state.mediaFinanceSummary = action.payload;
+    });
+    builder.addCase(getMediaFinanceSummary.rejected, (state) => {
+      state.loading = "failed";
+    });
+
+    // Get Media Station Finance Data
+    builder.addCase(getMediaStationFinanceData.pending, (state) => {
+       state.loadingFinanceData = "pending";
+    });
+    builder.addCase(getMediaStationFinanceData.fulfilled, (state, action) => {
+      state.loadingFinanceData = "succeeded";
+      console.log(action.payload);
+      state.mediaStationFinancedata = action.payload;
+    });
+    builder.addCase(getMediaStationFinanceData.rejected, (state) => {
+      state.loadingFinanceData = "failed";
     });
   },
 });

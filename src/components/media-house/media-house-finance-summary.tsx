@@ -1,6 +1,6 @@
 "use client";
 
-import { getMediaHouseDahsboardData } from "@/lib/media/media";
+import { getMediaFinanceSummary } from "@/lib/media/media";
 import { AppDispatch, RootState } from "@/lib/store";
 import { formatCurrency } from "@/utils/utils";
 import { DollarSign, Radio, SunIcon, TrendingUp, Users } from "lucide-react";
@@ -8,18 +8,16 @@ import { useParams } from "next/navigation";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-function MediaHouseDahboard() {
+function MediaHouseFinanceSummary() {
   const dispatch = useDispatch<AppDispatch>();
-  const loading = useSelector(
-    (state: RootState) => state.media.loadingDashboardData
-  );
+  const loading = useSelector((state: RootState) => state.media.loading);
   const dashboardData = useSelector(
-    (state: RootState) => state.media.mediaHouseDashboarddata
+    (state: RootState) => state.media.mediaFinanceSummary
   );
 
   const params = useParams<{ mediaIdd: string }>();
   useEffect(() => {
-    dispatch(getMediaHouseDahsboardData({ id: params.mediaIdd }));
+    dispatch(getMediaFinanceSummary({ id: params.mediaIdd }));
   }, [dispatch, params.mediaIdd]);
   return (
     <div className="mt-4">
@@ -73,4 +71,4 @@ function MediaHouseDahboard() {
   );
 }
 
-export default MediaHouseDahboard;
+export default MediaHouseFinanceSummary;

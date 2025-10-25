@@ -160,3 +160,15 @@ declare type StationUmmaryType ={
   contact:string;
   email:string;
 }
+
+
+declare type MediaStationFinancedataType = {
+  id:string;
+  station:string;
+  allocated:number;
+  utilized:number;
+  revenue:number;
+  remaining:number;
+  lastUpdated:string;
+  status:string;
+}
