@@ -23,6 +23,8 @@ interface MediaHouseInterface {
   mediaFinanceSummary: {label:string,value:number,icon:string,color:string}[];
   mediaStationFinancedata: MediaStationFinancedataType[];
   loadingFinanceData: "idle" | "pending" | "succeeded" | "failed";
+
+  mediaShowTransactionHistory: TransactionsType[];
 }
 
 const initialState: MediaHouseInterface = {
@@ -44,6 +46,7 @@ const initialState: MediaHouseInterface = {
   mediaFinanceSummary: [],
   mediaStationFinancedata: [],
   loadingFinanceData: "idle",
+  mediaShowTransactionHistory: [],
 };
 
 export const getAllMediaHouses = createAsyncThunk(
@@ -314,6 +317,30 @@ export const getMediaStationFinanceData = createAsyncThunk(
   }
 );
 
+export const getMediaTransactionHistory = createAsyncThunk(
+  "media/getMediaTransactionHistory",
+  async (data:{id:string}, { rejectWithValue, getState }) => {
+    try {
+      const state = getState() as { auth: { token: string } };
+      const response = await fetch(`${BASE_URL}/media/media-show-transaction-history/${data.id}`, {
+        method: "GET",
+        headers: {
+          "content-type": "application/json",
+          Authorization: `Bearer ${state.auth.token}`,
+        },
+      });
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message);
+      }
+      const responseData = await response.json();
+      return responseData;
+    } catch (error) {
+      return rejectWithValue((error as Error).message);
+    }
+  }
+);
+
 export const newMedia = createAsyncThunk(
   "media/newMedia",
   async (data:{name:string; address:string; userId:string}, { rejectWithValue, getState }) => {
@@ -497,6 +524,19 @@ const mediaSlice = createSlice({
     });
     builder.addCase(getMediaStationFinanceData.rejected, (state) => {
       state.loadingFinanceData = "failed";
+    });
+
+    // Get Media Transaction History
+    builder.addCase(getMediaTransactionHistory.pending, (state) => {
+       state.loading = "pending";
+    });
+    builder.addCase(getMediaTransactionHistory.fulfilled, (state, action) => {
+      state.loading = "succeeded";
+      console.log(action.payload);
+      state.mediaShowTransactionHistory = action.payload;
+    });
+    builder.addCase(getMediaTransactionHistory.rejected, (state) => {
+      state.loading = "failed";
     });
   },
 });
