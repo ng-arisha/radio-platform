@@ -75,7 +75,7 @@ function MediaHouseTransactions() {
                       className="hover:bg-gray-800 transition-colors"
                     >
                       <td className="px-6 py-4 text-sm font-mono text-blue-400">
-                        {tx._id}
+                        {tx._id.slice(0, 8).toUpperCase()}
                       </td>
                       <td className="px-6 py-4 text-sm">{tx.show?.name}</td>
                       <td className="px-6 py-4 text-sm">
