@@ -1,4 +1,3 @@
-import AllocateFundsModal from "@/components/finance/allocate-funds"
 import NewShow from "@/components/finance/show/new-show"
 import NewPromotionModal from "@/components/promotions/new-promotion-modal"
 import { UserRole } from "@/utils/utils"
@@ -14,7 +13,7 @@ function StationActions() {
           <div className="flex gap-3">
             <NewShow role={UserRole.STATION_ADMIN} />
             <NewPromotionModal />
-           <AllocateFundsModal />
+           {/* <AllocateFundsModal /> */}
            
           </div>
         </div>

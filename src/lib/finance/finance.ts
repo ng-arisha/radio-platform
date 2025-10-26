@@ -21,7 +21,7 @@ const initialState: InitialFinanceState = {
 export const allocateFundsToMediaHouse = createAsyncThunk(
   "finance/allocateFundsToMediaHouse",
   async (
-    data: {id:string, allocated: number; mediaHouseId: string },
+    data: { id: string; allocated: number; mediaHouseId: string },
     { rejectWithValue, getState }
   ) => {
     const state = getState() as { auth: { token: string } };
@@ -36,6 +36,36 @@ export const allocateFundsToMediaHouse = createAsyncThunk(
         mediaHouseId: data.mediaHouseId,
       }),
     });
+    if (!response.ok) {
+      const errorData = await response.json();
+      return rejectWithValue(errorData.message);
+    }
+    const responseData = await response.json();
+    return responseData;
+  }
+);
+
+export const allocateFundsToStation = createAsyncThunk(
+  "finance/allocateFundsToStation",
+  async (
+    data: { id: string; allocated: number; stationId: string },
+    { rejectWithValue, getState }
+  ) => {
+    const state = getState() as { auth: { token: string } };
+    const response = await fetch(
+      `${BASE_URL}/finance/allocate-station/${data.id}`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${state.auth.token}`,
+        },
+        body: JSON.stringify({
+          allocated: data.allocated,
+          stationId: data.stationId,
+        }),
+      }
+    );
     if (!response.ok) {
       const errorData = await response.json();
       return rejectWithValue(errorData.message);
@@ -188,6 +218,19 @@ const financeSlice = createSlice({
       toast.error(
         (payload as string) || "Failed to fetch station transactions data"
       );
+    });
+
+    // allocate funds to station
+    builder.addCase(allocateFundsToStation.pending, (state) => {
+      state.loading = "pending";
+    });
+    builder.addCase(allocateFundsToStation.fulfilled, (state) => {
+      state.loading = "succeeded";
+      toast.success("Funds allocated to station successfully");
+    });
+    builder.addCase(allocateFundsToStation.rejected, (state, { payload }) => {
+      state.loading = "failed";
+      toast.error((payload as string) || "Failed to allocate funds to station");
     });
   },
 });

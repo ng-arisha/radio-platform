@@ -163,5 +163,6 @@ declare type MediaStationFinancedataType = {
   remaining: number;
   lastUpdated: string;
   status: string;
+  financeId:string
 };
 

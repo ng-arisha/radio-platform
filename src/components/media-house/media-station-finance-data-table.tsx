@@ -2,11 +2,12 @@
 
 import { getMediaStationFinanceData } from "@/lib/media/media";
 import { AppDispatch, RootState } from "@/lib/store";
-import { formatCurrency } from "@/utils/utils";
+import { formatCurrency, UserRole } from "@/utils/utils";
 import { Edit, Eye, SunIcon } from "lucide-react";
 import { useParams } from "next/navigation";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import AllocateFundsModal from "../finance/allocate-funds";
 
 function MediaHouseFinanceDataTable() {
   const dispatch = useDispatch<AppDispatch>();
@@ -90,6 +91,7 @@ function MediaHouseFinanceDataTable() {
                       <td className="p-4 text-gray-400 text-sm">{row.lastUpdated}</td>
                       <td className="p-4">
                         <div className="flex gap-2">
+                          <AllocateFundsModal role={UserRole.MEDIA_HOUSE} stationId={row.id} stationName={row.station} financeId={row.financeId} />
                           <button className="p-2 hover:bg-gray-700 rounded transition-colors" title="View Details">
                             <Eye size={16} className="text-gray-400" />
                           </button>

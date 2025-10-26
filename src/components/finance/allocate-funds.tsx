@@ -1,99 +1,115 @@
 "use client";
 
-import { getShowInStation } from "@/lib/shows/shows";
+import { allocateFundsToStation } from "@/lib/finance/finance";
 import { AppDispatch, RootState } from "@/lib/store";
-import { DollarSign, X } from "lucide-react";
-import { useParams } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { UserRole } from "@/utils/utils";
+import { DollarSign, SunIcon, X } from "lucide-react";
+import { useRef, useState } from "react";
+import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import Button from "../shared/button";
 import Input from "../shared/input";
 
-function AllocateFundsModal() {
-  const params = useParams<{ stationId: string }>();
-    const newStationModal = useRef<HTMLDialogElement>(null);
-    const [allocated, setAllocated] = useState<number>(0);
-    const [selectedShow, setSelectedShow] = useState("");
-    const dispatch = useDispatch<AppDispatch>();
-  const shows = useSelector((state: RootState) => state.shows.stationShows);
-  useEffect(() => {
-    dispatch(getShowInStation({ id: params.stationId }));
-  }, [dispatch, params.stationId]);
-    
-      const openModal = () => {
-        if (newStationModal.current) {
-          newStationModal.current.showModal();
-        }
-      };
-    
-      const closeModal = () => {
-        if (newStationModal.current) {
-          newStationModal.current.close();
-        }
-      };
+function AllocateFundsModal({
+  role,
+  stationName,
+  stationId,
+  financeId,
+}: {
+  role: string;
+  stationName: string;
+  stationId: string;
+  financeId: string;
+}) {
+  const newStationModal = useRef<HTMLDialogElement>(null);
+  const [allocated, setAllocated] = useState<number>(0);
 
-      const handleAllocateFunds = async () => {
-        if (!allocated || !selectedShow) {
-          // handle error
-          return;
-        }
-        // allocate funds logic here
+  const dispatch = useDispatch<AppDispatch>();
+  const loading = useSelector((state: RootState) => state.finance.loading);
+
+  const openModal = () => {
+    if (newStationModal.current) {
+      newStationModal.current.showModal();
+    }
+  };
+
+  const closeModal = () => {
+    if (newStationModal.current) {
+      newStationModal.current.close();
+    }
+  };
+
+  const handleAllocateFunds = async () => {
+    if (!allocated) {
+      toast.error("Please enter an amount to allocate.");
+      // handle error
+      return;
+    }
+    if (role === UserRole.MEDIA_HOUSE) {
+      const data = {
+        id: financeId,
+        allocated,
+        stationId: stationId,
+      };
+      const res = await dispatch(allocateFundsToStation(data));
+      if (res.meta.requestStatus === "fulfilled") {
+        closeModal();
       }
-      
-    return (
-        <div>
-        <Button className="flex space-x-1 items-center" onClick={openModal}>
-          <DollarSign size={16} />
-          <span>Allocate</span>
-        </Button>
-        <dialog ref={newStationModal} className="modal modal-end">
-          <div className="modal-box">
-            <div className="flex justify-between items-center mb-4">
-              <h1 className="text-gray-200 text-xl font-medium">
-                Allocate Funds to a Show
-              </h1>
-              <button
-                onClick={closeModal}
-                className="btn btn-sm btn-circle btn-ghost text-red-500"
-              >
-                <X />
-              </button>
-            </div>
-            {/* inputs */}
-            <div className="mb-6">
-            <Input
-            label="Amount to Allocate"
-            type="number"
-            value={allocated}
-            onChange={(e) => setAllocated(Number(e))}
-            Icon={DollarSign}
-            />
-            </div>
-            <div className="mb-6">
-            <label className="block text-sm font-medium mb-2 text-gray-300">
-              Show to be Allocated <span className="text-red-400 ">*</span>
-            </label>
-            <select
-              id="adminstrator"
-              value={selectedShow}
-              onChange={(e) => setSelectedShow(e.target.value)}
-              className="w-full pl-3 pr-3 py-3 bg-gray-700 border border-gray-600 rounded-lg text-gray-200 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-transparent transition-all duration-200"
+    }
+    // allocate funds logic here
+  };
+
+  return (
+    <div>
+      <button
+      type="button"
+      onClick={openModal}
+        className="p-2 hover:bg-gray-700 rounded transition-colors"
+        title="View Details"
+      >
+        <DollarSign size={16} className="text-gray-400" />
+      </button>
+      <dialog ref={newStationModal} className="modal modal-end">
+        <div className="modal-box">
+          <div className="flex justify-between items-center mb-4">
+            <h1 className="text-gray-200 text-xl font-medium">
+              Allocate Funds to {stationName}
+            </h1>
+            <button
+              onClick={closeModal}
+              className="btn btn-sm btn-circle btn-ghost text-red-500"
             >
-              <option value="">Select Show</option>
-              {shows?.map((show) => (
-                <option key={show._id} value={show._id}>
-                  {show.name}
-                </option>
-              ))}
-            </select>
+              <X />
+            </button>
           </div>
+          {/* inputs */}
+          <div className="mb-6">
+            <Input
+              label="Amount to Allocate"
+              type="number"
+              value={allocated}
+              onChange={(e) => setAllocated(Number(e))}
+              Icon={DollarSign}
+            />
+          </div>
+
           <div className="flex justify-center items-center w-full">
-              <Button onClick={handleAllocateFunds} variant="primary" className="w-full">Allocate Funds</Button>
+            {loading === "pending" ? (
+              <SunIcon className="animate-spin text-yellow-500" size={24} />
+            ) : (
+              <Button
+                onClick={handleAllocateFunds}
+                variant="primary"
+                className="w-full"
+              >
+                Allocate Funds
+              </Button>
+            )}
           </div>
-          </div>
-        </dialog>
-      </div>
-    )
+        </div>
+      </dialog>
+    </div>
+  );
 }
 
-export default AllocateFundsModal
+export default AllocateFundsModal;

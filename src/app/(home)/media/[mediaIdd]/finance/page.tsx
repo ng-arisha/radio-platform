@@ -1,6 +1,5 @@
 "use client"
 
-import AllocateFundsModal from "@/components/finance/allocate-funds"
 import MediaHouseFinanceSummary from "@/components/media-house/media-house-finance-summary"
 import MediaHouseRevenueByStation from "@/components/media-house/media-house-revenue-by-station"
 import MediaPieChart from "@/components/media-house/media-pie-chart"
@@ -16,7 +15,7 @@ function MediaFinancePage() {
             <h1 className="text-3xl font-medium text-white mb-2">💰 Finance & Budget Management</h1>
             <p className="text-gray-400">Manage budget allocations and track financial performance across stations</p>
           </div>
-          <AllocateFundsModal/>
+          {/* <AllocateFundsModal role={UserRole.MEDIA_HOUSE} /> */}
         </div>
 
         <MediaHouseFinanceSummary />

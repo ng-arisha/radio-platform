@@ -7,7 +7,6 @@ import { SunIcon } from "lucide-react";
 import { useParams } from "next/navigation";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import AllocateFundsModal from "../finance/allocate-funds";
 
 function ShowFinancialAllocations() {
   const dispatch = useDispatch<AppDispatch>();
@@ -36,7 +35,8 @@ function ShowFinancialAllocations() {
               <h2 className="text-xl font-semibold text-white">
                 Budget Allocation
               </h2>
-              <AllocateFundsModal />
+              {/* ? TODO */}
+              {/* <AllocateFundsModal /> */}
             </div>
             <div className="overflow-x-auto">
               <table className="w-full">
