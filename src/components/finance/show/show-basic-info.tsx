@@ -75,7 +75,7 @@ function ShowBasicInfo() {
                   </button>
                 </div>
 
-                <NewShow role={UserRole.MEDIA_HOUSE} />
+                <NewShow role={UserRole.STATION_ADMIN} />
               </div>
             </div>
           </div>
