@@ -1,10 +1,14 @@
+"use client"
+
 import AllocateFundsModal from "@/components/finance/allocate-funds"
 import MediaHouseFinanceSummary from "@/components/media-house/media-house-finance-summary"
 import MediaHouseRevenueByStation from "@/components/media-house/media-house-revenue-by-station"
 import MediaPieChart from "@/components/media-house/media-pie-chart"
 import MediaHouseFinanceDataTable from "@/components/media-house/media-station-finance-data-table"
+import { useParams } from "next/navigation"
 
 function MediaFinancePage() {
+  const param = useParams<{mediaIdd:string}>()
     return (
         <div>
            <div className="flex justify-between items-center">
@@ -17,8 +21,8 @@ function MediaFinancePage() {
 
         <MediaHouseFinanceSummary />
         <MediaHouseFinanceDataTable />
-        <MediaHouseRevenueByStation />
-        <MediaPieChart />
+        <MediaHouseRevenueByStation param={param.mediaIdd} />
+        <MediaPieChart param={param.mediaIdd}/>
         </div>
     )
 }

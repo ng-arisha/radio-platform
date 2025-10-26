@@ -1,5 +1,6 @@
 import StationSummaryInfo from "@/components/media-house/station-summary-info"
 import NewStationModal from "@/components/stations/new-station-modal"
+import { UserRole } from "@/utils/utils"
 
 function MediaStationPage() {
     return (
@@ -9,7 +10,7 @@ function MediaStationPage() {
             <h1 className="text-3xl font-medium mb-2">Stations Management</h1>
             <p className="text-gray-400">Manage all stations within the media house</p>
           </div>
-         <NewStationModal page="stations" />
+         <NewStationModal page="stations" role={UserRole.STATION_ADMIN} />
         </div>
 
         <StationSummaryInfo />

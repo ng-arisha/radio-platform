@@ -5,7 +5,6 @@ import { AppDispatch, RootState } from "@/lib/store";
 import { SunIcon } from "lucide-react";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import AllocateFundsModal from "./allocate-funds-modal";
 import MediaHouseAloocationTable from "./media-house-allocation-table";
 
 function MediaHouseAllocations() {
@@ -31,7 +30,7 @@ function MediaHouseAllocations() {
             <div className="bg-gray-900 rounded-lg p-6 mb-6 border border-gray-700">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-semibold">Media House Allocations</h3>
-             <AllocateFundsModal />
+             {/* <AllocateFundsModal /> */}
             </div>
             <MediaHouseAloocationTable mediaHouses={mediaHouses} />
           </div>

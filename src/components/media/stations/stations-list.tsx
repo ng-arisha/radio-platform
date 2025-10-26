@@ -2,6 +2,7 @@ import NewStationModal from "@/components/stations/new-station-modal";
 import StationTable from "@/components/stations/station-table";
 import { getMediaStations } from "@/lib/stations/stations";
 import { AppDispatch, RootState } from "@/lib/store";
+import { UserRole } from "@/utils/utils";
 import { SunIcon } from "lucide-react";
 import { useParams } from "next/navigation";
 import { useEffect } from "react";
@@ -22,7 +23,7 @@ function StationsList() {
     <div className="mt-6">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-lg font-medium text-gray-400">Stations</h2>
-         <NewStationModal page="stations" />
+         <NewStationModal page="stations" role={UserRole.ADMIN} />
       </div>
       {loading === "pending" ? (
         <div className="h-24 flex flex-col justify-center items-center">

@@ -21,17 +21,20 @@ const initialState: InitialFinanceState = {
 export const allocateFundsToMediaHouse = createAsyncThunk(
   "finance/allocateFundsToMediaHouse",
   async (
-    data: { allocated: number; mediaHouseId: string },
+    data: {id:string, allocated: number; mediaHouseId: string },
     { rejectWithValue, getState }
   ) => {
     const state = getState() as { auth: { token: string } };
-    const response = await fetch(`${BASE_URL}/finance/allocate`, {
-      method: "POST",
+    const response = await fetch(`${BASE_URL}/finance/allocate/${data.id}`, {
+      method: "PATCH",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${state.auth.token}`,
       },
-      body: JSON.stringify(data),
+      body: JSON.stringify({
+        allocated: data.allocated,
+        mediaHouseId: data.mediaHouseId,
+      }),
     });
     if (!response.ok) {
       const errorData = await response.json();

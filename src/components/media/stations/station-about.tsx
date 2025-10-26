@@ -4,6 +4,7 @@ import TextColumn from "@/components/shared/text-column";
 import NewStationModal from "@/components/stations/new-station-modal";
 import { stationDetails } from "@/lib/stations/stations";
 import { AppDispatch, RootState } from "@/lib/store";
+import { UserRole } from "@/utils/utils";
 import { SunIcon } from "lucide-react";
 import { useParams } from "next/navigation";
 import { useEffect } from "react";
@@ -22,7 +23,7 @@ function StationAbout() {
         <div>
         <div className="flex justify-between items-center">
           <h1>{station ? station.name : "Station"} Details</h1>
-          <NewStationModal page="shows" />
+          <NewStationModal page="shows" role={UserRole.ADMIN} />
         </div>
   
         {station === null || loading === 'pending' ? (

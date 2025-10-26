@@ -14,7 +14,7 @@ import { Id } from "../../../convex/_generated/dataModel";
 import Button from "../shared/button";
 import Input from "../shared/input";
 
-function NewStationModal({ page }: { page: string }) {
+function NewStationModal({ page,role }: { page: string,role:string }) {
   const newStationModal = useRef<HTMLDialogElement>(null);
   const [stationName, setStationName] = useState("");
   const [address, setAddress] = useState("");
@@ -32,6 +32,7 @@ function NewStationModal({ page }: { page: string }) {
   const stationUsers = useSelector((state:RootState)=>state.users.stationAdminUsers);
   const dispatch = useDispatch<AppDispatch>();
   const params = useParams<{ mediaId: string }>();
+  const mediaParams = useParams<{ mediaIdd: string }>();
   const loading = useSelector((state:RootState)=>state.stations.addingStation);
   
 
@@ -67,11 +68,11 @@ function NewStationModal({ page }: { page: string }) {
         address,
         frequency,
         userId:selectedUser,
-        mediaHouseId: params.mediaId,
+        mediaHouseId: role === 'admin' ? params.mediaId : mediaParams.mediaIdd,
       };
       const res = await dispatch(newStation(data));
       if (res.type === "stations/newStation/rejected") {
-        
+        closeModal();
         return;
       }
     }

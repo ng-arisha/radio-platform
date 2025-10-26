@@ -249,10 +249,12 @@ const stationSlice = createSlice({
     builder.addCase(newStation.fulfilled, (state, action) => {
       state.addingStation = "succeeded";
       state.mediaStations.push(action.payload);
+      toast.success("Station created successfully");
     });
     builder.addCase(newStation.rejected, (state, { payload }) => {
       state.addingStation = "failed";
       toast.error(payload as string);
+      console.log(`Error creating station: ${payload}`);
     });
 
     // Get Media Stations

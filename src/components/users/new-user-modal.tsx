@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Button from "../shared/button";
 import Input from "../shared/input";
 
-function NewUserModal({path}:{path:string}) {
+function NewUserModal({path,page}:{path:string,page:string}) {
   const newUserModal = useRef<HTMLDialogElement>(null);
   const [fullName, setFullName] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
@@ -55,7 +55,8 @@ function NewUserModal({path}:{path:string}) {
     <div>
       <Button className="flex gap-2" variant="primary" onClick={openModal}>
         <Plus size={16} />
-        <span>Add New User</span>
+        <span>{
+          page === 'station' ? "New Station Admin" : page === "media" ? "New Media House Admin": "New Presenter"}</span>
       </Button>
       <dialog className="modal modal-end" ref={newUserModal}>
         <div className="modal-box">

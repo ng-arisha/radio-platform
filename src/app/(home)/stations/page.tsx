@@ -1,6 +1,7 @@
 import NewStationModal from "@/components/stations/new-station-modal"
 import StationList from "@/components/stations/station-list"
 import StationSummary from "@/components/summary/station-summary"
+import { UserRole } from "@/utils/utils"
 
 function StationsPage() {
 
@@ -10,7 +11,7 @@ function StationsPage() {
            <StationSummary />
            <div className="flex justify-between items-center">
             <h1>Radio Stations</h1>
-            <NewStationModal page="stations" />
+            <NewStationModal page="stations" role={UserRole.ADMIN} />
            </div>
 
          <div className="mt-4">

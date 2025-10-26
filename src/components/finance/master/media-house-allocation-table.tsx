@@ -1,5 +1,6 @@
 import { formatCurrency, formatDate } from "@/utils/utils";
-import { Eye } from "lucide-react";
+import AllocateFundsModal from "./allocate-funds-modal";
+
 
 function MediaHouseAloocationTable({
   mediaHouses,
@@ -59,11 +60,7 @@ function MediaHouseAloocationTable({
                 {formatDate(house.createdAt)}
               </td>
               <td className="py-3 px-4">
-                <Eye
-                  size={18}
-                  className="text-gray-400 hover:text-gray-200 cursor-pointer"
-                  onClick={() => console.log("View details")}
-                />
+                <AllocateFundsModal id={house._id} mediaId={house.media!._id!} mediaName={house.media!.name!} />
               </td>
             </tr>
           ))}

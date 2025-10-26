@@ -1,5 +1,6 @@
 import MediaUsersParent from "@/components/media-house/media-users-parent";
-import { Plus, Users } from "lucide-react";
+import NewUserModal from "@/components/users/new-user-modal";
+import { Users } from "lucide-react";
 
 function UsersPage() {
   return (
@@ -17,10 +18,10 @@ function UsersPage() {
               </p>
             </div>
           </div>
-          <button className="bg-orange-600 hover:bg-orange-700 px-4 py-2 rounded-lg flex items-center gap-2 transition-colors">
-            <Plus className="w-4 h-4" />
-            Create User
-          </button>
+          <div className="flex items-center gap-4">
+          <NewUserModal path="new-station-admin" page="station" />
+          <NewUserModal path="new-presenter" page="show" />
+          </div>
         </div>
       </div>
 
