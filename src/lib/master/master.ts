@@ -7,13 +7,18 @@ interface InitialMasterState {
     masterDashboardData:{label:string;value:number | string, icon:string, color:string}[];
     revenueData:{month:string; amount:number}[];
     loadingRevenueData: "idle" | "pending" | "succeeded" | "failed";
+    loadingMediaPerformanceData: "idle" | "pending" | "succeeded" | "failed";
+    performancedata:{name:string,revenue:number,totalStations:number,totalShows:number}[];
 }
 
 const initialState: InitialMasterState = {
+
     loading: "idle",
     masterDashboardData:[],
     revenueData:[],
     loadingRevenueData: "idle",
+    loadingMediaPerformanceData: "idle",
+    performancedata:[]
 }
 
 
@@ -66,6 +71,31 @@ export const getPlatformDashboardData = createAsyncThunk(
   );
 
 
+  export const getPlatformPerformancedata = createAsyncThunk(
+    "master/getPlatformPerformancedata",
+    async (_, { rejectWithValue, getState }) => {
+      try {
+        const state = getState() as { auth: { token: string } };
+        const response = await fetch(`${BASE_URL}/show/media-house-performance`, {
+          method: "GET",
+          headers: {
+            "content-type": "application/json",
+            Authorization: `Bearer ${state.auth.token}`,
+          },
+        });
+        if (!response.ok) {
+          const errorData = await response.json();
+          return rejectWithValue(errorData.message);
+        }
+        const responseData = await response.json();
+        return responseData;
+      } catch (error) {
+        return rejectWithValue((error as Error).message);
+      }
+    }
+  );
+
+
 const masterSlice = createSlice({
     name: "master",
     initialState,
@@ -96,6 +126,19 @@ const masterSlice = createSlice({
         });
         builder.addCase(getPlatformRevenueData.rejected, (state) => {
             state.loadingRevenueData = "failed";
+        });
+
+        // Get Platform Performance Data
+        builder.addCase(getPlatformPerformancedata.pending, (state) => {
+            state.loadingMediaPerformanceData = "pending";
+        });
+        builder.addCase(getPlatformPerformancedata.fulfilled, (state, action) => {
+            state.loadingMediaPerformanceData = "succeeded";
+          
+            state.performancedata = action.payload;
+        });
+        builder.addCase(getPlatformPerformancedata.rejected, (state) => {
+            state.loadingMediaPerformanceData = "failed";
         });
     },
 })
