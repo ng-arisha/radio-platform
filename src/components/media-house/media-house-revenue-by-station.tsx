@@ -4,12 +4,11 @@ import { getMediaRevenueByStation } from "@/lib/media/media";
 import { AppDispatch, RootState } from "@/lib/store";
 import { formatCurrency } from "@/utils/utils";
 import { SunIcon } from "lucide-react";
-import { useParams } from "next/navigation";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
-function MediaHouseRevenueByStation() {
+function MediaHouseRevenueByStation({param}:{param:string}) {
   const dispatch = useDispatch<AppDispatch>();
   const loading = useSelector(
     (state: RootState) => state.media.loadingRevenueByStation
@@ -17,10 +16,10 @@ function MediaHouseRevenueByStation() {
   const stationRevenueData = useSelector(
     (state: RootState) => state.media.mediaRevenueByStation
   );
-  const params = useParams<{ mediaIdd: string }>();
+  
 
   useEffect(()=>{
-    dispatch(getMediaRevenueByStation({id: params.mediaIdd}))
+    dispatch(getMediaRevenueByStation({id: param}))
   },[])
   return (
     <div className="mt-4">

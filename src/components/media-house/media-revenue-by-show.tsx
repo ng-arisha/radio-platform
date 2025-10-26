@@ -4,12 +4,11 @@ import { getMediaRevenueByShow } from "@/lib/media/media";
 import { AppDispatch, RootState } from "@/lib/store";
 import { formatCurrency } from "@/utils/utils";
 import { SunIcon } from "lucide-react";
-import { useParams } from "next/navigation";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
-function MediaRevenueByShow() {
+function MediaRevenueByShow({param}:{param:string}) {
   const dispatch = useDispatch<AppDispatch>();
   const loading = useSelector(
     (state: RootState) => state.media.loadingRevenueByShow
@@ -17,10 +16,10 @@ function MediaRevenueByShow() {
   const showRevenueData = useSelector(
     (state: RootState) => state.media.mediaRevenueByShow
   );
-  const params = useParams<{ mediaIdd: string }>();
+  
 
   useEffect(() => {
-    dispatch(getMediaRevenueByShow({ id: params.mediaIdd }));
+    dispatch(getMediaRevenueByShow({ id: param }));
   }, []);
   return (
     <div className="mt-4">

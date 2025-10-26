@@ -4,19 +4,18 @@ import { getMediaHousePieData } from "@/lib/media/media";
 import { AppDispatch, RootState } from "@/lib/store";
 import { formatCurrency } from "@/utils/utils";
 import { SunIcon } from "lucide-react";
-import { useParams } from "next/navigation";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
 
-function MediaPieChart() {
+function MediaPieChart({param}:{param:string}) {
   const dispatch = useDispatch<AppDispatch>();
   const loading = useSelector((state: RootState) => state.media.loadingPieData);
   const pieData = useSelector((state: RootState) => state.media.mediaPieData);
-  const params = useParams<{ mediaIdd: string }>();
+  
   useEffect(() => {
-    dispatch(getMediaHousePieData({ id: params.mediaIdd }));
-  }, [dispatch]);
+    dispatch(getMediaHousePieData({ id: param }));
+  }, [dispatch,param]);
   return (
     <div className="mt-4">
       {loading === "pending" ? (

@@ -4,11 +4,10 @@ import { getMediaHouseDahsboardData } from "@/lib/media/media";
 import { AppDispatch, RootState } from "@/lib/store";
 import { formatCurrency } from "@/utils/utils";
 import { DollarSign, Radio, SunIcon, TrendingUp, Users } from "lucide-react";
-import { useParams } from "next/navigation";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-function MediaHouseDahboard() {
+function MediaHouseDahboard({param}:{param:string}) {
   const dispatch = useDispatch<AppDispatch>();
   const loading = useSelector(
     (state: RootState) => state.media.loadingDashboardData
@@ -17,10 +16,10 @@ function MediaHouseDahboard() {
     (state: RootState) => state.media.mediaHouseDashboarddata
   );
 
-  const params = useParams<{ mediaIdd: string }>();
+  
   useEffect(() => {
-    dispatch(getMediaHouseDahsboardData({ id: params.mediaIdd }));
-  }, [dispatch, params.mediaIdd]);
+    dispatch(getMediaHouseDahsboardData({ id: param }));
+  }, [dispatch, param]);
   return (
     <div className="mt-4">
       {loading === "pending" ? (
