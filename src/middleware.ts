@@ -45,7 +45,7 @@ export function middleware(request: NextRequest) {
       if(isAllowed){
         return NextResponse.next();
       }
-      return NextResponse.redirect(new URL("/", request.url));
+      return NextResponse.redirect(new URL("/master/dashboard", request.url));
     }else if(role === UserRole.PRESENTER){
       if(decodedToken?.show){
         const allowedPaths = ["/shows/"+decodedToken.show];
