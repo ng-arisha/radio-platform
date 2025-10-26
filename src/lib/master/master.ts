@@ -5,11 +5,15 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 interface InitialMasterState {
     loading: "idle" | "pending" | "succeeded" | "failed";
     masterDashboardData:{label:string;value:number | string, icon:string, color:string}[];
+    revenueData:{month:string; amount:number}[];
+    loadingRevenueData: "idle" | "pending" | "succeeded" | "failed";
 }
 
 const initialState: InitialMasterState = {
     loading: "idle",
     masterDashboardData:[],
+    revenueData:[],
+    loadingRevenueData: "idle",
 }
 
 
@@ -19,6 +23,30 @@ export const getPlatformDashboardData = createAsyncThunk(
       try {
         const state = getState() as { auth: { token: string } };
         const response = await fetch(`${BASE_URL}/show/platform-summary`, {
+          method: "GET",
+          headers: {
+            "content-type": "application/json",
+            Authorization: `Bearer ${state.auth.token}`,
+          },
+        });
+        if (!response.ok) {
+          const errorData = await response.json();
+          return rejectWithValue(errorData.message);
+        }
+        const responseData = await response.json();
+        return responseData;
+      } catch (error) {
+        return rejectWithValue((error as Error).message);
+      }
+    }
+  );
+
+  export const getPlatformRevenueData = createAsyncThunk(
+    "master/getPlatformRevenueData",
+    async (_, { rejectWithValue, getState }) => {
+      try {
+        const state = getState() as { auth: { token: string } };
+        const response = await fetch(`${BASE_URL}/show/generated-revenue`, {
           method: "GET",
           headers: {
             "content-type": "application/json",
@@ -55,6 +83,19 @@ const masterSlice = createSlice({
         });
         builder.addCase(getPlatformDashboardData.rejected, (state) => {
             state.loading = "failed";
+        });
+
+        // Get Platform Revenue Data
+        builder.addCase(getPlatformRevenueData.pending, (state) => {
+            state.loadingRevenueData = "pending";
+        });
+        builder.addCase(getPlatformRevenueData.fulfilled, (state, action) => {
+            state.loadingRevenueData = "succeeded";
+          
+            state.revenueData = action.payload;
+        });
+        builder.addCase(getPlatformRevenueData.rejected, (state) => {
+            state.loadingRevenueData = "failed";
         });
     },
 })
