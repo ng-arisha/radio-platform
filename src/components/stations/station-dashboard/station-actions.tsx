@@ -1,6 +1,7 @@
 import AllocateFundsModal from "@/components/finance/allocate-funds"
 import NewShow from "@/components/finance/show/new-show"
 import NewPromotionModal from "@/components/promotions/new-promotion-modal"
+import { UserRole } from "@/utils/utils"
 
 
 function StationActions() {
@@ -11,7 +12,7 @@ function StationActions() {
             <p className="text-gray-400">Complete snapshot of your station&rsquo;s performance and activity</p>
           </div>
           <div className="flex gap-3">
-            <NewShow />
+            <NewShow role={UserRole.STATION_ADMIN} />
             <NewPromotionModal />
            <AllocateFundsModal />
            

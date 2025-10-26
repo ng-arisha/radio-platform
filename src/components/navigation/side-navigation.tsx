@@ -14,6 +14,7 @@ import {
   Settings,
   TrendingUp,
   Trophy,
+  Tv,
   Users,
   Wallet,
 } from "lucide-react";
@@ -34,14 +35,19 @@ function SideNavigation() {
       icon: <Home />,
     },
     {
+      name: "Users",
+      path: `/media/${tokenUser?.media}/users`,
+      icon: <Users />,
+    },
+    {
       name: "Stations",
       path: `/media/${tokenUser?.media}/stations`,
       icon: <Radio />,
     },
     {
-      name: "Users",
-      path: `/media/${tokenUser?.media}/users`,
-      icon: <Users />,
+      name: "Shows Management",
+      path: `/media/${tokenUser?.media}/shows`,
+      icon: <Tv />,
     },
     {
       name: "Finance & Budget",

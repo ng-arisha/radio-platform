@@ -16,6 +16,7 @@ interface InitialShowState {
   showPromotions: PromotionType[];
   showTransactions:TransactionsType[];
   stationShows:ShowType[];
+  mediaHouseShows:ShowType[];
 }
 
 const initialState: InitialShowState = {
@@ -31,7 +32,8 @@ const initialState: InitialShowState = {
   showPresnters: [],
   showPromotions: [],
   showTransactions:[],
-  stationShows:[]
+  stationShows:[],
+  mediaHouseShows:[]
 };
 
 export const getShowDetails = createAsyncThunk(
@@ -178,6 +180,29 @@ export const getShowPresenters = createAsyncThunk(
     const state = getState() as { auth: { token: string } };
     const response = await fetch(
       `${BASE_URL}/transaction/team-members/${data.id}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${state.auth.token}`,
+        },
+      }
+    );
+    if (!response.ok) {
+      const errorData = await response.json();
+      return rejectWithValue(errorData.message);
+    }
+    const revenueData = await response.json();
+    return revenueData;
+  }
+);
+
+export const getMediaHouseShows = createAsyncThunk(
+  "shows/getMediaHouseShows",
+  async (data: { id: string }, { rejectWithValue, getState }) => {
+    const state = getState() as { auth: { token: string } };
+    const response = await fetch(
+      `${BASE_URL}/media/media-house-shows/${data.id}`,
       {
         method: "GET",
         headers: {
@@ -387,6 +412,18 @@ const showSlice = createSlice({
     });
     builder.addCase(updateShow.rejected, (state) => {
       state.updatingShow = "failed";
+    });
+
+    // Get Media House Shows
+    builder.addCase(getMediaHouseShows.pending, (state) => {
+      state.loading = "pending";
+    });
+    builder.addCase(getMediaHouseShows.fulfilled, (state, action) => {
+      state.loading = "succeeded";
+      state.mediaHouseShows = action.payload;
+    });
+    builder.addCase(getMediaHouseShows.rejected, (state) => {
+      state.loading = "failed";
     });
   },
 });

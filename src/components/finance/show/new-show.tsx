@@ -2,20 +2,32 @@
 
 import Button from "@/components/shared/button";
 import Input from "@/components/shared/input";
+import { getStationSummary } from "@/lib/media/media";
 import { createNewShow } from "@/lib/shows/shows";
 import { AppDispatch, RootState } from "@/lib/store";
+import { UserRole } from "@/utils/utils";
 import { Plus, Radio, SunIcon, X } from "lucide-react";
 import { useParams } from "next/navigation";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 
-function NewShow() {
+function NewShow({role}:{role:string}) {
   const newStationModal = useRef<HTMLDialogElement>(null);
   const [showName, setShowName] = useState("");
   const [code, setCode] = useState("");
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
+  const [selectedStation, setSelectedStation] = useState("");
+
+  const stationsData = useSelector(
+      (state: RootState) => state.media.stationSummary
+    );
+    const param = useParams<{ mediaIdd: string }>();
+  
+    useEffect(() => {
+      dispatch(getStationSummary({ id: param.mediaIdd }));
+    }, []);
 
   const loading = useSelector((state: RootState) => state.shows.loading);
   const dispatch = useDispatch<AppDispatch>();
@@ -43,9 +55,10 @@ function NewShow() {
       code,
       startTime,
       endTime,
-      stationId: params.stationId,
+      stationId: role ===UserRole.MEDIA_HOUSE ? selectedStation: params.stationId,
     };
     const res = await dispatch(createNewShow(data));
+    console.log(res);
     if (createNewShow.fulfilled.match(res)) {
       closeModal();
       // reset fields
@@ -74,6 +87,28 @@ function NewShow() {
               <X />
             </button>
           </div>
+          {
+            role === UserRole.MEDIA_HOUSE && (
+              <div className="my-3">
+              <label className="block text-sm font-medium text-gray-300">
+                Select Station <span className="text-red-400">*</span>
+              </label>
+              <select
+                id="station"
+                value={selectedStation}
+                onChange={(e) => setSelectedStation(e.target.value)}
+                className="w-full pl-3 pr-3 py-3 bg-gray-700 border border-gray-600 rounded-lg text-gray-200 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-transparent transition-all duration-200"
+              >
+                <option value="">Select Station</option>
+                {stationsData?.map((station) => (
+                  <option key={station.id} value={station.id}>
+                    {station.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+            )
+          }
           {/* input fields */}
           <div className="mb-6">
             <Input

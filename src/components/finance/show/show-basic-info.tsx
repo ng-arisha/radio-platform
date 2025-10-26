@@ -1,6 +1,7 @@
 "use client";
 
 import Input from "@/components/shared/input";
+import { UserRole } from "@/utils/utils";
 import { Radio, Search } from "lucide-react";
 import { useState } from "react";
 import NewShow from "./new-show";
@@ -74,7 +75,7 @@ function ShowBasicInfo() {
                   </button>
                 </div>
 
-                <NewShow />
+                <NewShow role={UserRole.MEDIA_HOUSE} />
               </div>
             </div>
           </div>
