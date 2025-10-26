@@ -43,7 +43,7 @@ function LoginForm() {
       console.log(decodedToken);
       const role = decodedToken.role;
       if (role === UserRole.ADMIN) {
-        router.push("/");
+        router.push("/master/dashboard");
       } else if (role === UserRole.PRESENTER) {
         if (decodedToken.show) {
           // navigate to that show
