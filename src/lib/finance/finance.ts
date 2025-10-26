@@ -75,6 +75,37 @@ export const allocateFundsToStation = createAsyncThunk(
   }
 );
 
+
+export const allocateFundsToShow = createAsyncThunk(
+  "finance/allocateFundsToShow",
+  async (
+    data: { id: string; allocated: number; showId: string },
+    { rejectWithValue, getState }
+  ) => {
+    const state = getState() as { auth: { token: string } };
+    const response = await fetch(
+      `${BASE_URL}/finance/allocate-show/${data.id}`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${state.auth.token}`,
+        },
+        body: JSON.stringify({
+          allocated: data.allocated,
+          showId: data.showId,
+        }),
+      }
+    );
+    if (!response.ok) {
+      const errorData = await response.json();
+      return rejectWithValue(errorData.message);
+    }
+    const responseData = await response.json();
+    return responseData;
+  }
+);
+
 export const getStationFinancialPieData = createAsyncThunk(
   "finance/getStationFinancialPieData",
   async (data: { id: string }, { rejectWithValue, getState }) => {
@@ -231,6 +262,20 @@ const financeSlice = createSlice({
     builder.addCase(allocateFundsToStation.rejected, (state, { payload }) => {
       state.loading = "failed";
       toast.error((payload as string) || "Failed to allocate funds to station");
+    });
+
+    // allocate funds to show
+    builder.addCase(allocateFundsToShow.pending, (state) => {
+      state.loading = "pending";
+    });
+    builder.addCase(allocateFundsToShow.fulfilled, (state) => {
+      state.loading = "succeeded";
+      toast.success("Funds allocated to show successfully");
+    });
+    builder.addCase(allocateFundsToShow.rejected, (state, { payload }) => {
+      state.loading = "failed";
+      console.log("Payload:", payload);
+      toast.error((payload as string) || "Failed to allocate funds to show");
     });
   },
 });

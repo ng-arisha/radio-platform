@@ -2,11 +2,12 @@
 
 import { getStationFinancialShowData } from "@/lib/finance/finance";
 import { AppDispatch, RootState } from "@/lib/store";
-import { formatCurrency, formatDate } from "@/utils/utils";
+import { formatCurrency, formatDate, UserRole } from "@/utils/utils";
 import { SunIcon } from "lucide-react";
 import { useParams } from "next/navigation";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import AllocateFundsToShow from "../finance/show/allocate-funds-to-show";
 
 function ShowFinancialAllocations() {
   const dispatch = useDispatch<AppDispatch>();
@@ -78,15 +79,18 @@ function ShowFinancialAllocations() {
                         {formatCurrency(row.utilized)}
                       </td>
                       <td className="py-3 px-4 text-green-400">
-                        ${formatCurrency(row.allocated - row.utilized)}
+                        {formatCurrency(row.allocated - row.utilized)}
                       </td>
                       <td className="py-3 px-4 text-gray-400">
                         {formatDate(row.createdAt)}
                       </td>
                       <td className="py-3 px-4">
-                        <button className="text-blue-400 hover:text-blue-300 text-sm font-medium">
-                          Edit
-                        </button>
+                        <AllocateFundsToShow
+                          role={UserRole.STATION_ADMIN}
+                          showName={row.show.name}
+                          showId={row.show._id}
+                          financeId={row._id}
+                        />
                       </td>
                     </tr>
                   ))}
