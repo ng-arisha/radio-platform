@@ -21,7 +21,7 @@ function StationPieChart() {
         <div>
             {
                loading === 'pending' ? (
-                <div className="h-24 flex items-center justify-center text-gray-300">
+                <div className="h-24 flex flex-col items-center justify-center text-gray-300">
                     <SunIcon className="animate-spin mr-2" size={24} />
                     <p>Loading data...</p>
                 </div>

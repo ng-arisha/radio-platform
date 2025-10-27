@@ -1,4 +1,4 @@
-import { AwardIcon, House, Info, Radio, RadioTower, TrendingUp, Tv, Users } from "lucide-react";
+import { AwardIcon, BarChart3, DollarSign, Gift, House, Info, Radio, RadioTower, Settings, TrendingUp, Tv, Users } from "lucide-react";
 
 
 export const isClient = typeof window !== "undefined";
@@ -85,30 +85,16 @@ export const sidebarLinks = [
     path: "/",
     icon: House,
   },
-  // {
-  //   label: "Stations",
-  //   path: "/stations",
-  //   icon: Radio,
-  // },
-  // {
-  //   label: "Shows",
-  //   path: "/shows",
-  //   icon: Tv,
-  // },
+ 
   {
     label: "Media Houses",
     path: "/media-houses",
     icon: RadioTower,
     children:[
-      // { label: "Overview", path: "/media-houses" },
       { label: "All", path: "/media-houses/media" },
       { label: "Stations", path: "/media-houses/stations" },
-      // { label: "Shows & Schedules", path: "/media-houses/shows" },
       { label: "Finance", path: "/media-houses/finance" },
-      // { label: "Allocations", path: "/media-houses/allocations" },
-      // { label: "Reports", path: "/media-houses/reports" },
-      // { label: "Activity Log", path: "/media-houses/activity" },
-      // { label: "Settings", path: "/media-houses/settings" },
+     
     ]
   },
   {
@@ -121,6 +107,26 @@ export const sidebarLinks = [
       { label: "Station Admins", path: "/users/station-admins" },
       { label: "Show Presenters", path: "/users/show-presenters" },
     ],
+  },
+  {
+    label: "Promotions",
+    path: "/promotions",
+    icon: Gift,
+  },
+  {
+    label: "Finance & Allocations",
+    path: "/finance",
+    icon: DollarSign,
+  },
+  {
+    label: "Reports",
+    path: "/reports",
+    icon: BarChart3,
+  },
+  {
+    label: "Settings",
+    path: "/settings",
+    icon: Settings,
   },
 ];
 
