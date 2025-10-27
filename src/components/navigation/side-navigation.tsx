@@ -1,6 +1,7 @@
 "use client";
 
-import { RootState } from "@/lib/store";
+import { getAllMediaHouses } from "@/lib/media/media";
+import { AppDispatch, RootState } from "@/lib/store";
 import { sidebarLinks, UserRole } from "@/utils/utils";
 import {
   ChevronDown,
@@ -16,17 +17,39 @@ import {
   Trophy,
   Tv,
   Users,
-  Wallet,
+  Wallet
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
-import { useSelector } from "react-redux";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 function SideNavigation() {
   const activePath = usePathname();
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const tokenUser = useSelector((state: RootState) => state.auth.tokenuser);
+  const mediaHouses = useSelector((state:RootState)=>state.media.mediaHouses);
+  const dispatch = useDispatch<AppDispatch>();
+  useEffect(() => {
+    dispatch(getAllMediaHouses());
+  }, []);
+  // add media house links to the admin links in the children section of media houses
+  const masterLinks =
+  mediaHouses?.map((house) => ({
+    label: house.name,
+    path: `/media-houses/media/${house._id}`, // or house.id depending on your schema
+  })) || [];
+  const newSidebarLinks = sidebarLinks.map((link) => {
+    if (link.label === "Media Houses") {
+      const [first, ...rest] = link.children || [];
+      const newChildren = [first, ...masterLinks, ...rest];
+      return { ...link, children: newChildren };
+    }
+    return link;
+  });
+
+
+
 
   const mediaHouseLinks = [
     {
@@ -67,7 +90,7 @@ function SideNavigation() {
     },
     {
       name: "Settings",
-      path: `/media/${tokenUser?.station}/settings`,
+      path: `/media/${tokenUser?.media}/settings`,
       icon: <Settings />,
     },
   ];
@@ -160,7 +183,7 @@ function SideNavigation() {
         {/* Sidebar content here */}
         {tokenUser &&
           tokenUser.role === UserRole.ADMIN &&
-          sidebarLinks.map(({ label, path, icon: Icon, children }) => {
+          newSidebarLinks.map(({ label, path, icon: Icon, children }) => {
             const isActive = path === activePath || activePath.startsWith(path);
             const isOpen = openDropdown === label;
 
