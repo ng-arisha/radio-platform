@@ -126,7 +126,7 @@ function SideNavigation() {
     },
     {
       name: "Commissions",
-      path: `/show/${tokenUser?.show}/commissions`,
+      path: `/shows/${tokenUser?.show}/commissions`,
       icon: <DollarSign />,
     },
     {

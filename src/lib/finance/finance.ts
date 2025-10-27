@@ -8,6 +8,7 @@ interface InitialFinanceState {
   stationFinancialsShowData: AllocationType[];
   loadingShowData: "idle" | "pending" | "succeeded" | "failed";
   stationTransactionsData: TransactionsType[];
+  showCommissionData: {level: string; commission: number,color:string}[];
 }
 
 const initialState: InitialFinanceState = {
@@ -16,6 +17,7 @@ const initialState: InitialFinanceState = {
   stationFinancialsShowData: [],
   loadingShowData: "idle",
   stationTransactionsData: [],
+  showCommissionData: [],
 };
 
 export const allocateFundsToMediaHouse = createAsyncThunk(
@@ -175,6 +177,29 @@ export const getStationTransactions = createAsyncThunk(
   }
 );
 
+export const getShowCommission = createAsyncThunk(
+  "finance/getShowCommission",
+  async (data: { id: string }, { rejectWithValue, getState }) => {
+    const state = getState() as { auth: { token: string } };
+    const response = await fetch(
+      `${BASE_URL}/show/show-commissions/${data.id}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${state.auth.token}`,
+        },
+      }
+    );
+    if (!response.ok) {
+      const errorData = await response.json();
+      return rejectWithValue(errorData.message);
+    }
+    const responseData = await response.json();
+    return responseData;
+  }
+);
+
 const financeSlice = createSlice({
   name: "finance",
   initialState,
@@ -276,6 +301,19 @@ const financeSlice = createSlice({
       state.loading = "failed";
       console.log("Payload:", payload);
       toast.error((payload as string) || "Failed to allocate funds to show");
+    });
+
+    // get show commission data
+    builder.addCase(getShowCommission.pending, (state) => {
+      state.loadingShowData = "pending";
+    });
+    builder.addCase(getShowCommission.fulfilled, (state, { payload }) => {
+      state.loadingShowData = "succeeded";
+      state.showCommissionData = payload;
+    });
+    builder.addCase(getShowCommission.rejected, (state, { payload }) => {
+      state.loadingShowData = "failed";
+      toast.error((payload as string) || "Failed to fetch show commission data");
     });
   },
 });
