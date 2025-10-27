@@ -136,7 +136,7 @@ function SideNavigation() {
     },
     {
       name: "Winners",
-      path: `/show/${tokenUser?.show}/winners`,
+      path: `/shows/${tokenUser?.show}/winners`,
       icon: <Trophy />,
     },
   ];

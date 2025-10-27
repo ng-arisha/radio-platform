@@ -17,6 +17,7 @@ interface InitialShowState {
   showTransactions:TransactionsType[];
   stationShows:ShowType[];
   mediaHouseShows:ShowType[];
+  randomShowTransaction:TransactionsType | null;
 }
 
 const initialState: InitialShowState = {
@@ -33,7 +34,8 @@ const initialState: InitialShowState = {
   showPromotions: [],
   showTransactions:[],
   stationShows:[],
-  mediaHouseShows:[]
+  mediaHouseShows:[],
+  randomShowTransaction:null,
 };
 
 export const getShowDetails = createAsyncThunk(
@@ -259,6 +261,26 @@ export const getShowTransactions = createAsyncThunk(
   }
 );
 
+export const getRandomTransaction = createAsyncThunk(
+  "shows/getRandomTransaction",
+  async (data: { id: string }, { rejectWithValue, getState }) => {
+    const state = getState() as { auth: { token: string } };
+    const response = await fetch(`${BASE_URL}/transaction/show-transactions-summary/${data.id}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${state.auth.token}`,
+      },
+    });
+    if (!response.ok) {
+      const errorData = await response.json();
+      return rejectWithValue(errorData.message);
+    }
+    const revenueData = await response.json();
+    return revenueData;
+  }
+);
+
 export const getShowInStation = createAsyncThunk(
   "shows/getShowInStation",
   async (data: { id: string }, { rejectWithValue, getState }) => {
@@ -423,6 +445,18 @@ const showSlice = createSlice({
       state.mediaHouseShows = action.payload;
     });
     builder.addCase(getMediaHouseShows.rejected, (state) => {
+      state.loading = "failed";
+    });
+
+    // Get Random Show Transaction
+    builder.addCase(getRandomTransaction.pending, (state) => {
+      state.loading = "pending";
+    });
+    builder.addCase(getRandomTransaction.fulfilled, (state, action) => {
+      state.loading = "succeeded";
+      state.randomShowTransaction = action.payload;
+    });
+    builder.addCase(getRandomTransaction.rejected, (state) => {
       state.loading = "failed";
     });
   },
