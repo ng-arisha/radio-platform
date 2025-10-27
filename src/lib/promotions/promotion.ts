@@ -19,7 +19,7 @@ const initialState: InitialPromotionsState = {
   stationPromotionPieData: [],
   loadingPromotionPieData: "idle",
   masterPromotions: [],
-  masterPromotionsPiedata:[]
+  masterPromotionsPiedata: [],
 };
 
 export const createNewPromotion = createAsyncThunk(
@@ -53,41 +53,66 @@ export const createNewPromotion = createAsyncThunk(
 );
 
 export const editPromotion = createAsyncThunk(
-    "promotions/editPromotion",
-    async (
-      data: {
-        id:string
-        name?: string;
-        amount?: number;
-        expiryDate?: string;
-        showId?: string;
-        type?: string;
+  "promotions/editPromotion",
+  async (
+    data: {
+      id: string;
+      name?: string;
+      amount?: number;
+      expiryDate?: string;
+      showId?: string;
+      type?: string;
+    },
+    { rejectWithValue, getState }
+  ) => {
+    const state = getState() as { auth: { token: string } };
+    const response = await fetch(`${BASE_URL}/promotion/update/${data.id}`, {
+      method: "PATCH",
+      headers: {
+        "content-type": "application/json",
+        Authorization: `Bearer ${state.auth.token}`,
       },
-      { rejectWithValue, getState }
-    ) => {
-      const state = getState() as { auth: { token: string } };
-      const response = await fetch(`${BASE_URL}/promotion/update/${data.id}`, {
-        method: "PATCh",
-        headers: {
-          "content-type": "application/json",
-          Authorization: `Bearer ${state.auth.token}`,
-        },
-        body: JSON.stringify({
-            name:data.name,
-            amount:data.amount,
-            expiryDate:data.expiryDate,
-            showId:data.showId,
-            type:data.type
-        }),
-      });
-      if (!response.ok) {
-        const errorResponse = await response.json();
-        return rejectWithValue(errorResponse.message);
-      }
-      const promotion = await response.json();
-      return promotion;
+      body: JSON.stringify({
+        name: data.name,
+        amount: data.amount,
+        expiryDate: data.expiryDate,
+        showId: data.showId,
+        type: data.type,
+      }),
+    });
+    if (!response.ok) {
+      const errorResponse = await response.json();
+      return rejectWithValue(errorResponse.message);
     }
-  );
+    const promotion = await response.json();
+    return promotion;
+  }
+);
+
+export const deletePromotion = createAsyncThunk(
+  "promotions/deletePromotion",
+  async (
+    data: {
+      id: string;
+    },
+    { rejectWithValue, getState }
+  ) => {
+    const state = getState() as { auth: { token: string } };
+    const response = await fetch(`${BASE_URL}/promotion/delete/${data.id}`, {
+      method: "DELETE",
+      headers: {
+        "content-type": "application/json",
+        Authorization: `Bearer ${state.auth.token}`,
+      },
+    });
+    if (!response.ok) {
+      const errorResponse = await response.json();
+      return rejectWithValue(errorResponse.message);
+    }
+    const promotion = await response.json();
+    return promotion;
+  }
+);
 
 export const getStationPromotions = createAsyncThunk(
   "promotions/getStationPromotions",
@@ -116,16 +141,13 @@ export const getMasterPromotions = createAsyncThunk(
   "promotions/getMasterPromotions",
   async (_, { rejectWithValue, getState }) => {
     const state = getState() as { auth: { token: string } };
-    const response = await fetch(
-      `${BASE_URL}/promotion/all-promotions`,
-      {
-        method: "Get",
-        headers: {
-          "content-type": "application/json",
-          Authorization: `Bearer ${state.auth.token}`,
-        },
-      }
-    );
+    const response = await fetch(`${BASE_URL}/promotion/all-promotions`, {
+      method: "Get",
+      headers: {
+        "content-type": "application/json",
+        Authorization: `Bearer ${state.auth.token}`,
+      },
+    });
     if (!response.ok) {
       const errorResponse = await response.json();
       return rejectWithValue(errorResponse.message);
@@ -158,29 +180,28 @@ export const getStationPromotionsPiedata = createAsyncThunk(
   }
 );
 
-
 export const getMasterPromotionsPiedata = createAsyncThunk(
-    "promotions/getMasterPromotionsPiedata",
-    async (_, { rejectWithValue, getState }) => {
-      const state = getState() as { auth: { token: string } };
-      const response = await fetch(
-        `${BASE_URL}/promotion/all-promotions-pie-data`,
-        {
-          method: "Get",
-          headers: {
-            "content-type": "application/json",
-            Authorization: `Bearer ${state.auth.token}`,
-          },
-        }
-      );
-      if (!response.ok) {
-        const errorResponse = await response.json();
-        return rejectWithValue(errorResponse.message);
+  "promotions/getMasterPromotionsPiedata",
+  async (_, { rejectWithValue, getState }) => {
+    const state = getState() as { auth: { token: string } };
+    const response = await fetch(
+      `${BASE_URL}/promotion/all-promotions-pie-data`,
+      {
+        method: "Get",
+        headers: {
+          "content-type": "application/json",
+          Authorization: `Bearer ${state.auth.token}`,
+        },
       }
-      const promotion = await response.json();
-      return promotion;
+    );
+    if (!response.ok) {
+      const errorResponse = await response.json();
+      return rejectWithValue(errorResponse.message);
     }
-  );
+    const promotion = await response.json();
+    return promotion;
+  }
+);
 
 const promotionSlice = createSlice({
   name: "promotions",
@@ -277,6 +298,19 @@ const promotionSlice = createSlice({
       toast.success("Promotion updated successfully");
     });
     builder.addCase(editPromotion.rejected, (state, { payload }) => {
+      state.loading = "failed";
+      toast.error(payload as string);
+    });
+
+    // delete promotion
+    builder.addCase(deletePromotion.pending, (state) => {
+      state.loading = "pending";
+    });
+    builder.addCase(deletePromotion.fulfilled, (state) => {
+      state.loading = "succeeded";
+      toast.success("Promotion deleted successfully");
+    });
+    builder.addCase(deletePromotion.rejected, (state, { payload }) => {
       state.loading = "failed";
       toast.error(payload as string);
     });

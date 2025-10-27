@@ -3,9 +3,10 @@
 import { getMasterPromotions } from "@/lib/promotions/promotion";
 import { AppDispatch, RootState } from "@/lib/store";
 import { formatCurrency, formatDate } from "@/utils/utils";
-import { SunIcon, Trash2 } from "lucide-react";
+import { SunIcon } from "lucide-react";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import DeletePromotionModal from "./delete-promotion-modal";
 import EditPromotionModal from "./edit-promotion-modal";
 
 function MasterPromotionsList() {
@@ -109,12 +110,7 @@ function MasterPromotionsList() {
                           <td className="px-6 py-4 whitespace-nowrap text-sm">
                             <div className="flex items-center gap-2">
                              <EditPromotionModal promotion={promo} />
-                              <button
-                                
-                                className="text-red-400 hover:text-red-300"
-                              >
-                                <Trash2 size={18} />
-                              </button>
+                            <DeletePromotionModal promotion={promo} />
                             </div>
                           </td>
                         </tr>
