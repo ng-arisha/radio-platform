@@ -52,6 +52,43 @@ export const createNewPromotion = createAsyncThunk(
   }
 );
 
+export const editPromotion = createAsyncThunk(
+    "promotions/editPromotion",
+    async (
+      data: {
+        id:string
+        name?: string;
+        amount?: number;
+        expiryDate?: string;
+        showId?: string;
+        type?: string;
+      },
+      { rejectWithValue, getState }
+    ) => {
+      const state = getState() as { auth: { token: string } };
+      const response = await fetch(`${BASE_URL}/promotion/update/${data.id}`, {
+        method: "PATCh",
+        headers: {
+          "content-type": "application/json",
+          Authorization: `Bearer ${state.auth.token}`,
+        },
+        body: JSON.stringify({
+            name:data.name,
+            amount:data.amount,
+            expiryDate:data.expiryDate,
+            showId:data.showId,
+            type:data.type
+        }),
+      });
+      if (!response.ok) {
+        const errorResponse = await response.json();
+        return rejectWithValue(errorResponse.message);
+      }
+      const promotion = await response.json();
+      return promotion;
+    }
+  );
+
 export const getStationPromotions = createAsyncThunk(
   "promotions/getStationPromotions",
   async (data: { id: string }, { rejectWithValue, getState }) => {
@@ -230,6 +267,19 @@ const promotionSlice = createSlice({
         toast.error(payload as string);
       }
     );
+
+    // update promotion
+    builder.addCase(editPromotion.pending, (state) => {
+      state.loading = "pending";
+    });
+    builder.addCase(editPromotion.fulfilled, (state) => {
+      state.loading = "succeeded";
+      toast.success("Promotion updated successfully");
+    });
+    builder.addCase(editPromotion.rejected, (state, { payload }) => {
+      state.loading = "failed";
+      toast.error(payload as string);
+    });
   },
 });
 
