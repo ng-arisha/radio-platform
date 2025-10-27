@@ -93,7 +93,7 @@ export const sidebarLinks = [
     children:[
       { label: "All", path: "/media-houses/media" },
       { label: "Stations", path: "/media-houses/stations" },
-      { label: "Finance", path: "/media-houses/finance" },
+      
      
     ]
   },

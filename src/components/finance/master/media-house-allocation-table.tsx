@@ -1,4 +1,6 @@
 import { formatCurrency, formatDate } from "@/utils/utils";
+import { useParams } from "next/navigation";
+import AllocateFundsModal from "./allocate-funds-to-media-modal";
 import AllocateFundsToStationModal from "./allocate-funds-to-station";
 
 
@@ -7,6 +9,8 @@ function MediaHouseAloocationTable({
 }: {
   mediaHouses: FinanceAllocationsType[];
 }) {
+
+  const params = useParams<{ mediaId: string }>();
   return (
     <div className="overflow-x-auto">
       <table className="w-full">
@@ -61,7 +65,20 @@ function MediaHouseAloocationTable({
               </td>
               <td className="py-3 px-4">
                 {/* <AllocateFundsModal id={house._id} mediaId={house.media!._id!} mediaName={house.media!.name!} /> */}
-                <AllocateFundsToStationModal id={house._id} stationId={house.station!._id!} mediaName={house.station!.name!} />
+                {
+                  house.media && (
+                    <AllocateFundsModal
+                      id={house._id}
+                      mediaId={house.media!._id!}
+                      mediaName={house.media!.name!}
+                    />
+                  )
+                }
+                {
+                  house.station && (
+                    <AllocateFundsToStationModal id={house._id} stationId={house.station!._id!} mediaName={house.station!.name!} />
+                  )
+                }
               </td>
             </tr>
           ))}
