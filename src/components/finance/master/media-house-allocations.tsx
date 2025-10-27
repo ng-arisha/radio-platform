@@ -7,6 +7,7 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import MediaHouseAloocationTable from "./media-house-allocation-table";
 
+
 function MediaHouseAllocations() {
     const loading = useSelector((state:RootState)=>state.stats.loadingAllocations)
     const mediaHouses = useSelector((state:RootState)=>state.stats.financeAllocations)

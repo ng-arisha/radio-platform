@@ -1,5 +1,5 @@
 import { formatCurrency, formatDate } from "@/utils/utils";
-import AllocateFundsModal from "./allocate-funds-modal";
+import AllocateFundsToStationModal from "./allocate-funds-to-station";
 
 
 function MediaHouseAloocationTable({
@@ -60,7 +60,8 @@ function MediaHouseAloocationTable({
                 {formatDate(house.createdAt)}
               </td>
               <td className="py-3 px-4">
-                <AllocateFundsModal id={house._id} mediaId={house.media!._id!} mediaName={house.media!.name!} />
+                {/* <AllocateFundsModal id={house._id} mediaId={house.media!._id!} mediaName={house.media!.name!} /> */}
+                <AllocateFundsToStationModal id={house._id} stationId={house.station!._id!} mediaName={house.station!.name!} />
               </td>
             </tr>
           ))}

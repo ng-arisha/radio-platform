@@ -154,6 +154,7 @@ const statsSlice = createSlice({
         builder.addCase(getFinanceAllocations.fulfilled,(state,action)=>{
             state.loadingAllocations = "succeeded"
             state.financeAllocations = action.payload
+            console.log(action.payload);
         });
         builder.addCase(getFinanceAllocations.rejected,(state,action)=>{
             state.loadingAllocations = "failed"
