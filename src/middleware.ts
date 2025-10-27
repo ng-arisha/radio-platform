@@ -6,7 +6,7 @@ export function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname;
   console.log(`Middleware invoked for path: ${path}`);
 
-  const isPublicRoute = path === "/login" || path == "/forgot-password";
+  const isPublicRoute = path === "/login" || path == "/forgot-password" || path === "/un-authorized" || path=== "/reset-password";
   const token = request.cookies.get("token")?.value ?? null;
 
   if (isPublicRoute) {
