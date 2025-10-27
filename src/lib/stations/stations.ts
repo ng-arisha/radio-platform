@@ -15,6 +15,7 @@ interface InitialStationType {
   stationBarData:{showName:string;revenue:number}[];
   loadingBarData: "idle" | "pending" | "succeeded" | "failed";
   stationPresenters:UserType[];
+  
 }
 
 const initialState: InitialStationType = {
@@ -29,6 +30,7 @@ const initialState: InitialStationType = {
   stationBarData:[],
   loadingBarData: "idle",
   stationPresenters:[],
+ 
 };
 
 export const newStation = createAsyncThunk(
@@ -66,11 +68,11 @@ export const editStation = createAsyncThunk(
   async (
     data: {
       id: string;
-      name: string;
-      address: string;
-      frequency: string;
-      userId: string;
-      mediaHouseId: string;
+      name?: string;
+      address?: string;
+      frequency?: string;
+      userId?: string;
+      mediaHouseId?: string;
     },
     { rejectWithValue, getState }
   ) => {
