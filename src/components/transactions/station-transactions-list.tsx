@@ -2,31 +2,141 @@
 
 import { getStationTransactions } from "@/lib/finance/finance";
 import { AppDispatch, RootState } from "@/lib/store";
-import { formatCurrency, formatDate } from "@/utils/utils";
-import { SunIcon } from "lucide-react";
+import {
+  formatCurrency,
+  formatDate,
+  timeFilters,
+  transactionsType,
+} from "@/utils/utils";
+import { Clock, Filter, Receipt, Search, SunIcon } from "lucide-react";
 import { useParams } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import Input from "../shared/input";
+import Pagination from "../shared/pagination";
+import Select from "../shared/reusable-select-input";
 
 function StationTransactionList() {
-    const dispatch = useDispatch<AppDispatch>();
-  const loading = useSelector((state: RootState) => state.finance.loadingShowData);
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const recordPerPageFilter = [
+    { label: "5", value: 5 },
+    { label: "10", value: 10 },
+    { label: "20", value: 20 },
+    { label: "50", value: 50 },
+    { label: "100", value: 100 },
+  ];
+  const [recordsPerPage, setRecordsPerPage] = useState(
+    recordPerPageFilter[0].value
+  );
+  const [selectedTimeFilter, setSelectedTimeFilter] = useState(
+    timeFilters[0].value
+  );
+  const [selectedTransactionType, setSelectedTransactionType] = useState(
+    transactionsType[0].value
+  );
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+  const dispatch = useDispatch<AppDispatch>();
+  const loading = useSelector(
+    (state: RootState) => state.finance.loadingShowData
+  );
   const showTransactions = useSelector(
-    (state: RootState) => state.shows.showTransactions
+    (state: RootState) => state.finance.stationTransactionsData
   );
   const params = useParams<{ stationId: string }>();
 
+  const handleFetchtransactions = async (
+    timeRange: string,
+    phoneNumber: string,
+    type: string,
+    page: number,
+    limit: number
+  ) => {
+    await dispatch(
+      getStationTransactions({
+        id: params.stationId,
+        range: timeRange,
+        phoneNumber,
+        type,
+        page,
+        limit,
+      })
+    );
+  };
+
   useEffect(() => {
-    dispatch(getStationTransactions({ id: params.stationId }));
-  }, [dispatch, params.stationId]);
-    return (
-        <div>
-      {loading === "pending" ? (
+    handleFetchtransactions(
+      selectedTimeFilter,
+      phoneNumber,
+      selectedTransactionType,
+      currentPage,
+      recordsPerPage
+    );
+  }, [
+    selectedTimeFilter,
+    phoneNumber,
+    selectedTransactionType,
+    currentPage,
+    recordsPerPage,
+  ]);
+  return (
+    <div>
+      <div className="mb-8">
+        <div className="flex items-center gap-3 mb-2">
+          <div className="p-2 bg-blue-900 rounded-lg">
+            <Receipt className="text-blue-400" size={24} />
+          </div>
+          <h1 className="text-3xl font-medium text-white">
+            Transaction Visibility
+          </h1>
+        </div>
+        <p className="text-gray-400">
+          View the transactions across all shows 
+        </p>
+      </div>
+
+      <div className="bg-gray-700 rounded-xl p-6 border border-gray-600 shadow-lg mb-6">
+        <div className="flex flex-wrap gap-4 items-center justify-between">
+          {/* Search */}
+          <div className="flex-1 min-w-[300px] relative">
+            <Input
+              value={phoneNumber}
+              onChange={setPhoneNumber}
+              placeholder="+2557123456..."
+              type="text"
+              Icon={Search}
+            />
+          </div>
+
+          {/* Filters */}
+          <div className="flex gap-3">
+            <div className="flex items-center gap-2 bg-gray-800 rounded-lg p-1 border border-gray-600">
+              <Select
+                Icon={Clock}
+                value={selectedTimeFilter}
+                onChange={setSelectedTimeFilter}
+                options={timeFilters}
+              />
+              <Select
+                Icon={Filter}
+                value={selectedTransactionType}
+                onChange={setSelectedTransactionType}
+                options={transactionsType}
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {(loading === "pending" || showTransactions === null) ? (
         <div className="h-24 flex flex-col justify-center items-center text-gray-300">
           <SunIcon className="animate-spin" size={32} />
           <p className="mt-2">Loading show transactions...</p>
         </div>
-      ) : showTransactions.length === 0 ? (
+      ) : showTransactions!.data.length === 0 ? (
         <div className="h-24 flex flex-col justify-center items-center text-gray-300">
           <p className="mt-2 text-red-500">
             There are no transactions in this show
@@ -47,17 +157,17 @@ function StationTransactionList() {
             <table className="w-full">
               <thead className="bg-gray-800">
                 <tr>
-                <th className="text-left p-4 text-gray-300 font-semibold">
-                    Show 
+                  <th className="text-left p-4 text-gray-300 font-semibold">
+                    Show
                   </th>
                   <th className="text-left p-4 text-gray-300 font-semibold">
                     Transaction ID
                   </th>
                   <th className="text-left p-4 text-gray-300 font-semibold">
-                   Phone Number
+                    Amount
                   </th>
                   <th className="text-left p-4 text-gray-300 font-semibold">
-                    Amount
+                    Phone Number
                   </th>
                   <th className="text-left p-4 text-gray-300 font-semibold">
                     Type
@@ -68,12 +178,12 @@ function StationTransactionList() {
                 </tr>
               </thead>
               <tbody>
-                {showTransactions.map((tx) => (
+                {showTransactions!.data.map((tx) => (
                   <tr
                     key={tx._id}
                     className="border-t border-gray-600 hover:bg-gray-600 transition"
                   >
-                     <td className="p-4 text-white font-mono">
+                    <td className="p-4 text-white font-mono">
                       {tx.show?.name || "N/A"}
                     </td>
                     <td className="p-4 text-white font-mono">
@@ -108,8 +218,26 @@ function StationTransactionList() {
           </div>
         </div>
       )}
+
+<div className="flex justify-between items-center mt-6">
+        <Select
+          Icon={Filter}
+          value={recordsPerPage}
+          onChange={(e) => setRecordsPerPage(Number(e))}
+          options={recordPerPageFilter}
+        />
+       {
+        loading === 'succeeded' && showTransactions !== null && (
+            <Pagination
+            currentPage={currentPage}
+            totalPages={showTransactions!.totalPages}
+            onPageChange={handlePageChange}
+          />
+        )
+       }
+      </div>
     </div>
-    )
+  );
 }
 
-export default StationTransactionList
+export default StationTransactionList;

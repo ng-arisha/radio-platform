@@ -69,18 +69,7 @@ const handleFetchtransactions = async (timeRange: string,
     dispatch(getMediaTransactionHistory({ id: params.mediaIdd }));
   }, [dispatch, params.mediaIdd]);
 
-  const getTypeColor = (type: string) => {
-    switch (type) {
-      case "revenue":
-        return "text-blue-400";
-      case "Allocation":
-        return "text-purple-400";
-      case "Payout":
-        return "text-orange-400";
-      default:
-        return "text-gray-400";
-    }
-  };
+ 
   return (
     <div className="mt-4">
         <div className="mb-8">
