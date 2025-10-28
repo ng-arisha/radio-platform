@@ -1,4 +1,4 @@
-import { AwardIcon, DollarSign, Gift, House, Info, Radio, RadioTower, Settings, TrendingUp, Tv, Users, Wallet } from "lucide-react";
+import { AwardIcon, DollarSign, Gift, House, Info, Radio, RadioTower, Receipt, Settings, TrendingUp, Tv, Users, Wallet } from "lucide-react";
 
 
 export const isClient = typeof window !== "undefined";
@@ -9,6 +9,60 @@ export enum UserRole {
   STATION_ADMIN = "station-admin",
   PRESENTER = "presenter",
 }
+export  const timeFilters = [
+  {
+      label: "30 Minutes",
+      value: "30m",
+  },
+  {
+      label: "1 hr",
+      value: "1h",
+  },
+  {
+      label: "2 hrs",
+      value: "2h",
+  },
+  {
+      label: "6 hrs",
+      value: "6h",
+  },
+  {
+      label: "Today",
+      value: "today",
+  },
+  {
+      label: "Yesterday",
+      value: "yesterday",
+  },
+  {
+      label: "This Week",
+      value: "thisWeek",
+  },
+  {
+      label: "This Month",
+      value: "thisMonth",
+  },
+ 
+];
+
+export const transactionsType = [
+  {
+      label: "All",
+      value: "all",
+  },
+  {
+      label: "Revenue",
+      value: "revenue",
+  },
+  {
+      label: "Expense",
+      value: "expense",
+  },
+  {
+      label: "Bonus",
+      value: "bonus",
+  }
+]
 export const formatCurrency=(amount:number)=>{
   return new Intl.NumberFormat('en-TZ',{
       style:'currency',
@@ -92,7 +146,7 @@ export const sidebarLinks = [
     icon: RadioTower,
     children:[
       { label: "All", path: "/media-houses/media" },
-      { label: "Stations", path: "/media-houses/stations" },
+      // { label: "Stations", path: "/media-houses/stations" },
       
      
     ]
@@ -122,6 +176,11 @@ export const sidebarLinks = [
     label: "Commission",
     path: "/commission",
     icon: Wallet,
+  },
+  {
+    label: "Transactions",
+    path: "/transactions",
+    icon: Receipt,
   },
   // {
   //   label: "Reports",

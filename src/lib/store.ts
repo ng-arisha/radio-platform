@@ -11,6 +11,7 @@ import { promotionReducer } from "./promotions/promotion";
 import { showReducer } from "./shows/shows";
 import { stationReducer } from "./stations/stations";
 import { statsReducer } from "./stats/stats";
+import { transactionReducer } from "./transactions/transaction";
 import { userReducer } from "./users/users";
 import { utilReducer } from "./util/util";
 
@@ -54,7 +55,8 @@ export const store = configureStore({
         shows:showReducer,
         promotions: promotionReducer,
         master:masterReducer,
-        commission:commissionReducer
+        commission:commissionReducer,
+        transactions:transactionReducer
     },
     middleware:(getDefaultMiddleware)=>getDefaultMiddleware({
         serializableCheck:{

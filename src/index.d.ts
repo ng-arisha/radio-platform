@@ -181,3 +181,12 @@ declare type MediaHouseCommissionType = {
   rate: number;
   commissionId:string
 }
+
+declare type PaginatatedTxnsType = {
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+  data: TransactionsType[];
+  
+};

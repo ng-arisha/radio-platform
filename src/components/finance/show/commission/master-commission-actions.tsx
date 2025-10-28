@@ -1,7 +1,7 @@
 "use client";
 
 import MasterCommissionFilters from "@/components/commission/master-commission-filters";
-import { Percent, Wallet, Wallet2 } from "lucide-react";
+import { Wallet, Wallet2 } from "lucide-react";
 import { useState } from "react";
 
 function MsterCommissionActions() {
@@ -34,7 +34,7 @@ function MsterCommissionActions() {
           <Wallet2 className="w-4 h-4" />
           <span> Income</span>
         </button>
-        <button
+        {/* <button
           type="button"
           onClick={() => setActiveTab("rates")}
           className={`flex items-center gap-2 px-4 cursor-pointer py-3 border-b-2 transition-colors ${
@@ -45,7 +45,7 @@ function MsterCommissionActions() {
         >
           <Percent className="w-4 h-4" />
           <span> Rates</span>
-        </button>
+        </button> */}
       </div>
       {
         activeTab === "income" ? (
