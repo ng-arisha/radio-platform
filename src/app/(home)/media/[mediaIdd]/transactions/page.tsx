@@ -3,7 +3,6 @@ import MediaHouseTransactions from "@/components/media-house/media-house-transac
 function MediaTransactionsPage() {
   return (
     <div>
-     
       <MediaHouseTransactions />
     </div>
   );

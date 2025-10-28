@@ -12,12 +12,14 @@ import {
   Home,
   Radio,
   Receipt,
+  ReceiptCent,
   Settings,
   TrendingUp,
   Trophy,
   Tv,
   Users,
-  Wallet
+  Wallet,
+  Wallet2
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -77,6 +79,11 @@ function SideNavigation() {
       path: `/media/${tokenUser?.media}/finance`,
       icon: <Gift />,
     },
+    {
+      name: "Commissions",
+      path: `/media/${tokenUser?.media}/commission`,
+      icon: <Wallet2 />,
+    },
     
     {
       name: "Transactions",
@@ -86,7 +93,7 @@ function SideNavigation() {
     {
       name: "Reports",
       path: `/media/${tokenUser?.media}/reports`,
-      icon: <Settings />,
+      icon: <ReceiptCent />,
     },
     {
       name: "Settings",
@@ -124,6 +131,11 @@ function SideNavigation() {
       name: "Transactions",
       path: `/stations/${tokenUser?.station}/transactions`,
       icon: <Receipt />,
+    },
+    {
+      name: "Commission",
+      path: `/stations/${tokenUser?.station}/commission`,
+      icon: <Wallet />,
     },
     {
       name: "Settings",

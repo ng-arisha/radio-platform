@@ -191,3 +191,37 @@ declare type PaginatatedTxnsType = {
   
 };
 
+declare type MediaHousesCommissionType = {
+  mediaHouseId: string;
+  mediaHouseName: string;
+  totalRevenue:number;
+  totalCommission:number;
+  stations:StationsCommissionType[]
+}
+
+
+declare type StationsCommissionType={
+  stationName:string;
+  totalRevenue:number;
+  commissionRate:number;
+  commissionId:string;
+  totalCommission:number;
+  stationId:string
+}
+
+declare type StationLevelCommissionType = {
+  stationId:string;
+  stationName:string;
+  totalRevenue:number;
+  totalCommission:number;
+  shows:ShowCommissionType[]
+}
+
+declare type ShowCommissionType = {
+  showId:string;
+  showName:string;
+  totalRevenue:number;
+  commissionId:string
+  commissionRate:number;
+  totalCommission:number
+}
