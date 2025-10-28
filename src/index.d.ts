@@ -166,3 +166,18 @@ declare type MediaStationFinancedataType = {
   financeId:string
 };
 
+declare type MasterCommissionType = {
+  platformTotalRevenue: number;
+  platformTotalCommission: number;
+  mediaHouses:MediaHouseCommissionType[];
+}
+
+
+declare type MediaHouseCommissionType = {
+  mediaHouseId: string;
+  mediaHouseName: string;
+  totalRevenue: number;
+  totalCommission: number;
+  rate: number;
+  commissionId:string
+}

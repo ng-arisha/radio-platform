@@ -3,6 +3,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import { FLUSH, PAUSE, PERSIST, persistReducer, persistStore, PURGE, REGISTER, REHYDRATE } from "redux-persist";
 import createWebStorage from "redux-persist/es/storage/createWebStorage";
 import { authReducer } from "./auth/auth";
+import { commissionReducer } from "./commission/commission";
 import { financeReducer } from "./finance/finance";
 import { masterReducer } from "./master/master";
 import { mediaReducer } from "./media/media";
@@ -52,7 +53,8 @@ export const store = configureStore({
         finance:financeReducer,
         shows:showReducer,
         promotions: promotionReducer,
-        master:masterReducer
+        master:masterReducer,
+        commission:commissionReducer
     },
     middleware:(getDefaultMiddleware)=>getDefaultMiddleware({
         serializableCheck:{
