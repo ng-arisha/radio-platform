@@ -1,4 +1,4 @@
-import { AwardIcon, BarChart3, DollarSign, Gift, House, Info, Radio, RadioTower, Settings, TrendingUp, Tv, Users, Wallet } from "lucide-react";
+import { AwardIcon, DollarSign, Gift, House, Info, Radio, RadioTower, Settings, TrendingUp, Tv, Users, Wallet } from "lucide-react";
 
 
 export const isClient = typeof window !== "undefined";
@@ -123,11 +123,11 @@ export const sidebarLinks = [
     path: "/commission",
     icon: Wallet,
   },
-  {
-    label: "Reports",
-    path: "/reports",
-    icon: BarChart3,
-  },
+  // {
+  //   label: "Reports",
+  //   path: "/reports",
+  //   icon: BarChart3,
+  // },
   {
     label: "Settings",
     path: "/settings",
