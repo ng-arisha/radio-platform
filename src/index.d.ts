@@ -190,3 +190,4 @@ declare type PaginatatedTxnsType = {
   data: TransactionsType[];
   
 };
+
