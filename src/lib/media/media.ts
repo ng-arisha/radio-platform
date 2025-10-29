@@ -172,10 +172,10 @@ export const getMediaRevenueByStation = createAsyncThunk(
 
 export const getMediaRevenueByShow = createAsyncThunk(
   "media/getMediaRevenueByShow",
-  async (data:{id:string}, { rejectWithValue, getState }) => {
+  async (data:{id:string,range:string}, { rejectWithValue, getState }) => {
     try {
       const state = getState() as { auth: { token: string } };
-      const response = await fetch(`${BASE_URL}/media/media-show-revenue-data/${data.id}`, {
+      const response = await fetch(`${BASE_URL}/media/media-show-revenue-data/${data.id}?range=${data.range}`, {
         method: "GET",
         headers: {
           "content-type": "application/json",
