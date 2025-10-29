@@ -152,6 +152,17 @@ export const sidebarLinks = [
     ]
   },
   {
+    label: "Stations",
+    path: "/stations",
+    icon: RadioTower,
+    children:[
+      { label: "All", path: "/media-houses/stations" },
+      // { label: "Stations", path: "/media-houses/stations" },
+      
+     
+    ]
+  },
+  {
     label: "Users",
     path: "/users",
     icon: Users,

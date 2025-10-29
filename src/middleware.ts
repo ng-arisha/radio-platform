@@ -40,7 +40,7 @@ export function middleware(request: NextRequest) {
 
   if(!isPublicRoute){
     if(role === UserRole.ADMIN){
-      const allowedPaths = ["/master", "/stations", "/shows", "/users","/media-houses","/promotions","/finance","/commission","/reports","/settings","/transactions"];
+      const allowedPaths = ["/master", "/stations", "/shows", "/users","/media-houses","/promotions","/finance","/commission","/reports","/settings","/transactions","/stations"];
       const isAllowed = allowedPaths.some(allowedPath => path === allowedPath || path.startsWith(allowedPath + "/"));
       if(isAllowed){
         return NextResponse.next();

@@ -1,6 +1,7 @@
 "use client";
 
 import { getAllMediaHouses } from "@/lib/media/media";
+import { getAllStations } from "@/lib/stations/stations";
 import { AppDispatch, RootState } from "@/lib/store";
 import { sidebarLinks, UserRole } from "@/utils/utils";
 import {
@@ -31,15 +32,22 @@ function SideNavigation() {
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const tokenUser = useSelector((state: RootState) => state.auth.tokenuser);
   const mediaHouses = useSelector((state:RootState)=>state.media.mediaHouses);
+
+  const stations = useSelector((state:RootState)=>state.stations.allStations);
   const dispatch = useDispatch<AppDispatch>();
   useEffect(() => {
     dispatch(getAllMediaHouses());
+    dispatch(getAllStations());
   }, []);
   // add media house links to the admin links in the children section of media houses
   const masterLinks =
   mediaHouses?.map((house) => ({
     label: house.name,
     path: `/media-houses/media/${house._id}`, // or house.id depending on your schema
+  })) || [];
+  const adminStationLinks = stations?.map((station) => ({
+    label: station.name,
+    path: `/stations/${station._id}/dashboard`, // or house.id depending on your schema
   })) || [];
   const newSidebarLinks = sidebarLinks.map((link) => {
     if (link.label === "Media Houses") {
@@ -49,6 +57,19 @@ function SideNavigation() {
     }
     return link;
   });
+
+  const adminSidebarLinks = newSidebarLinks.map((link) => {
+    if (link.label === "Stations") {
+      const [first, ...rest] = link.children || [];
+      const newChildren = [first, ...adminStationLinks, ...rest];
+      return { ...link, children: newChildren };
+    }
+    return link;
+  });
+
+
+
+
 
 
 
@@ -195,7 +216,7 @@ function SideNavigation() {
         {/* Sidebar content here */}
         {tokenUser &&
           tokenUser.role === UserRole.ADMIN &&
-          newSidebarLinks.map(({ label, path, icon: Icon, children }) => {
+          adminSidebarLinks.map(({ label, path, icon: Icon, children }) => {
             const isActive = path === activePath || activePath.startsWith(path);
             const isOpen = openDropdown === label;
 
