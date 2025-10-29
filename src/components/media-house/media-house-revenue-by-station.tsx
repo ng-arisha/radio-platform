@@ -2,13 +2,15 @@
 
 import { getMediaRevenueByStation } from "@/lib/media/media";
 import { AppDispatch, RootState } from "@/lib/store";
-import { formatCurrency } from "@/utils/utils";
-import { SunIcon } from "lucide-react";
-import { useEffect } from "react";
+import { formatCurrency, timeFilters } from "@/utils/utils";
+import { Filter, SunIcon } from "lucide-react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import Select from "../shared/reusable-select-input";
 
 function MediaHouseRevenueByStation({param}:{param:string}) {
+  const [activeRange, setActiveRange] = useState(timeFilters[3].value);
   const dispatch = useDispatch<AppDispatch>();
   const loading = useSelector(
     (state: RootState) => state.media.loadingRevenueByStation
@@ -16,11 +18,15 @@ function MediaHouseRevenueByStation({param}:{param:string}) {
   const stationRevenueData = useSelector(
     (state: RootState) => state.media.mediaRevenueByStation
   );
-  
+  const fetchMediaRevenueByStation = async (range: string) => {
+    await dispatch(
+      getMediaRevenueByStation({ range: range, id: param })
+    );
+  }
 
   useEffect(()=>{
-    dispatch(getMediaRevenueByStation({id: param}))
-  },[])
+    fetchMediaRevenueByStation(activeRange);
+  },[activeRange])
   return (
     <div className="mt-4">
       {loading === "pending" ? (
@@ -32,7 +38,16 @@ function MediaHouseRevenueByStation({param}:{param:string}) {
         <div>
             <div className="grid grid-cols-1 lg:grid-cols-1 gap-6">
         <div className="bg-gray-900 rounded-lg p-6 shadow-sm border border-gray-700">
-          <h3 className="text-lg font-semibold mb-4 text-white">Revenue by Station</h3>
+          <div className="mb-4 flex justify-between items-center">
+          <h3 className="text-lg font-semibold  text-white">Revenue by Station</h3>
+
+          <Select 
+          onChange={setActiveRange}
+          value={activeRange}
+          options={timeFilters}
+          Icon={Filter}
+          />
+          </div>
           <ResponsiveContainer width="100%" height={300}>
             <BarChart data={stationRevenueData}>
               <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
