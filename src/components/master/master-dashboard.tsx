@@ -3,9 +3,18 @@
 import { getPlatformDashboardData } from "@/lib/master/master";
 import { AppDispatch, RootState } from "@/lib/store";
 import { formatCurrency, timeFilters } from "@/utils/utils";
-import { Building2, DollarSign, Radio, SunIcon, Tv, Users } from "lucide-react";
+import {
+  Building2,
+  DollarSign,
+  Filter,
+  Radio,
+  SunIcon,
+  Tv,
+  Users,
+} from "lucide-react";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import Select from "../shared/reusable-select-input";
 
 function MasterDashboard() {
   const dispatch = useDispatch<AppDispatch>();
@@ -13,35 +22,32 @@ function MasterDashboard() {
   const data = useSelector(
     (state: RootState) => state.master.masterDashboardData
   );
-   const [activeRange, setActiveRange] = useState(timeFilters[2].value);
+  const [activeRange, setActiveRange] = useState(timeFilters[2].value);
 
-   const fetchPlatformDashboardData = async (range: string) => {
+  const fetchPlatformDashboardData = async (range: string) => {
     await dispatch(getPlatformDashboardData({ range }));
-   }
+  };
 
   useEffect(() => {
     fetchPlatformDashboardData(activeRange);
   }, [activeRange]);
   return (
     <div className="mt-4">
-      <div className="flex justify-end items-center mb-4">
-      <div className="flex gap-3">
-            <div className="flex items-center gap-2 bg-gray-800 rounded-lg p-1 border border-gray-600">
-              {timeFilters.map((item) => (
-                <button
-                  key={item.value}
-                  onClick={() => setActiveRange(item.value)}
-                  className={`px-4 py-2 rounded-md text-sm font-medium transition-colors cursor-pointer ${
-                    activeRange === item.value
-                      ? "bg-orange-600 text-white"
-                      : "text-gray-400 hover:text-white"
-                  }`}
-                >
-                  {item.label}
-                </button>
-              ))}
-            </div>
-          </div>
+      <div className="flex justify-between items-center mb-4">
+        <div className="pb-6">
+          <h1 className="text-xl font-medium text-gray-100">
+            Master Finance Dashboard
+          </h1>
+          <p className="py-2 text-gray-400">
+            Overview of financial performance accross all media houses
+          </p>
+        </div>
+        <Select
+              value={activeRange}
+              onChange={(value) => setActiveRange(value)}
+              options={timeFilters}
+              Icon={Filter}
+            />
       </div>
       {loading === "pending" ? (
         <div className="h-24 flex flex-col justify-center items-center text-gray-300">
@@ -60,10 +66,9 @@ function MasterDashboard() {
                   <div className="flex-1">
                     <p className="text-gray-400 text-sm mb-2">{kpi.label}</p>
                     <h3 className="text-2xl font-bold text-white mb-2">
-                        {
-                            kpi.icon === "DollarSign" ? formatCurrency(Number(kpi.value)) : kpi.value
-                        }
-                      
+                      {kpi.icon === "DollarSign"
+                        ? formatCurrency(Number(kpi.value))
+                        : kpi.value}
                     </h3>
                   </div>
                   <div className={`p-3 rounded-lg bg-gray-600`}>

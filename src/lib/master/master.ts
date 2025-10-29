@@ -73,10 +73,10 @@ export const getPlatformDashboardData = createAsyncThunk(
 
   export const getPlatformPerformancedata = createAsyncThunk(
     "master/getPlatformPerformancedata",
-    async (_, { rejectWithValue, getState }) => {
+    async (data:{range:string}, { rejectWithValue, getState }) => {
       try {
         const state = getState() as { auth: { token: string } };
-        const response = await fetch(`${BASE_URL}/show/media-house-performance`, {
+        const response = await fetch(`${BASE_URL}/show/media-house-performance?range=${data.range}`, {
           method: "GET",
           headers: {
             "content-type": "application/json",
