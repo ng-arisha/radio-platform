@@ -2,12 +2,13 @@
 
 import { getMediaHouseDahsboardData } from "@/lib/media/media";
 import { AppDispatch, RootState } from "@/lib/store";
-import { formatCurrency } from "@/utils/utils";
+import { formatCurrency, timeFilters } from "@/utils/utils";
 import { DollarSign, Radio, SunIcon, TrendingUp, Users } from "lucide-react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-function MediaHouseDahboard({param}:{param:string}) {
+function MediaHouseDahboard({ param }: { param: string }) {
+  const [activeRange, setActiveRange] = useState(timeFilters[2].value);
   const dispatch = useDispatch<AppDispatch>();
   const loading = useSelector(
     (state: RootState) => state.media.loadingDashboardData
@@ -16,12 +17,34 @@ function MediaHouseDahboard({param}:{param:string}) {
     (state: RootState) => state.media.mediaHouseDashboarddata
   );
 
-  
+  const fetchMediaHouseDashboardData = async (range: string) => {
+    await dispatch(getMediaHouseDahsboardData({ range: range, id: param }));
+  };
+
   useEffect(() => {
-    dispatch(getMediaHouseDahsboardData({ id: param }));
-  }, [dispatch, param]);
+    fetchMediaHouseDashboardData(activeRange);
+  }, [activeRange]);
   return (
     <div className="mt-4">
+      <div className="flex justify-end items-center mb-4">
+      <div className="flex gap-3">
+            <div className="flex items-center gap-2 bg-gray-800 rounded-lg p-1 border border-gray-600">
+              {timeFilters.map((item) => (
+                <button
+                  key={item.value}
+                  onClick={() => setActiveRange(item.value)}
+                  className={`px-4 py-2 rounded-md text-sm font-medium transition-colors cursor-pointer ${
+                    activeRange === item.value
+                      ? "bg-orange-600 text-white"
+                      : "text-gray-400 hover:text-white"
+                  }`}
+                >
+                  {item.label}
+                </button>
+              ))}
+            </div>
+          </div>
+      </div>
       {loading === "pending" ? (
         <div className="h-24 flex flex-col justify-center items-center text-gray-300">
           <SunIcon className="animate-spin mb-2" size={24} />
