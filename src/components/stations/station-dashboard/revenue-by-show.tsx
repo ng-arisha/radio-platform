@@ -1,14 +1,17 @@
 "use client";
 
+import Select from "@/components/shared/reusable-select-input";
 import { getStationBardata } from "@/lib/stations/stations";
 import { AppDispatch, RootState } from "@/lib/store";
-import { SunIcon } from "lucide-react";
+import { timeFilters } from "@/utils/utils";
+import { Filter, SunIcon } from "lucide-react";
 import { useParams } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
 function RevenueByShow() {
+  const [activeRange, setActiveRange] = useState(timeFilters[2].value);
   const dispatch = useDispatch<AppDispatch>();
   const loading = useSelector(
     (state: RootState) => state.stations.loadingBarData
@@ -18,9 +21,13 @@ function RevenueByShow() {
   );
   const params = useParams<{ stationId: string }>();
 
+  const fetchBarShowData = async (range: string) => {
+    await dispatch(getStationBardata({ id: params.stationId, range }));
+  }
+
   useEffect(() => {
-    dispatch(getStationBardata({ id: params.stationId }));
-  }, [dispatch, params.stationId]);
+    fetchBarShowData(activeRange);
+  }, [activeRange]);
   return (
     <div className="mt-4">
       {loading === "pending" ? (
@@ -30,7 +37,16 @@ function RevenueByShow() {
         </div>
       ) : (
         <div className="xl:col-span-2 bg-gray-700 rounded-xl p-6 border border-gray-600 shadow-lg">
-            <h3 className="text-xl font-bold text-white mb-6">Revenue by Show</h3>
+           <div className="mb-4 flex justify-between items-center">
+           <h3 className="text-xl font-bold text-white ">Revenue by Show</h3>
+           
+           <Select 
+           options={timeFilters}
+            value={activeRange}
+            onChange={setActiveRange}
+            Icon={Filter}
+              />
+           </div>
             <ResponsiveContainer width="100%" height={320}>
               <BarChart data={barData}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
