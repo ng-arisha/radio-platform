@@ -1,7 +1,6 @@
 "use client";
 
 import RevenueByShow from "./revenue-by-show";
-import StationActions from "./station-actions";
 import StationCharts from "./station-chats";
 import StationInfo from "./station-info";
 import StationOverview from "./station-overview";
@@ -10,7 +9,7 @@ function StationDashboard() {
     return (
         <div>
             <StationInfo />
-            <StationActions />
+            {/* <StationActions /> */}
             <StationOverview />
             <StationCharts />
             <RevenueByShow />

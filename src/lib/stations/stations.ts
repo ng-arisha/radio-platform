@@ -162,9 +162,9 @@ export const getAllStations = createAsyncThunk(
 
 export const getStationDashBoard = createAsyncThunk(
   "stations/ggetStationDashBoard",
-  async (data:{id:string}, { rejectWithValue, getState }) => {
+  async (data:{id:string,range:string}, { rejectWithValue, getState }) => {
     const state = getState() as { auth: { token: string } };
-    const response = await fetch(`${BASE_URL}/station/station-dashboard/${data.id}`, {
+    const response = await fetch(`${BASE_URL}/station/station-dashboard/${data.id}?range=${data.range}`, {
       method: "GET",
       headers: {
         "content-type": "application/json",

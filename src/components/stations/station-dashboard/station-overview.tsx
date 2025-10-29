@@ -1,13 +1,18 @@
 "use client";
 
+import NewShow from "@/components/finance/show/new-show";
+import NewPromotionModal from "@/components/promotions/new-promotion-modal";
+import Select from "@/components/shared/reusable-select-input";
 import { getStationDashBoard } from "@/lib/stations/stations";
 import { AppDispatch, RootState } from "@/lib/store";
-import { DollarSign, Radio, Sun, TrendingUp, Users } from "lucide-react";
+import { timeFilters, UserRole } from "@/utils/utils";
+import { DollarSign, Filter, Radio, Sun, TrendingUp, Users } from "lucide-react";
 import { useParams } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 function StationOverview() {
+  const [activeRange, setActiveRange] = useState(timeFilters[2].value);
   const dispatch = useDispatch<AppDispatch>();
   const dashboarddata = useSelector(
     (state: RootState) => state.stations.stationDashboard
@@ -15,11 +20,34 @@ function StationOverview() {
   const loading = useSelector((state: RootState) => state.stations.loading);
   const params = useParams<{ stationId: string }>();
 
+  const fetchStationDashboardData = async (range: string) => {
+    await dispatch(getStationDashBoard({ range: range, id: params.stationId }));
+  }
+
   useEffect(() => {
-    dispatch(getStationDashBoard({ id: params.stationId }));
-  }, [dispatch, params.stationId]);
+    fetchStationDashboardData(activeRange);
+  }, [activeRange]);
   return (
     <div className="mt-4">
+      {/* overview */}
+      <div className="flex justify-between items-center mb-8 mt-4">
+          <div>
+            <h2 className="text-3xl font-medium text-white mb-2">Station Overview</h2>
+            <p className="text-gray-400">Complete snapshot of your station&rsquo;s performance and activity</p>
+          </div>
+          <div className="flex gap-3">
+          <Select 
+          options={timeFilters}
+          value={activeRange}
+          onChange={setActiveRange}
+          Icon={Filter}
+          />
+            <NewShow role={UserRole.STATION_ADMIN} />
+            <NewPromotionModal />
+           {/* <AllocateFundsModal /> */}
+           
+          </div>
+        </div>
       {loading === "pending" ? (
         <div className="h-24 flex flex-col justify-center items-center text-gray-300">
           <Sun className="animate-spin mb-2" size={24} />
