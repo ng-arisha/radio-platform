@@ -1,6 +1,7 @@
 "use client";
 
 import { getAllMediaHouses } from "@/lib/media/media";
+import { getAllShows } from "@/lib/shows/shows";
 import { getAllStations } from "@/lib/stations/stations";
 import { AppDispatch, RootState } from "@/lib/store";
 import { sidebarLinks, UserRole } from "@/utils/utils";
@@ -34,10 +35,12 @@ function SideNavigation() {
   const mediaHouses = useSelector((state:RootState)=>state.media.mediaHouses);
 
   const stations = useSelector((state:RootState)=>state.stations.allStations);
+  const shows = useSelector((state:RootState)=>state.shows.allShows);
   const dispatch = useDispatch<AppDispatch>();
   useEffect(() => {
     dispatch(getAllMediaHouses());
     dispatch(getAllStations());
+    dispatch(getAllShows());
   }, []);
   // add media house links to the admin links in the children section of media houses
   const masterLinks =
@@ -48,6 +51,11 @@ function SideNavigation() {
   const adminStationLinks = stations?.map((station) => ({
     label: station.name,
     path: `/stations/${station._id}/dashboard`, // or house.id depending on your schema
+  })) || [];
+
+  const adminShowLinks = shows?.map((show) => ({
+    label: show.name,
+    path: `/shows/${show._id}/dashboard`, // or house.id depending on your schema
   })) || [];
   const newSidebarLinks = sidebarLinks.map((link) => {
     if (link.label === "Media Houses") {
@@ -62,6 +70,15 @@ function SideNavigation() {
     if (link.label === "Stations") {
       const [first, ...rest] = link.children || [];
       const newChildren = [first, ...adminStationLinks, ...rest];
+      return { ...link, children: newChildren };
+    }
+    return link;
+  });
+
+  const newAdminSideBarLinksWithShows  = adminSidebarLinks.map((link) => {
+    if (link.label === "Shows") {
+      const [first, ...rest] = link.children || [];
+      const newChildren = [first, ...adminShowLinks, ...rest];
       return { ...link, children: newChildren };
     }
     return link;
@@ -216,7 +233,7 @@ function SideNavigation() {
         {/* Sidebar content here */}
         {tokenUser &&
           tokenUser.role === UserRole.ADMIN &&
-          adminSidebarLinks.map(({ label, path, icon: Icon, children }) => {
+          newAdminSideBarLinksWithShows.map(({ label, path, icon: Icon, children }) => {
             const isActive = path === activePath || activePath.startsWith(path);
             const isOpen = openDropdown === label;
 

@@ -163,6 +163,17 @@ export const sidebarLinks = [
     ]
   },
   {
+    label: "Shows",
+    path: "/shows",
+    icon: Tv,
+    children:[
+      { label: "All", path: "/media-houses/shows" },
+      // { label: "Stations", path: "/media-houses/stations" },
+      
+     
+    ]
+  },
+  {
     label: "Users",
     path: "/users",
     icon: Users,

@@ -32,7 +32,7 @@ function MasterHeader() {
                 <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
               </button>
               <div className="flex items-center gap-3 cursor-pointer">
-                <div className="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center">
+                <div className="w-10 h-10 rounded-full bg-orange-600 flex items-center justify-center">
                   <span className="text-sm font-medium">MA</span>
                 </div>
                 <div className="text-right">

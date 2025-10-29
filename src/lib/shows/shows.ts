@@ -18,6 +18,7 @@ interface InitialShowState {
   stationShows:ShowType[];
   mediaHouseShows:ShowType[];
   randomShowTransaction:TransactionsType | null;
+  allShows:ShowType[];
 }
 
 const initialState: InitialShowState = {
@@ -36,6 +37,7 @@ const initialState: InitialShowState = {
   stationShows:[],
   mediaHouseShows:[],
   randomShowTransaction:null,
+  allShows:[],
 };
 
 export const getShowDetails = createAsyncThunk(
@@ -43,6 +45,26 @@ export const getShowDetails = createAsyncThunk(
   async (data: { id: string }, { rejectWithValue, getState }) => {
     const state = getState() as { auth: { token: string } };
     const response = await fetch(`${BASE_URL}/show/details/${data.id}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${state.auth.token}`,
+      },
+    });
+    if (!response.ok) {
+      const errorData = await response.json();
+      return rejectWithValue(errorData.message);
+    }
+    const showData = await response.json();
+    return showData;
+  }
+);
+
+export const getAllShows = createAsyncThunk(
+  "shows/getAllShows",
+  async (_, { rejectWithValue, getState }) => {
+    const state = getState() as { auth: { token: string } };
+    const response = await fetch(`${BASE_URL}/show/all`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -457,6 +479,18 @@ const showSlice = createSlice({
       state.randomShowTransaction = action.payload;
     });
     builder.addCase(getRandomTransaction.rejected, (state) => {
+      state.loading = "failed";
+    });
+
+    // Get All Shows
+    builder.addCase(getAllShows.pending, (state) => {
+      state.loading = "pending";
+    });
+    builder.addCase(getAllShows.fulfilled, (state, action) => {
+      state.loading = "succeeded";
+      state.allShows = action.payload;
+    });
+    builder.addCase(getAllShows.rejected, (state) => {
       state.loading = "failed";
     });
   },
