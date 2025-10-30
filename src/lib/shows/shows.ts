@@ -305,9 +305,9 @@ export const getRandomTransaction = createAsyncThunk(
 
 export const getShowInStation = createAsyncThunk(
   "shows/getShowInStation",
-  async (data: { id: string }, { rejectWithValue, getState }) => {
+  async (data: { id: string,search?:string,status?:string,range?:string }, { rejectWithValue, getState }) => {
     const state = getState() as { auth: { token: string } };
-    const response = await fetch(`${BASE_URL}/show/shows/${data.id}`, {
+    const response = await fetch(`${BASE_URL}/show/shows/${data.id}?search=${data.search}&status=${data.status}&range=${data.range}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

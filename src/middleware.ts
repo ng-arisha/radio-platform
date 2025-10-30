@@ -60,7 +60,7 @@ export function middleware(request: NextRequest) {
 
     }else if(role === UserRole.STATION_ADMIN){
       if(decodedToken?.station){
-        const allowedPaths = ["/stations/"+decodedToken.station];
+        const allowedPaths = ["/stations/"+decodedToken.station,"/shows"];
       const isAllowed = allowedPaths.some(allowedPath => path === allowedPath || path.startsWith(allowedPath + "/"));
       if(isAllowed){
         return NextResponse.next();

@@ -93,7 +93,7 @@ declare type ShowType = {
   status: string;
   createdAt: string;
   station: StationType;
-  dailyRevenue?: number;
+  revenue?: number;
   users: string[];
 };
 

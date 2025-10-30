@@ -51,8 +51,8 @@ function DeletePromotionModal({ promotion }: { promotion: PromotionType }) {
           </div>
           <div>
             <p className="text-gray-400 text-wrap">
-              Are you sure you want to delete the promotion 
-              <span className="font-semibold text-white">{promotion.name}</span>
+              Are you sure you want to delete the promotion  
+               <span className="font-semibold text-white ml-1">{promotion.name}</span>
               ? This action cannot be undone.
             </p>
 

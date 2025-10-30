@@ -3,10 +3,12 @@
 import { getStationPromotions } from "@/lib/promotions/promotion";
 import { AppDispatch, RootState } from "@/lib/store";
 import { formatCurrency, formatDate } from "@/utils/utils";
-import { Edit, SunIcon, Trash2 } from "lucide-react";
+import { SunIcon } from "lucide-react";
 import { useParams } from "next/navigation";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import DeletePromotionModal from "./master/delete-promotion-modal";
+import EditPromotionModal from "./master/edit-promotion-modal";
 
 function StationPromotions() {
   const dispatch = useDispatch<AppDispatch>();
@@ -111,15 +113,8 @@ function StationPromotions() {
                        
                         <td className="px-6 py-4 whitespace-nowrap text-sm">
                           <div className="flex items-center gap-2">
-                            <button className="text-blue-400 hover:text-blue-300">
-                              <Edit size={18} />
-                            </button>
-                            <button
-                              
-                              className="text-red-400 hover:text-red-300"
-                            >
-                              <Trash2 size={18} />
-                            </button>
+                           <EditPromotionModal promotion={promo} />
+                          <DeletePromotionModal promotion={promo} />
                           </div>
                         </td>
                       </tr>

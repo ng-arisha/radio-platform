@@ -87,7 +87,7 @@ function PresentersList() {
                       </td>
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-2 text-gray-300">
-                          <SunIcon size={16} />
+                         
                           <span className="text-sm">
                             {new Date(presenter.createdAt).toLocaleDateString()}
                           </span>

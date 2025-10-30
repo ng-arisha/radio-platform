@@ -1,10 +1,7 @@
 "use client";
 
-import Input from "@/components/shared/input";
-import { UserRole } from "@/utils/utils";
-import { Radio, Search } from "lucide-react";
+import { Radio } from "lucide-react";
 import { useState } from "react";
-import NewShow from "./new-show";
 
 function ShowBasicInfo() {
     const [query, setQuery] = useState("");
@@ -27,58 +24,7 @@ function ShowBasicInfo() {
             </p>
           </div>
 
-          <div className="bg-gray-700 rounded-xl p-6 border border-gray-600 shadow-lg mb-6">
-            <div className="flex flex-wrap gap-4 items-center justify-between">
-              {/* Search */}
-              <div className="flex-1 min-w-[300px] relative">
-                <Input
-                  value={query}
-                  onChange={setQuery}
-                  placeholder="Search shows by name or code..."
-                  type="text"
-                  Icon={Search}
-                />
-              </div>
-
-              {/* Filters */}
-              <div className="flex gap-3">
-                <div className="flex items-center gap-2 bg-gray-800 rounded-lg p-1 border border-gray-600">
-                  <button
-                    onClick={() => setFilterStatus("all")}
-                    className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
-                      filterStatus === "all"
-                        ? "bg-blue-600 text-white"
-                        : "text-gray-400 hover:text-white"
-                    }`}
-                  >
-                    All Shows
-                  </button>
-                  <button
-                    onClick={() => setFilterStatus("active")}
-                    className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
-                      filterStatus === "active"
-                        ? "bg-green-600 text-white"
-                        : "text-gray-400 hover:text-white"
-                    }`}
-                  >
-                    Active
-                  </button>
-                  <button
-                    onClick={() => setFilterStatus("inactive")}
-                    className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
-                      filterStatus === "inactive"
-                        ? "bg-gray-600 text-white"
-                        : "text-gray-400 hover:text-white"
-                    }`}
-                  >
-                    Inactive
-                  </button>
-                </div>
-
-                <NewShow role={UserRole.STATION_ADMIN} />
-              </div>
-            </div>
-          </div>
+          
         </div>
     )
 }

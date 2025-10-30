@@ -1,19 +1,16 @@
 "use client";
 
+import Input from "@/components/shared/input";
+import Select from "@/components/shared/reusable-select-input";
 import { getShowInStation } from "@/lib/shows/shows";
 import { AppDispatch, RootState } from "@/lib/store";
-import { formatCurrency } from "@/utils/utils";
-import {
-  Clock,
-  DollarSign,
-  Power,
-  Radio,
-  SunIcon,
-  Users
-} from "lucide-react";
+import { formatCurrency, timeFilters, UserRole } from "@/utils/utils";
+import { Clock, DollarSign, Eye, Filter, Radio, Search, SunIcon, Users } from "lucide-react";
+import Link from "next/link";
 import { useParams } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import NewShow from "./new-show";
 import ViewShowDetails from "./view-show-details";
 
 function ShowList() {
@@ -21,12 +18,79 @@ function ShowList() {
   const loading = useSelector((state: RootState) => state.shows.loading);
   const shows = useSelector((state: RootState) => state.shows.stationShows);
   const params = useParams<{ stationId: string }>();
+  const [filterStatus, setFilterStatus] = useState<
+      "all" | "active" | "inactive"
+    >("all");
+    const [query, setQuery] = useState("");
+    const [activeRange, setActiveRange] = useState(timeFilters[2].value);
+
+    const fetchShowsInStation = async (search:string,status:string,range:string) => {
+      await dispatch(getShowInStation({ id: params.stationId, search, status, range }));
+    }
 
   useEffect(() => {
-    dispatch(getShowInStation({ id: params.stationId }));
-  }, [dispatch, params.stationId]);
+    fetchShowsInStation(query,filterStatus,activeRange);
+  }, [dispatch, params.stationId, query, filterStatus, activeRange]);
   return (
     <div>
+      <div className="bg-gray-700 rounded-xl p-6 border border-gray-600 shadow-lg mb-6">
+            <div className="flex flex-wrap gap-4 items-center justify-between">
+              {/* Search */}
+              <div className="flex-1 min-w-[300px] relative">
+                <Input
+                  value={query}
+                  onChange={setQuery}
+                  placeholder="Search shows by name or code..."
+                  type="text"
+                  Icon={Search}
+                />
+              </div>
+
+              {/* Filters */}
+              <div className="flex gap-3">
+                <Select 
+                value={activeRange}
+                onChange={setActiveRange}
+                options={timeFilters}
+                Icon={Filter}
+                />
+                <div className="flex items-center gap-2 bg-gray-800 rounded-lg p-1 border border-gray-600">
+                  <button
+                    onClick={() => setFilterStatus("all")}
+                    className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                      filterStatus === "all"
+                        ? "bg-blue-600 text-white"
+                        : "text-gray-400 hover:text-white"
+                    }`}
+                  >
+                    All Shows
+                  </button>
+                  <button
+                    onClick={() => setFilterStatus("active")}
+                    className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                      filterStatus === "active"
+                        ? "bg-green-600 text-white"
+                        : "text-gray-400 hover:text-white"
+                    }`}
+                  >
+                    Active
+                  </button>
+                  <button
+                    onClick={() => setFilterStatus("inactive")}
+                    className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                      filterStatus === "inactive"
+                        ? "bg-gray-600 text-white"
+                        : "text-gray-400 hover:text-white"
+                    }`}
+                  >
+                    Inactive
+                  </button>
+                </div>
+
+                <NewShow role={UserRole.STATION_ADMIN} />
+              </div>
+            </div>
+          </div>
       {loading === "pending" ? (
         <div className="h-24 flex flex-col justify-center items-center text-gray-300">
           <SunIcon className="animate-spin mb-2" size={24} />
@@ -131,17 +195,25 @@ function ShowList() {
                         <div className="flex items-center gap-2">
                           <DollarSign className="text-green-400" size={16} />
                           <span className="text-green-400 font-bold">
-                            {formatCurrency(show.dailyRevenue || 0)}
+                            {formatCurrency(show.revenue || 0)}
                           </span>
                         </div>
                       </td>
 
                       <td className="px-6 py-4">
                         <div className="flex items-center justify-center gap-2">
-                         {/* view details */}
-                         <ViewShowDetails show={show} purpose="view" />
-                         <ViewShowDetails show={show} purpose="edit" />
-                          <button
+                          {/* view details */}
+                          {/* <ViewShowDetails show={show} purpose="view" /> */}
+                          <Link
+                            href={`/shows/${show._id}/dashboard`}
+                            type="button"
+                            className="p-2 text-yellow-400 hover:bg-yellow-900 rounded-lg transition-colors"
+                            title="Edit Show"
+                          >
+                            <Eye size={18} />
+                          </Link>
+                          <ViewShowDetails show={show} purpose="edit" />
+                          {/* <button
                             className={`p-2 rounded-lg transition-colors ${
                               show.status === "Active"
                                 ? "text-red-400 hover:bg-red-900"
@@ -154,7 +226,7 @@ function ShowList() {
                             }
                           >
                             <Power size={18} />
-                          </button>
+                          </button> */}
                         </div>
                       </td>
                     </tr>
@@ -181,7 +253,7 @@ function ShowList() {
               <p className="text-blue-400 text-2xl font-bold">
                 TZs{" "}
                 {shows
-                  .reduce((sum, show) => sum + show.dailyRevenue!, 0)
+                  .reduce((sum, show) => sum + show.revenue!, 0)
                   .toLocaleString()}
               </p>
             </div>
@@ -190,7 +262,7 @@ function ShowList() {
               <p className="text-purple-400 text-2xl font-bold">
                 TZs{" "}
                 {Math.round(
-                  shows.reduce((sum, show) => sum + show.dailyRevenue!, 0) /
+                  shows.reduce((sum, show) => sum + show.revenue!, 0) /
                     shows.length
                 ).toLocaleString()}
               </p>
