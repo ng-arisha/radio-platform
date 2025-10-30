@@ -1,12 +1,28 @@
 "use client";
 
+import Input from "@/components/shared/input";
+import Pagination from "@/components/shared/pagination";
+import Select from "@/components/shared/reusable-select-input";
 import { getShowTransactions } from "@/lib/shows/shows";
 import { AppDispatch, RootState } from "@/lib/store";
-import { formatCurrency, formatDate } from "@/utils/utils";
-import { SunIcon } from "lucide-react";
+import {
+  formatCurrency,
+  formatDate,
+  timeFilters,
+  transactionsType,
+} from "@/utils/utils";
+import { Clock, Filter, Search, SunIcon } from "lucide-react";
 import { useParams } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+
+const recordPerPageFilter = [
+  { label: "5", value: 5 },
+  { label: "10", value: 10 },
+  { label: "20", value: 20 },
+  { label: "50", value: 50 },
+  { label: "100", value: 100 },
+];
 
 function TransactionsList() {
   const dispatch = useDispatch<AppDispatch>();
@@ -15,18 +31,96 @@ function TransactionsList() {
     (state: RootState) => state.shows.showTransactions
   );
   const params = useParams<{ showId: string }>();
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [recordsPerPage, setRecordsPerPage] = useState(
+    recordPerPageFilter[0].value
+  );
+  const [selectedTimeFilter, setSelectedTimeFilter] = useState(
+    timeFilters[0].value
+  );
+  const [selectedTransactionType, setSelectedTransactionType] = useState(
+    transactionsType[0].value
+  );
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+
+  const handleFetchtransactions = async (
+    timeRange: string,
+    phoneNumber: string,
+    type: string,
+    page: number,
+    limit: number
+  ) => {
+    await dispatch(
+      getShowTransactions({
+        id: params.showId,
+        range: timeRange,
+        search: phoneNumber,
+        type,
+        page,
+        limit,
+      })
+    );
+  };
 
   useEffect(() => {
-    dispatch(getShowTransactions({ id: params.showId }));
-  }, [dispatch, params.showId]);
+    handleFetchtransactions(
+      selectedTimeFilter,
+      phoneNumber,
+      selectedTransactionType,
+      currentPage,
+      recordsPerPage
+    );
+  }, [
+    phoneNumber,
+    selectedTimeFilter,
+    selectedTransactionType,
+    currentPage,
+    recordsPerPage,
+  ]);
   return (
     <div>
-      {loading === "pending" ? (
+      <div className="bg-gray-700 rounded-xl p-6 border border-gray-600 shadow-lg mb-6">
+        <div className="flex flex-wrap gap-4 items-center justify-between">
+          {/* Search */}
+          <div className="flex-1 min-w-[300px] relative">
+            <Input
+              value={phoneNumber}
+              onChange={setPhoneNumber}
+              placeholder="+2557123456..."
+              type="text"
+              Icon={Search}
+            />
+          </div>
+
+          {/* Filters */}
+          <div className="flex gap-3">
+            <div className="flex items-center gap-2 bg-gray-800 rounded-lg p-1 border border-gray-600">
+              <Select
+                Icon={Clock}
+                value={selectedTimeFilter}
+                onChange={setSelectedTimeFilter}
+                options={timeFilters}
+              />
+              <Select
+                Icon={Filter}
+                value={selectedTransactionType}
+                onChange={setSelectedTransactionType}
+                options={transactionsType}
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+      {loading === "pending" || showTransactions === null ? (
         <div className="h-24 flex flex-col justify-center items-center text-gray-300">
           <SunIcon className="animate-spin" size={32} />
           <p className="mt-2">Loading show transactions...</p>
         </div>
-      ) : showTransactions.length === 0 ? (
+      ) : showTransactions?.data.length === 0 ? (
         <div className="h-24 flex flex-col justify-center items-center text-gray-300">
           <p className="mt-2 text-red-500">
             There are no transactions in this show
@@ -51,7 +145,7 @@ function TransactionsList() {
                     Transaction ID
                   </th>
                   <th className="text-left p-4 text-gray-300 font-semibold">
-                   Phone Number
+                    Phone Number
                   </th>
                   <th className="text-left p-4 text-gray-300 font-semibold">
                     Amount
@@ -65,7 +159,7 @@ function TransactionsList() {
                 </tr>
               </thead>
               <tbody>
-                {showTransactions.map((tx) => (
+                {showTransactions.data.map((tx) => (
                   <tr
                     key={tx._id}
                     className="border-t border-gray-600 hover:bg-gray-600 transition"
@@ -102,6 +196,21 @@ function TransactionsList() {
           </div>
         </div>
       )}
+      <div className="flex justify-between items-center mt-6">
+        <Select
+          Icon={Filter}
+          value={recordsPerPage}
+          onChange={(e) => setRecordsPerPage(Number(e))}
+          options={recordPerPageFilter}
+        />
+        {loading === "succeeded" && showTransactions !== null && (
+          <Pagination
+            currentPage={currentPage}
+            totalPages={showTransactions!.totalPages}
+            onPageChange={handlePageChange}
+          />
+        )}
+      </div>
     </div>
   );
 }

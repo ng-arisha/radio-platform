@@ -14,11 +14,11 @@ interface InitialShowState {
   showTransactionsdata: { time: string; revenue: number }[];
   showPresnters: PresenterType[];
   showPromotions: PromotionType[];
-  showTransactions:TransactionsType[];
-  stationShows:ShowType[];
-  mediaHouseShows:ShowType[];
-  randomShowTransaction:TransactionsType | null;
-  allShows:ShowType[];
+  showTransactions: PaginatatedTxnsType | null;
+  stationShows: ShowType[];
+  mediaHouseShows: ShowType[];
+  randomShowTransaction: TransactionsType | null;
+  allShows: ShowType[];
 }
 
 const initialState: InitialShowState = {
@@ -33,11 +33,11 @@ const initialState: InitialShowState = {
   showTransactionsdata: [],
   showPresnters: [],
   showPromotions: [],
-  showTransactions:[],
-  stationShows:[],
-  mediaHouseShows:[],
-  randomShowTransaction:null,
-  allShows:[],
+  showTransactions: null,
+  stationShows: [],
+  mediaHouseShows: [],
+  randomShowTransaction: null,
+  allShows: [],
 };
 
 export const getShowDetails = createAsyncThunk(
@@ -82,7 +82,16 @@ export const getAllShows = createAsyncThunk(
 
 export const createNewShow = createAsyncThunk(
   "shows/createNewShow",
-  async (data: { name: string,code:string,startTime:string,endTime:string,stationId:string }, { rejectWithValue, getState }) => {
+  async (
+    data: {
+      name: string;
+      code: string;
+      startTime: string;
+      endTime: string;
+      stationId: string;
+    },
+    { rejectWithValue, getState }
+  ) => {
     const state = getState() as { auth: { token: string } };
     const response = await fetch(`${BASE_URL}/show/new`, {
       method: "POST",
@@ -103,7 +112,16 @@ export const createNewShow = createAsyncThunk(
 
 export const updateShow = createAsyncThunk(
   "shows/updateShow",
-  async (data: {id:string, name: string,code:string,startTime:string,endTime:string }, { rejectWithValue, getState }) => {
+  async (
+    data: {
+      id: string;
+      name: string;
+      code: string;
+      startTime: string;
+      endTime: string;
+    },
+    { rejectWithValue, getState }
+  ) => {
     const state = getState() as { auth: { token: string } };
     const response = await fetch(`${BASE_URL}/show/update-show/${data.id}`, {
       method: "PATCH",
@@ -116,7 +134,6 @@ export const updateShow = createAsyncThunk(
         code: data.code,
         startTime: data.startTime,
         endTime: data.endTime,
-        
       }),
     });
     if (!response.ok) {
@@ -265,15 +282,28 @@ export const getShowPromotions = createAsyncThunk(
 
 export const getShowTransactions = createAsyncThunk(
   "shows/getShowTransactions",
-  async (data: { id: string }, { rejectWithValue, getState }) => {
+  async (
+    data: {
+      id: string;
+      search: string;
+      type: string;
+      range: string;
+      page: number;
+      limit: number;
+    },
+    { rejectWithValue, getState }
+  ) => {
     const state = getState() as { auth: { token: string } };
-    const response = await fetch(`${BASE_URL}/transaction/show-transactions/${data.id}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${state.auth.token}`,
-      },
-    });
+    const response = await fetch(
+      `${BASE_URL}/transaction/show-transactions/${data.id}?search=${data.search}&type=${data.type}&range=${data.range}&page=${data.page}&limit=${data.limit}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${state.auth.token}`,
+        },
+      }
+    );
     if (!response.ok) {
       const errorData = await response.json();
       return rejectWithValue(errorData.message);
@@ -287,13 +317,16 @@ export const getRandomTransaction = createAsyncThunk(
   "shows/getRandomTransaction",
   async (data: { id: string }, { rejectWithValue, getState }) => {
     const state = getState() as { auth: { token: string } };
-    const response = await fetch(`${BASE_URL}/transaction/show-transactions-summary/${data.id}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${state.auth.token}`,
-      },
-    });
+    const response = await fetch(
+      `${BASE_URL}/transaction/show-transactions-summary/${data.id}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${state.auth.token}`,
+        },
+      }
+    );
     if (!response.ok) {
       const errorData = await response.json();
       return rejectWithValue(errorData.message);
@@ -305,15 +338,21 @@ export const getRandomTransaction = createAsyncThunk(
 
 export const getShowInStation = createAsyncThunk(
   "shows/getShowInStation",
-  async (data: { id: string,search?:string,status?:string,range?:string }, { rejectWithValue, getState }) => {
+  async (
+    data: { id: string; search?: string; status?: string; range?: string },
+    { rejectWithValue, getState }
+  ) => {
     const state = getState() as { auth: { token: string } };
-    const response = await fetch(`${BASE_URL}/show/shows/${data.id}?search=${data.search}&status=${data.status}&range=${data.range}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${state.auth.token}`,
-      },
-    });
+    const response = await fetch(
+      `${BASE_URL}/show/shows/${data.id}?search=${data.search}&status=${data.status}&range=${data.range}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${state.auth.token}`,
+        },
+      }
+    );
     if (!response.ok) {
       const errorData = await response.json();
       return rejectWithValue(errorData.message);
@@ -425,7 +464,7 @@ const showSlice = createSlice({
       state.loading = "failed";
     });
 
-// handle new show
+    // handle new show
     builder.addCase(createNewShow.pending, (state) => {
       state.loading = "pending";
     });

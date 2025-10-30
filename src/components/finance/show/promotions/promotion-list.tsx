@@ -59,9 +59,9 @@ function PromotionList() {
                   <th className="text-left p-4 text-gray-300 font-semibold">
                     Expiry
                   </th>
-                  <th className="text-left p-4 text-gray-300 font-semibold">
+                  {/* <th className="text-left p-4 text-gray-300 font-semibold">
                     Actions
-                  </th>
+                  </th> */}
                 </tr>
               </thead>
               <tbody>
@@ -86,11 +86,11 @@ function PromotionList() {
                     <td className="p-4 text-gray-300">
                       {formatDate(bonus.expiryDate)}
                     </td>
-                    <td className="p-4">
+                    {/* <td className="p-4">
                       <button className="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700 transition text-sm">
                         Stop
                       </button>
-                    </td>
+                    </td> */}
                   </tr>
                 ))}
               </tbody>
