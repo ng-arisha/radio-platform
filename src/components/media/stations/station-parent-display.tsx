@@ -3,7 +3,6 @@ import ShowList from "@/components/finance/show/shows-list";
 import ShowFinancialAllocations from "@/components/financials/show-financials-allocation";
 import StationFinancialsPiedata from "@/components/financials/station-financials-pie-data";
 import RevenueByShow from "@/components/stations/station-dashboard/revenue-by-show";
-import StationActions from "@/components/stations/station-dashboard/station-actions";
 import StationCharts from "@/components/stations/station-dashboard/station-chats";
 import StationInfo from "@/components/stations/station-dashboard/station-info";
 import StationOverview from "@/components/stations/station-dashboard/station-overview";
@@ -23,7 +22,7 @@ function StationParentDispla() {
       {selectedTab === "Overview" && (
         <div>
           <StationInfo />
-          <StationActions />
+          {/* <StationActions /> */}
           <StationOverview />
           <StationCharts />
           <RevenueByShow />
