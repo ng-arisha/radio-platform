@@ -31,6 +31,7 @@ export const createNewPromotion = createAsyncThunk(
       expiryDate: string;
       showId: string;
       type: string;
+      numberOfBeneficiaries?: number;
     },
     { rejectWithValue, getState }
   ) => {

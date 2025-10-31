@@ -9,6 +9,10 @@ export enum UserRole {
   STATION_ADMIN = "station-admin",
   PRESENTER = "presenter",
 }
+export enum PromotionType {
+  FIXED_SHOW_WINNING = 'fixed_show_winning',
+  SHOW_GIVEAWAY = 'show_giveaway',
+}
 export  const timeFilters = [
   {
       label: "30 Minutes",

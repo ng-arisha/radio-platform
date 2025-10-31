@@ -3,13 +3,27 @@
 import { createNewPromotion } from "@/lib/promotions/promotion";
 import { getShowInStation } from "@/lib/shows/shows";
 import { AppDispatch, RootState } from "@/lib/store";
-import { CalendarPlusIcon, Gift, Plus, SunIcon, Wallet, X } from "lucide-react";
+import { PromotionType } from "@/utils/utils";
+import { CalendarPlusIcon, Gift, Plus, SunIcon, Users2, Wallet, X } from "lucide-react";
 import { useParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import Button from "../shared/button";
 import Input from "../shared/input";
+import Select from "../shared/reusable-select-input";
+
+const promoTypes = [
+  {
+    label:"Show Giveaway",
+    value:"show_giveaway"
+  },
+  {
+    label:"Fixed Show Winning",
+    value:"fixed_show_winning"
+  },
+  
+]
 
 function NewPromotionModal() {
   const params = useParams<{ stationId: string }>();
@@ -18,8 +32,9 @@ function NewPromotionModal() {
   const [amount, setAmount] = useState(1000);
   const [expiryDate, setExpiryDate] = useState("");
   const [selectedShow, setSelectedShow] = useState("");
-  const [promotionType, setPromotionType] = useState("");
-  const promotionTypes = ["bonus", "jackpot"];
+  const [promotionType, setPromotionType] = useState(promoTypes[0].value);
+  const [numberOfBeneficiaries, setNumberOfBeneficiaries] = useState(1);
+  
 
   const dispatch = useDispatch<AppDispatch>();
   const shows = useSelector((state: RootState) => state.shows.stationShows);
@@ -51,6 +66,10 @@ function NewPromotionModal() {
       expiryDate: new Date(expiryDate).toISOString(),
       showId: selectedShow,
       type: promotionType,
+      numberOfBeneficiaries:
+        promotionType === PromotionType.FIXED_SHOW_WINNING
+          ? numberOfBeneficiaries
+          : undefined,
     };
     const res = await dispatch(createNewPromotion(data));
     if (createNewPromotion.fulfilled.match(res)) {
@@ -115,23 +134,29 @@ function NewPromotionModal() {
           </div>
 
           <div className="mb-6">
-            <label className="block text-sm font-medium mb-2 text-gray-300">
-              Type of Promotion <span className="text-red-400 ">*</span>
-            </label>
-            <select
-              id="promotionType"
-              value={promotionType}
-              onChange={(e) => setPromotionType(e.target.value)}
-              className="w-full pl-3 pr-3 py-3 bg-gray-700 border border-gray-600 rounded-lg text-gray-200 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-transparent transition-all duration-200"
-            >
-              <option value="">Select Promotion type</option>
-              {promotionTypes?.map((show) => (
-                <option key={show} value={show}>
-                  {show}
-                </option>
-              ))}
-            </select>
+            <Select 
+            label="Promotion Type"
+            options={promoTypes}
+            value={promotionType}
+            onChange={setPromotionType}
+
+            />
           </div>
+
+        {
+          promotionType === PromotionType.FIXED_SHOW_WINNING && (
+            <div className="mb-6">
+            <Input
+              label="Number of Beneficiaries"
+              required
+              value={numberOfBeneficiaries}
+              onChange={(e) => setNumberOfBeneficiaries(Number(e))}
+              type="number"
+              Icon={Users2}
+            />
+          </div>
+          )
+        }
 
           <div className="mb-6">
             <label className="block text-sm font-medium mb-2 text-gray-300">
