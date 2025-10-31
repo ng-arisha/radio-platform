@@ -25,7 +25,6 @@ const daysOfWeek = [
 function NewShow({role}:{role:string}) {
   const newStationModal = useRef<HTMLDialogElement>(null);
   const [showName, setShowName] = useState("");
-  const [code, setCode] = useState("");
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
   const [selectedStation, setSelectedStation] = useState("");
@@ -65,13 +64,12 @@ function NewShow({role}:{role:string}) {
   };
 
   const handleNewShow = async () => {
-    if (!showName || !code || !startTime || !endTime || activedays.length === 0) {
+    if (!showName || !startTime || !endTime || activedays.length === 0) {
       toast.error("Please fill in all required fields.");
       return;
     }
     const data = {
       name: showName,
-      code,
       startTime,
       endTime,
       stationId: role ===UserRole.MEDIA_HOUSE ? selectedStation: params.stationId,
@@ -83,7 +81,6 @@ function NewShow({role}:{role:string}) {
       closeModal();
       // reset fields
       setShowName("");
-      setCode("");
       setStartTime("");
       setEndTime("");
     }
@@ -142,16 +139,7 @@ function NewShow({role}:{role:string}) {
             />
           </div>
 
-          <div className="mb-6">
-            <Input
-              label="Show Code"
-              required
-              value={code}
-              onChange={setCode}
-              placeholder="Enter show code"
-              type="text"
-            />
-          </div>
+         
           <div className="flex justify-between gap-4 mb-6 w-full">
             <div className="w-full">
               <Input

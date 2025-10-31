@@ -85,7 +85,6 @@ export const createNewShow = createAsyncThunk(
   async (
     data: {
       name: string;
-      code: string;
       startTime: string;
       endTime: string;
       stationId: string;
