@@ -89,6 +89,7 @@ export const createNewShow = createAsyncThunk(
       startTime: string;
       endTime: string;
       stationId: string;
+      activeDays: string[];
     },
     { rejectWithValue, getState }
   ) => {

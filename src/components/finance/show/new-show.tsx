@@ -12,6 +12,16 @@ import { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 
+const daysOfWeek = [
+  "Sunday",
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
+]
+
 function NewShow({role}:{role:string}) {
   const newStationModal = useRef<HTMLDialogElement>(null);
   const [showName, setShowName] = useState("");
@@ -19,6 +29,15 @@ function NewShow({role}:{role:string}) {
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
   const [selectedStation, setSelectedStation] = useState("");
+  const [activedays, setActiveDays] = useState<string[]>([]);
+
+  const onSelectDay = (day: string) => {
+    if (activedays.includes(day)) {
+      setActiveDays(activedays.filter((d) => d !== day));
+    } else {
+      setActiveDays([...activedays, day]);
+    }
+  }
 
   const stationsData = useSelector(
       (state: RootState) => state.media.stationSummary
@@ -46,7 +65,7 @@ function NewShow({role}:{role:string}) {
   };
 
   const handleNewShow = async () => {
-    if (!showName || !code || !startTime || !endTime) {
+    if (!showName || !code || !startTime || !endTime || activedays.length === 0) {
       toast.error("Please fill in all required fields.");
       return;
     }
@@ -56,6 +75,7 @@ function NewShow({role}:{role:string}) {
       startTime,
       endTime,
       stationId: role ===UserRole.MEDIA_HOUSE ? selectedStation: params.stationId,
+      activeDays: activedays,
     };
     const res = await dispatch(createNewShow(data));
     console.log(res);
@@ -154,6 +174,26 @@ function NewShow({role}:{role:string}) {
               />
             </div>
           </div>
+          <div>
+            <label className="block text-md font-medium text-gray-300 mb-2">
+              Active Days
+            </label>
+          </div>
+          <div className="grid grid-cols-7 gap-4 mt-2 mb-6">
+              {daysOfWeek.map((day,index) => (
+                <div
+                  key={index}
+                  onClick={() => onSelectDay(day)}
+                  className={` rounded-lg flex items-center justify-center h-12 w-12 cursor-pointer  transition-all ${
+                    activedays.includes(day)
+                      ? "bg-orange-400 text-gray-50"
+                      : "bg-gray-700 text-gray-200 hover:bg-gray-700/80"
+                  }`}
+                >
+                  {day.slice(0, 3)}
+                </div>
+              ))}
+            </div>
           <div className="w-full flex justify-center items-center">
             {
               loading === 'pending' ? (
