@@ -83,6 +83,7 @@ function NewShow({role}:{role:string}) {
       setShowName("");
       setStartTime("");
       setEndTime("");
+      setActiveDays([]);
     }
   };
   return (
