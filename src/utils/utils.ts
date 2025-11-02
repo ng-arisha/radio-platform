@@ -1,4 +1,4 @@
-import { AwardIcon, DollarSign, Gift, House, Info, Radio, RadioTower, Receipt, Settings, TrendingUp, Tv, Users, Wallet } from "lucide-react";
+import { AwardIcon, DollarSign, Gift, House, Info, NewspaperIcon, Radio, RadioTower, Receipt, Settings, TrendingUp, Tv, Users, Wallet } from "lucide-react";
 
 
 export const isClient = typeof window !== "undefined";
@@ -208,11 +208,16 @@ export const sidebarLinks = [
     path: "/transactions",
     icon: Receipt,
   },
-  // {
-  //   label: "Reports",
-  //   path: "/reports",
-  //   icon: BarChart3,
-  // },
+  {
+    label: "Reports",
+    path: "/reports",
+    icon: NewspaperIcon,
+    children: [
+      { label: "Revenue Reports", path: "/reports/revenue" },
+      { label: "Payout Reports", path: "/reports/payouts" },
+      { label: "Bonus Reports", path: "/reports/bonuses" },
+    ]
+  },
   {
     label: "Settings",
     path: "/settings",

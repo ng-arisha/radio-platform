@@ -8,6 +8,7 @@ import { financeReducer } from "./finance/finance";
 import { masterReducer } from "./master/master";
 import { mediaReducer } from "./media/media";
 import { promotionReducer } from "./promotions/promotion";
+import { revenueReducer } from "./revenue/revenue";
 import { showReducer } from "./shows/shows";
 import { stationReducer } from "./stations/stations";
 import { statsReducer } from "./stats/stats";
@@ -56,7 +57,9 @@ export const store = configureStore({
         promotions: promotionReducer,
         master:masterReducer,
         commission:commissionReducer,
-        transactions:transactionReducer
+        transactions:transactionReducer,
+        revenue: revenueReducer
+
     },
     middleware:(getDefaultMiddleware)=>getDefaultMiddleware({
         serializableCheck:{
