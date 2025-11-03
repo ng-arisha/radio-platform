@@ -3,7 +3,7 @@
 import { createNewPromotion } from "@/lib/promotions/promotion";
 import { getShowInStation } from "@/lib/shows/shows";
 import { AppDispatch, RootState } from "@/lib/store";
-import { PromotionType } from "@/utils/utils";
+import { PromoType } from "@/utils/utils";
 import { CalendarPlusIcon, Gift, Plus, SunIcon, Users2, Wallet, X } from "lucide-react";
 import { useParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
@@ -67,7 +67,7 @@ function NewPromotionModal() {
       showId: selectedShow,
       type: promotionType,
       numberOfBeneficiaries:
-        promotionType === PromotionType.FIXED_SHOW_WINNING
+        promotionType === PromoType.FIXED_SHOW_WINNING
           ? numberOfBeneficiaries
           : undefined,
     };
@@ -144,7 +144,7 @@ function NewPromotionModal() {
           </div>
 
         {
-          promotionType === PromotionType.FIXED_SHOW_WINNING && (
+          promotionType === PromoType.FIXED_SHOW_WINNING && (
             <div className="mb-6">
             <Input
               label="Number of Beneficiaries"

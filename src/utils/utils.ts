@@ -23,7 +23,7 @@ export enum UserRole {
   STATION_ADMIN = "station-admin",
   PRESENTER = "presenter",
 }
-export enum PromotionType {
+export enum PromoType {
   FIXED_SHOW_WINNING = "fixed_show_winning",
   SHOW_GIVEAWAY = "show_giveaway",
 }

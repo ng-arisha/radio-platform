@@ -63,6 +63,7 @@ export const editPromotion = createAsyncThunk(
       expiryDate?: string;
       showId?: string;
       type?: string;
+      numberOfBeneficiaries?: number;
     },
     { rejectWithValue, getState }
   ) => {
@@ -79,6 +80,7 @@ export const editPromotion = createAsyncThunk(
         expiryDate: data.expiryDate,
         showId: data.showId,
         type: data.type,
+        numberOfBeneficiaries: data.numberOfBeneficiaries,
       }),
     });
     if (!response.ok) {

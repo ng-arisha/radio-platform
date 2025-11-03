@@ -2,11 +2,25 @@
 
 import Button from "@/components/shared/button";
 import Input from "@/components/shared/input";
+import Select from "@/components/shared/reusable-select-input";
 import { editPromotion } from "@/lib/promotions/promotion";
 import { AppDispatch, RootState } from "@/lib/store";
-import { CalendarPlusIcon, Edit, Gift, SunIcon, Wallet, X } from "lucide-react";
+import { PromoType } from "@/utils/utils";
+import { CalendarPlusIcon, Edit, Gift, SunIcon, Users2, Wallet, X } from "lucide-react";
 import { useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+
+const promoTypes = [
+  {
+    label:"Show Giveaway",
+    value:"show_giveaway"
+  },
+  {
+    label:"Fixed Show Winning",
+    value:"fixed_show_winning"
+  },
+  
+]
 
 function EditPromotionModal({ promotion }: { promotion: PromotionType }) {
   const editPromotionModal = useRef<HTMLDialogElement>(null);
@@ -18,6 +32,8 @@ function EditPromotionModal({ promotion }: { promotion: PromotionType }) {
   );
   const [selectedShow, setSelectedShow] = useState(promotion.show._id);
   const [promotionType, setPromotionType] = useState(promotion.type);
+  const [numberOfBeneficiaries, setNumberOfBeneficiaries] = useState(1);
+ 
 
   const dispatch = useDispatch<AppDispatch>();
   const loading = useSelector((state: RootState) => state.promotions.loading);
@@ -102,23 +118,29 @@ function EditPromotionModal({ promotion }: { promotion: PromotionType }) {
             </div>
 
             <div className="mb-6">
-              <label className="block text-sm font-medium mb-2 text-gray-300">
-                Type of Promotion <span className="text-red-400 ">*</span>
-              </label>
-              <select
-                id="promotionType"
-                value={promotionType}
-                onChange={(e) => setPromotionType(e.target.value)}
-                className="w-full pl-3 pr-3 py-3 bg-gray-700 border border-gray-600 rounded-lg text-gray-200 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-transparent transition-all duration-200"
-              >
-                <option value="">Select Promotion type</option>
-                {promotionTypes?.map((show) => (
-                  <option key={show} value={show}>
-                    {show}
-                  </option>
-                ))}
-              </select>
-            </div>
+            <Select 
+            label="Promotion Type"
+            options={promoTypes}
+            value={promotionType ?? promoTypes[0].value}
+            onChange={setPromotionType}
+
+            />
+          </div>
+
+        {
+          promotionType === PromoType.FIXED_SHOW_WINNING && (
+            <div className="mb-6">
+            <Input
+              label="Number of Beneficiaries"
+              required
+              value={numberOfBeneficiaries}
+              onChange={(e) => setNumberOfBeneficiaries(Number(e))}
+              type="number"
+              Icon={Users2}
+            />
+          </div>
+          )
+        }
             <div>
               {loading === "pending" ? (
                 <SunIcon
