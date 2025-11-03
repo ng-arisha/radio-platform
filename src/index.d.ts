@@ -225,3 +225,20 @@ declare type ShowCommissionType = {
   commissionRate:number;
   totalCommission:number
 }
+
+declare type DetailedMasterTransactionsType = {
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+  data: {
+    date:string;
+    mediaHouse:string;
+    station:string;
+    paybill:string;
+    deposits:number;
+    payouts:number;
+    net:number;
+    participants:number
+  }[];
+}

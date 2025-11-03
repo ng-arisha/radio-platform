@@ -2,63 +2,67 @@
 
 import ReusableLoader from "@/components/shared/reusable-loader";
 import Select from "@/components/shared/reusable-select-input";
-import { getMasterLineRevenueData } from "@/lib/revenue/revenue";
+import { getMasterMediaHouseevenueBarGraphData } from "@/lib/revenue/revenue";
 import { AppDispatch, RootState } from "@/lib/store";
 import { formatCurrency, timeRanges } from "@/utils/utils";
 import { Filter } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
+    Bar,
+    BarChart,
     CartesianGrid,
-    Legend,
-    Line,
-    LineChart,
+    Cell,
     ResponsiveContainer,
     Tooltip,
     XAxis,
     YAxis,
 } from "recharts";
 
-
-
-function MasterrevenueLineGraphReport() {
+function MasterMediaHouseBarGhraphRevenue() {
   const dispatch = useDispatch<AppDispatch>();
+  const loading = useSelector(
+    (state: RootState) => state.revenue.loadinMasterMediaHouseBardata
+  );
+  const barGraphData = useSelector(
+    (state: RootState) => state.revenue.masterMediaHouseBarGraphData
+  );
   const [selectedRange, setSelectedRange] = useState<string>(
     timeRanges[2].value
   );
-  const loading = useSelector(
-    (state: RootState) => state.revenue.loadMasterLineRevenueData
-  );
-  const lineData = useSelector(
-    (state: RootState) => state.revenue.masterLineRevenueData
-  );
-  const handleFetchNasterRevenueLineData = async (range: string) => {
-    dispatch(getMasterLineRevenueData({ range }));
+  const fetchMastrMediaHouseBarData = async (range: string) => {
+    dispatch(getMasterMediaHouseevenueBarGraphData({ range }));
   };
   useEffect(() => {
-    handleFetchNasterRevenueLineData(selectedRange);
+    fetchMastrMediaHouseBarData(selectedRange);
   }, [selectedRange]);
   return (
-    <div>
+    <div className="mt-6">
       {loading === "pending" ? (
         <ReusableLoader />
       ) : (
         <div className="bg-gray-750 p-6 rounded-lg border border-gray-700">
-          <div className="flex justify-between items-center mb-4">
-            <h3 className="text-lg font-semibold text-white ">
-              Revenue Trends Over Time
-            </h3>
-            <Select
+         <div className="flex justify-between items-center mb-4">
+         <h3 className="text-lg font-semibold text-white ">
+            Revenue by Media House
+          </h3>
+          <Select
               value={selectedRange}
               onChange={setSelectedRange}
               options={timeRanges}
               Icon={Filter}
             />
-          </div>
+         </div>
           <ResponsiveContainer width="100%" height={300}>
-            <LineChart data={lineData}>
+            <BarChart data={barGraphData}>
               <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
-              <XAxis dataKey="label" stroke="#9ca3af" />
+              <XAxis
+                dataKey="name"
+                stroke="#9ca3af"
+                angle={-45}
+                textAnchor="end"
+                height={80}
+              />
               <YAxis
                 stroke="#9ca3af"
                 tickFormatter={(value) => `${value / 1000000}M`}
@@ -72,29 +76,12 @@ function MasterrevenueLineGraphReport() {
                 labelStyle={{ color: "#f3f4f6" }}
                 formatter={(value) => formatCurrency(Number(value))}
               />
-              <Legend />
-              <Line
-                type="monotone"
-                dataKey="deposits"
-                stroke="#3b82f6"
-                strokeWidth={2}
-                name="Deposits"
-              />
-              <Line
-                type="monotone"
-                dataKey="payouts"
-                stroke="#ef4444"
-                strokeWidth={2}
-                name="Payouts"
-              />
-              <Line
-                type="monotone"
-                dataKey="net"
-                stroke="#10b981"
-                strokeWidth={2}
-                name="Net Revenue"
-              />
-            </LineChart>
+              <Bar dataKey="value" name="Revenue">
+                {barGraphData.map((entry, index) => (
+                  <Cell key={`cell-${index}`} fill={entry.color} />
+                ))}
+              </Bar>
+            </BarChart>
           </ResponsiveContainer>
         </div>
       )}
@@ -102,4 +89,4 @@ function MasterrevenueLineGraphReport() {
   );
 }
 
-export default MasterrevenueLineGraphReport;
+export default MasterMediaHouseBarGhraphRevenue;

@@ -67,6 +67,24 @@ export const transactionsType = [
       value: "bonus",
   }
 ]
+export const timeRanges = [
+  {
+    label: "Daily",
+    value: "daily",
+  },
+  {
+    label: "Weekly",
+    value: "weekly",
+  },
+  {
+    label: "Monthly",
+    value: "monthly",
+  },
+  {
+    label: "Yearly",
+    value: "yearly",
+  },
+];
 export const formatCurrency=(amount:number)=>{
   return new Intl.NumberFormat('en-TZ',{
       style:'currency',
