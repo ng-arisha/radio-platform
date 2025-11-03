@@ -145,6 +145,36 @@ export const updateShow = createAsyncThunk(
   }
 );
 
+export const changeShowStatus = createAsyncThunk(
+  "shows/changeShowStatus",
+  async (
+    data: {
+      id: string;
+      status: string;
+      
+    },
+    { rejectWithValue, getState }
+  ) => {
+    const state = getState() as { auth: { token: string } };
+    const response = await fetch(`${BASE_URL}/show/status/${data.id}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${state.auth.token}`,
+      },
+      body: JSON.stringify({
+        status: data.status,
+      }),
+    });
+    if (!response.ok) {
+      const errorData = await response.json();
+      return rejectWithValue(errorData.message);
+    }
+    const showData = await response.json();
+    return showData;
+  }
+);
+
 export const getShowStats = createAsyncThunk(
   "shows/getShowStats",
   async (data: { id: string }, { rejectWithValue, getState }) => {
@@ -530,6 +560,25 @@ const showSlice = createSlice({
       state.allShows = action.payload;
     });
     builder.addCase(getAllShows.rejected, (state) => {
+      state.loading = "failed";
+    });
+
+    // Change Show Status
+    builder.addCase(changeShowStatus.pending, (state) => {
+      state.loading = "pending";
+    });
+    builder.addCase(changeShowStatus.fulfilled, (state, action) => {
+      state.loading = "succeeded";
+      // Update the show status in stationShows
+      const index = state.stationShows.findIndex(
+        (show) => show._id === action.payload._id
+      );
+      if (index !== -1) {
+        state.stationShows[index] = action.payload;
+      }
+      toast.success("Show status updated successfully!");
+    });
+    builder.addCase(changeShowStatus.rejected, (state) => {
       state.loading = "failed";
     });
   },

@@ -47,7 +47,7 @@ function PowerOnOrOffStation({ station }: { station: StationType }) {
         <div className="modal-box">
           <h3 className="font-medium text-lg">Station Status Upadate!</h3>
           {station.status === "active" ? (
-            <div className="text-red-500">Are you sure you want to Deactivate ${station.name}?</div>
+            <div className="text-red-500">Are you sure you want to Deactivate {station.name}?</div>
           ) : (
             <div>You are about to reactivate ${station.name}</div>
           )}

@@ -5,22 +5,14 @@ import Input from "@/components/shared/input";
 import { getStationSummary } from "@/lib/media/media";
 import { createNewShow } from "@/lib/shows/shows";
 import { AppDispatch, RootState } from "@/lib/store";
-import { UserRole } from "@/utils/utils";
+import { daysOfWeek, UserRole } from "@/utils/utils";
 import { Plus, Radio, SunIcon, X } from "lucide-react";
 import { useParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 
-const daysOfWeek = [
-  "Sunday",
-  "Monday",
-  "Tuesday",
-  "Wednesday",
-  "Thursday",
-  "Friday",
-  "Saturday",
-]
+
 
 function NewShow({role}:{role:string}) {
   const newStationModal = useRef<HTMLDialogElement>(null);

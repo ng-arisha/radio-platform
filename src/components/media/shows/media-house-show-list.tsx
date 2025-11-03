@@ -2,9 +2,10 @@
 
 import ViewShowDetails from "@/components/finance/show/view-show-details";
 import ReusableLoader from "@/components/shared/reusable-loader";
+import ChangeShowStatusModal from "@/components/shows/change-show-status-modal";
 import { getMediaHouseShows } from "@/lib/shows/shows";
 import { AppDispatch, RootState } from "@/lib/store";
-import { Clock, Power, Radio, Users } from "lucide-react";
+import { Clock, Radio, Users } from "lucide-react";
 import { useParams } from "next/navigation";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -44,7 +45,7 @@ function MediaHouseShowsList() {
                       Show Name
                     </th>
                     <th className="px-6 py-4 text-left text-xs font-semibold text-gray-300 uppercase tracking-wider">
-                      Code
+                      Days
                     </th>
                     <th className="px-6 py-4 text-left text-xs font-semibold text-gray-300 uppercase tracking-wider">
                       Time Slot
@@ -79,7 +80,7 @@ function MediaHouseShowsList() {
                       </td>
                       <td className="px-6 py-4">
                         <span className="text-gray-300 font-mono text-sm">
-                          {show.code}
+                          {/* days display to go here */}
                         </span>
                       </td>
                       <td className="px-6 py-4">
@@ -125,20 +126,7 @@ function MediaHouseShowsList() {
                           {/* view details */}
                           <ViewShowDetails show={show} purpose="view" />
                           <ViewShowDetails show={show} purpose="edit" />
-                          <button
-                            className={`p-2 rounded-lg transition-colors ${
-                              show.status === "Active"
-                                ? "text-red-400 hover:bg-red-900"
-                                : "text-green-400 hover:bg-green-900"
-                            }`}
-                            title={
-                              show.status === "Active"
-                                ? "Disable Show"
-                                : "Enable Show"
-                            }
-                          >
-                            <Power size={18} />
-                          </button>
+                          <ChangeShowStatusModal show={show} />
                         </div>
                       </td>
                     </tr>

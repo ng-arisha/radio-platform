@@ -13,6 +13,16 @@ export enum PromotionType {
   FIXED_SHOW_WINNING = 'fixed_show_winning',
   SHOW_GIVEAWAY = 'show_giveaway',
 }
+
+export const daysOfWeek = [
+  "Sunday",
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
+]
 export  const timeFilters = [
   {
       label: "30 Minutes",

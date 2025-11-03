@@ -5,7 +5,7 @@ import Input from "@/components/shared/input";
 import TextColumn from "@/components/shared/text-column";
 import { updateShow } from "@/lib/shows/shows";
 import { AppDispatch, RootState } from "@/lib/store";
-import { formatDate } from "@/utils/utils";
+import { daysOfWeek, formatDate } from "@/utils/utils";
 import { Edit, Eye, Radio, SunIcon, X } from "lucide-react";
 import { useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -24,6 +24,16 @@ function ViewShowDetails({
   const [endTime, setEndTime] = useState(show.endTime);
   const loading = useSelector((state: RootState) => state.shows.updatingShow);
   const dispatch = useDispatch<AppDispatch>();
+
+  const [activedays, setActiveDays] = useState<string[]>([]);
+
+  const onSelectDay = (day: string) => {
+    if (activedays.includes(day)) {
+      setActiveDays(activedays.filter((d) => d !== day));
+    } else {
+      setActiveDays([...activedays, day]);
+    }
+  }
   const openModal = () => {
     if (viewShowDetailsModal.current) {
       viewShowDetailsModal.current.showModal();
@@ -109,14 +119,14 @@ function ViewShowDetails({
                   Icon={Radio}
                 />
               </div>
-              <div className="mb-6">
+              {/* <div className="mb-6">
                 <Input
                   label="Show Code"
                   value={code}
                   onChange={setCode}
                   type="text"
                 />
-              </div>
+              </div> */}
               <div className="flex justify-between gap-4 mb-6 w-full">
                 <div className="w-full">
                   <Input
@@ -135,6 +145,21 @@ function ViewShowDetails({
                   />
                 </div>
               </div>
+              <div className="grid grid-cols-7 gap-4 mt-2 mb-6">
+              {daysOfWeek.map((day,index) => (
+                <div
+                  key={index}
+                  onClick={() => onSelectDay(day)}
+                  className={` rounded-lg flex items-center justify-center h-12 w-12 cursor-pointer  transition-all ${
+                    activedays.includes(day)
+                      ? "bg-orange-400 text-gray-50"
+                      : "bg-gray-700 text-gray-200 hover:bg-gray-700/80"
+                  }`}
+                >
+                  {day.slice(0, 3)}
+                </div>
+              ))}
+            </div>
               <div className="flex justify-center items-center w-full">
                 {loading === "pending" ? (
                   <SunIcon className="animate-spin text-gray-400" size={20} />
