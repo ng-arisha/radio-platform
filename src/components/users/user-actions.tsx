@@ -1,8 +1,6 @@
 "use client";
 
-import { Download } from "lucide-react";
 import { useState } from "react";
-import Button from "../shared/button";
 
 function UserActions() {
     const dateFilters = [
@@ -32,12 +30,12 @@ function UserActions() {
                 ))}
               </select>
 
-              <Button 
+              {/* <Button 
               onClick={handleExport}
               className="flex space-x-2 items-center cursor-pointer" variant="secondary">
                 <Download size={16} />
                 <span>Export</span>
-              </Button>
+              </Button> */}
         </div>
     )
 }

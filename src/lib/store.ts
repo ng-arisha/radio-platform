@@ -58,7 +58,7 @@ export const store = configureStore({
         master:masterReducer,
         commission:commissionReducer,
         transactions:transactionReducer,
-        revenue: revenueReducer
+        revenue: revenueReducer,
 
     },
     middleware:(getDefaultMiddleware)=>getDefaultMiddleware({

@@ -8,6 +8,14 @@ interface InitialUserState {
   mediahouseUsers: UserType[];
   presenterUsers: UserType[];
   stationAdminUsers: UserType[];
+  userDistribution: {
+    date: string;
+    mediaHouse: number;
+    stationAdmin: number;
+    presenter: number;
+    customerCare: number;
+    financeOfficer: number;
+  }[];
 }
 
 const initialState: InitialUserState = {
@@ -16,6 +24,7 @@ const initialState: InitialUserState = {
   mediahouseUsers: [],
   presenterUsers: [],
   stationAdminUsers: [],
+  userDistribution: [],
 };
 
 export const getMediaHouseUsers = createAsyncThunk(
@@ -103,25 +112,25 @@ export const createMediaHouseUser = createAsyncThunk(
     { rejectWithValue, getState }
   ) => {
     const state = getState() as { auth: { token: string } };
-      const response = await fetch(`${BASE_URL}/user/${data.path}`, {
-        method: "POST",
-        headers: {
-          "content-type": "application/json",
-          Authorization: `Bearer ${state.auth.token}`,
-        },
-        body: JSON.stringify({
-          fullName: data.fullName,
-          email: data.email,
-          phoneNumber: data.phoneNumber,
-          showId: data.showId,
-        }),
-      });
-      if (!response.ok) {
-        const errorData = await response.json();
-        return rejectWithValue(errorData.message);
-      }
-      const responseData = await response.json();
-      return responseData;
+    const response = await fetch(`${BASE_URL}/user/${data.path}`, {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+        Authorization: `Bearer ${state.auth.token}`,
+      },
+      body: JSON.stringify({
+        fullName: data.fullName,
+        email: data.email,
+        phoneNumber: data.phoneNumber,
+        showId: data.showId,
+      }),
+    });
+    if (!response.ok) {
+      const errorData = await response.json();
+      return rejectWithValue(errorData.message);
+    }
+    const responseData = await response.json();
+    return responseData;
   }
 );
 
@@ -190,6 +199,28 @@ export const deleteUser = createAsyncThunk(
     } catch (error) {
       return rejectWithValue((error as Error).message);
     }
+  }
+);
+
+export const getUserDistribution = createAsyncThunk(
+  "user/getUserDistribution",
+  async (_, { rejectWithValue, getState }) => {
+    const state = getState() as { auth: { token: string } };
+    console.log(`Tone: ${state.auth.token}`);
+    const response = await fetch(`${BASE_URL}/user/user-distribution`, {
+      method: "GET",
+      headers: {
+        "content-type": "application/json",
+        Authorization: `Bearer ${state.auth.token}`,
+      },
+    });
+    if (!response.ok) {
+      const errorData = await response.json();
+      return rejectWithValue(errorData.message);
+    }
+    const responseData = await response.json();
+    console.log("Station Details Response:", responseData);
+    return responseData;
   }
 );
 const userSlice = createSlice({
@@ -292,6 +323,17 @@ const userSlice = createSlice({
     builder.addCase(deleteUser.rejected, (state, { payload }) => {
       state.addingUser = "failed";
       toast.error((payload as string) || "Failed to delete user");
+    });
+
+    builder.addCase(getUserDistribution.pending, (state) => {
+      state.loading = "pending";
+    });
+    builder.addCase(getUserDistribution.fulfilled, (state, action) => {
+      state.loading = "succeeded";
+      state.userDistribution = action.payload;
+    });
+    builder.addCase(getUserDistribution.rejected, (state) => {
+      state.loading = "failed";
     });
   },
 });

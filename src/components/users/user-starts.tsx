@@ -7,7 +7,7 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Stats from "../shared/stats";
 import ActivitySummary from "./activity-summary";
-import UserGraphs from "./user-graphs";
+import UsersDistributionGraph from "./users-distribution-graph";
 
 function UserStats() {
    const loading = useSelector((state: RootState) => state.users.loading);
@@ -62,7 +62,7 @@ function UserStats() {
             }
 
             <div className="mt-3">
-            <UserGraphs distributionData={distributionData} />
+          <UsersDistributionGraph />
             </div>
             <div className="my-3">
             <ActivitySummary statusData={statusData} />

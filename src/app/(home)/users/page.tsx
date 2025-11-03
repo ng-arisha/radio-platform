@@ -1,4 +1,3 @@
-import UserActions from "@/components/users/user-actions";
 import UserStats from "@/components/users/user-starts";
 
 function UsersPage() {
@@ -13,7 +12,7 @@ function UsersPage() {
             Monitor user distribution, trends, and activity across the platform
           </p>
         </div>
-        <UserActions />
+        {/* <UserActions /> */}
       </div>
       <UserStats />
     

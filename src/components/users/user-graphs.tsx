@@ -1,4 +1,4 @@
-import { growthData } from "@/utils/utils";
+import { transformToNameValueArray } from "@/utils/utils";
 import { Area, AreaChart, CartesianGrid, Cell, Legend, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
 
@@ -29,7 +29,12 @@ const CustomTooltip:React.FC<TooltipProps> = ({ active, payload }) => {
   };
 
 
-function UserGraphs({distributionData}: {distributionData: { name: string; value: number; color: string }[]}) {
+function UserGraphs({distributionData}: {distributionData: { mediaHouse: number; stationAdmin: number; presenter: number;customerCare:number; financeOfficer: number }[]}) {
+  console.log('distributionData', distributionData);
+  const modifiedDistributionData = transformToNameValueArray(distributionData)
+
+  console.log('modifiedDistributionData', modifiedDistributionData);
+
     return (
         <div className="grid grid-1 md:grid-cols-2 gap-4">
             {/* pie chart */}
@@ -38,7 +43,7 @@ function UserGraphs({distributionData}: {distributionData: { name: string; value
           <ResponsiveContainer width="100%" height={280}>
             <PieChart>
               <Pie
-                data={distributionData}
+                data={modifiedDistributionData}
                 cx="50%"
                 cy="50%"
                 innerRadius={60}
@@ -46,7 +51,7 @@ function UserGraphs({distributionData}: {distributionData: { name: string; value
                 paddingAngle={2}
                 dataKey="value"
               >
-                {distributionData.map((entry, index) => (
+                {modifiedDistributionData.map((entry, index) => (
                   <Cell key={`cell-${index}`} fill={entry.color} />
                 ))}
               </Pie>
@@ -54,8 +59,8 @@ function UserGraphs({distributionData}: {distributionData: { name: string; value
             </PieChart>
           </ResponsiveContainer>
           <div className="mt-4 space-y-2">
-            {distributionData.map((item, index) => {
-              const total = distributionData.reduce((sum, i) => sum + i.value, 0);
+            {modifiedDistributionData.map((item, index) => {
+              const total = modifiedDistributionData.reduce((sum, i) => sum + i.value, 0);
               const percentage = ((item.value / total) * 100).toFixed(1);
               return (
                 <div key={index} className="flex items-center justify-between text-sm">
@@ -74,7 +79,7 @@ function UserGraphs({distributionData}: {distributionData: { name: string; value
         <div className="bg-gray-800 rounded-lg p-6 shadow-lg border border-gray-700 ">
           <h2 className="text-lg font-bold text-white mb-4">Player Growth Over Time</h2>
           <ResponsiveContainer width="100%" height={280}>
-            <AreaChart data={growthData}>
+            <AreaChart data={distributionData}>
               <defs>
                 <linearGradient id="colorMedia" x1="0" y1="0" x2="0" y2="1">
                   <stop offset="5%" stopColor="#8b5cf6" stopOpacity={0.3}/>

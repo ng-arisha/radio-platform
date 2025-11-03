@@ -397,14 +397,36 @@ export const insightCards = {
 
 export const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
-export const growthData = [
-  { date: 'Week 1', mediaHouse: 20, stationAdmins: 58, presenters: 950 },
-  { date: 'Week 2', mediaHouse: 21, stationAdmins: 60, presenters: 1020 },
-  { date: 'Week 3', mediaHouse: 22, stationAdmins: 62, presenters: 1095 },
-  { date: 'Week 4', mediaHouse: 23, stationAdmins: 64, presenters: 1150 },
-  { date: 'Week 5', mediaHouse: 24, stationAdmins: 65, presenters: 1191 }
-];
 
+
+export function transformToNameValueArray(data: { mediaHouse: number; stationAdmin: number; presenter: number;customerCare:number; financeOfficer: number }[]) {
+  const totals: Record<string, number> = {};
+
+  // Step 1: Compute totals for each role
+  for (const week of data) {
+    for (const [key, value] of Object.entries(week)) {
+      if (key === 'date') continue;
+      totals[key] = (totals[key] || 0) + (value as number);
+    }
+  }
+
+  // Step 2: Define color mapping for each role
+  const roleColors: Record<string, string> = {
+    mediaHouse: '#8b5cf6',
+    stationAdmin: '#3b82f6',
+    presenter: '#10b981',
+    customerCare: '#f59e0b',
+    financeOfficer: '#ef4444',
+    admin: '#6b7280', // gray for admin or others
+  };
+
+  // Step 3: Transform into { name, value, color } array
+  return Object.entries(totals).map(([name, value]) => ({
+    name,
+    value,
+    color: roleColors[name] || '#6b7280', // fallback color
+  }));
+}
 export const activityData: ActivityItemType[] = [
   { id: 1, name: 'John Mwangi', action: 'Joined', time: '2 mins ago', role: 'Presenter', color: '#10b981' },
   { id: 2, name: 'Jane Otieno', action: 'Updated show', time: '10 mins ago', role: 'Station Admin', color: '#3b82f6' },
