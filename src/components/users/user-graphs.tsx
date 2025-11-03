@@ -116,7 +116,7 @@ function UserGraphs({
       {/* user growth over time */}
       <div className="bg-gray-800 rounded-lg p-6 shadow-lg border border-gray-700 ">
         <h2 className="text-lg font-bold text-white mb-4">
-          Player Growth Over Time
+          User Distribution
         </h2>
         <ResponsiveContainer width="100%" height={280}>
           <AreaChart data={distributionData}>
