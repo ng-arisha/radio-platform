@@ -15,10 +15,10 @@ function MediaHouseFinanceSummary() {
     (state: RootState) => state.media.mediaFinanceSummary
   );
 
-  const params = useParams<{ mediaIdd: string }>();
+  const params = useParams<{ mediaId: string }>();
   useEffect(() => {
-    dispatch(getMediaFinanceSummary({ id: params.mediaIdd }));
-  }, [dispatch, params.mediaIdd]);
+    dispatch(getMediaFinanceSummary({ id: params.mediaId }));
+  }, [dispatch, params.mediaId]);
   return (
     <div className="mt-4">
       {loading === "pending" ? (

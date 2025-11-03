@@ -9,7 +9,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 function MediaHouseInfo() {
-    const params = useParams<{ mediaIdd: string }>();
+    const params = useParams<{ mediaId: string }>();
     const dispatch = useDispatch<AppDispatch>();
     const loading = useSelector((state: RootState) => state.media.loading);
     const mediaHouse = useSelector((state: RootState) => state.media.mediaHouse);
@@ -24,8 +24,8 @@ function MediaHouseInfo() {
       }, []);
 
       useEffect(() => {
-          dispatch(getSingleMediaHouse({ id: params.mediaIdd }));
-        }, [dispatch, params.mediaIdd]);
+          dispatch(getSingleMediaHouse({ id: params.mediaId }));
+        }, [dispatch, params.mediaId]);
     return (
         <div>
       {loading === "pending" || mediaHouse === null ? (

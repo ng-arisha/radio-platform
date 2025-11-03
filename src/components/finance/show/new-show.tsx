@@ -41,10 +41,10 @@ function NewShow({role}:{role:string}) {
   const stationsData = useSelector(
       (state: RootState) => state.media.stationSummary
     );
-    const param = useParams<{ mediaIdd: string }>();
+    const param = useParams<{ mediaId: string }>();
   
     useEffect(() => {
-      dispatch(getStationSummary({ id: param.mediaIdd }));
+      dispatch(getStationSummary({ id: param.mediaId }));
     }, []);
 
   const loading = useSelector((state: RootState) => state.shows.loading);

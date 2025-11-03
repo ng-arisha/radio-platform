@@ -7,7 +7,7 @@ import MediaHouseFinanceDataTable from "@/components/media-house/media-station-f
 import { useParams } from "next/navigation"
 
 function MediaFinancePage() {
-  const param = useParams<{mediaIdd:string}>()
+  const param = useParams<{mediaId:string}>()
     return (
         <div>
            <div className="flex justify-between items-center">
@@ -20,8 +20,8 @@ function MediaFinancePage() {
 
         <MediaHouseFinanceSummary />
         <MediaHouseFinanceDataTable />
-        <MediaHouseRevenueByStation param={param.mediaIdd} />
-        <MediaPieChart param={param.mediaIdd}/>
+        <MediaHouseRevenueByStation param={param.mediaId} />
+        <MediaPieChart param={param.mediaId}/>
         </div>
     )
 }

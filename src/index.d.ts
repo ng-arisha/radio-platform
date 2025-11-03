@@ -49,6 +49,7 @@ declare type StationType = {
   name: string;
   address: string;
   frequency: string;
+  code:string
   status: string;
   createdAt: string;
   user: UserType;

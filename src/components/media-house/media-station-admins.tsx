@@ -14,10 +14,10 @@ function MediaStationAdmins() {
   const adminsData = useSelector(
     (state: RootState) => state.media.mediaStationAdmins
   );
-  const params = useParams<{ mediaIdd: string }>();
+  const params = useParams<{ mediaId: string }>();
 
   useEffect(() => {
-    dispatch(getMediaStationAdmins({ id: params.mediaIdd }));
+    dispatch(getMediaStationAdmins({ id: params.mediaId }));
   }, []);
   return (
     <div>

@@ -14,7 +14,7 @@ function MediaHouseSettings() {
     const loading = useSelector((state:RootState)=>state.media.loading);
     const mediaHouse = useSelector((state:RootState)=>state.media.mediaHouse);
     const dispatch = useDispatch<AppDispatch>();
-    const params = useParams<{mediaIdd:string}>();
+    const params = useParams<{mediaId:string}>();
 
     const [name,setName] =  useState(mediaHouse?.name ||"");
     const [address,setAddress] =  useState(mediaHouse?.address ||"");
@@ -23,7 +23,7 @@ function MediaHouseSettings() {
     const updatingMediaHouse = useSelector((state:RootState)=>state.media.loading);
     const handleUpdateSTation = async () => {
         const data = {
-          id: params.mediaIdd,
+          id: params.mediaId,
           name: name === "" ? mediaHouse?.name : name,
           address: address === "" ? mediaHouse?.address : address,
           
@@ -32,7 +32,7 @@ function MediaHouseSettings() {
       };
 
     useEffect(() => {
-        dispatch(getSingleMediaHouse({id:params.mediaIdd}))
+        dispatch(getSingleMediaHouse({id:params.mediaId}))
     }, [dispatch, params]);
     return (
         <div>

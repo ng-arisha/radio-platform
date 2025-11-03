@@ -1,11 +1,9 @@
 import { editStation } from "@/lib/stations/stations";
 import { AppDispatch, RootState } from "@/lib/store";
-import { useMutation } from "convex/react";
 import { Edit2, LocationEditIcon, Radio, Sun } from "lucide-react";
 import { useParams } from "next/navigation";
 import { useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { api } from "../../../convex/_generated/api";
 import Button from "../shared/button";
 import Input from "../shared/input";
 
@@ -15,14 +13,14 @@ function EditStationModal({station}:{station:StationType}) {
     const [address, setAddress] = useState(station.address);
     const [frequency, setFrequency] = useState(station.frequency);
     const [enabled, setEnabled] = useState(station.status);
-    const [isLoading, setIsLoading] = useState(false);
+    const [code, setCode] = useState(station.code);
     const loading = useSelector((state:RootState)=>state.stations.addingStation);
     const dispatch = useDispatch<AppDispatch>();
     const [selectedUser, setSelectedUser] = useState("");
     const stationUsers = useSelector((state:RootState)=>state.users.stationAdminUsers);
     const params = useParams<{ mediaId: string }>();
 
-    const updateStation = useMutation(api.stations.updateById);
+  
   const closeModal = () => {
     if (editStationModal.current) {
       editStationModal.current.close();
@@ -36,7 +34,7 @@ function EditStationModal({station}:{station:StationType}) {
   };
 
   const handleUpdateStation = async () => {
-    setIsLoading(true);
+   
     const data = {
         id:station._id,
         name: stationName,
@@ -110,6 +108,16 @@ function EditStationModal({station}:{station:StationType}) {
             label="Frequency"
             type="text"
             Icon={Radio}
+            required
+            />
+          </div>
+          <div className="my-3">
+            <Input 
+            value={code}
+            onChange={setCode}
+            label="Code"
+            type="text"
+          
             required
             />
           </div>

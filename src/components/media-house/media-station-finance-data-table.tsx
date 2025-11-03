@@ -18,10 +18,10 @@ function MediaHouseFinanceDataTable() {
     (state: RootState) => state.media.mediaStationFinancedata
   );
 
-  const params = useParams<{ mediaIdd: string }>();
+  const params = useParams<{ mediaId: string }>();
   useEffect(() => {
-    dispatch(getMediaStationFinanceData({ id: params.mediaIdd }));
-  }, [dispatch, params.mediaIdd]);
+    dispatch(getMediaStationFinanceData({ id: params.mediaId }));
+  }, [dispatch, params.mediaId]);
 
   const getUtilizationPercentage = (utilized:number, allocated:number) => {
     return ((utilized / allocated) * 100).toFixed(1);

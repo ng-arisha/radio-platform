@@ -41,11 +41,11 @@ function MediaHouseCommission() {
   const masterCommission = useSelector(
     (state: RootState) => state.commission.mediaCommission
   );
-  const params = useParams<{ mediaIdd: string }>();
+  const params = useParams<{ mediaId: string }>();
 
   const fetchMasterCommission = async (range: string) => {
     await dispatch(
-      getMediaHouseCommission({ range: range, id: params.mediaIdd })
+      getMediaHouseCommission({ range: range, id: params.mediaId })
     );
   };
 

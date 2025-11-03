@@ -7,13 +7,13 @@ import MediaPieChart from "./media-pie-chart";
 import MediaRevenueByShow from "./media-revenue-by-show";
 
 function MediaDisplay() {
-    const params = useParams<{ mediaIdd: string }>(); 
+    const params = useParams<{ mediaId: string }>(); 
     return (
         <div>
-            <MediaHouseDahboard param={params.mediaIdd} />
-            <MediaPieChart param={params.mediaIdd} />
-            <MediaHouseRevenueByStation param={params.mediaIdd} />
-            <MediaRevenueByShow param={params.mediaIdd} />
+            <MediaHouseDahboard param={params.mediaId} />
+            <MediaPieChart param={params.mediaId} />
+            <MediaHouseRevenueByStation param={params.mediaId} />
+            <MediaRevenueByShow param={params.mediaId} />
         </div>
     )
 }

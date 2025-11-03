@@ -12,10 +12,10 @@ function MediaShowPresenters() {
   const presenters = useSelector(
     (state: RootState) => state.media.mediaShowPresenters
   );
-  const params = useParams<{ mediaIdd: string }>();
+  const params = useParams<{ mediaId: string }>();
 
   useEffect(() => {
-    dispatch(getMediaStationShowPresenters({ id: params.mediaIdd }));
+    dispatch(getMediaStationShowPresenters({ id: params.mediaId }));
   }, []);
   return (
     <div>

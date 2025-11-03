@@ -118,6 +118,7 @@ export const stationDetails = createAsyncThunk(
       return rejectWithValue(errorData.message);
     }
     const responseData = await response.json();
+    console.log("Station Details Response:", responseData);
     return responseData;
   }
 );
@@ -230,6 +231,27 @@ export const getStationPresenters = createAsyncThunk(
         "content-type": "application/json",
         Authorization: `Bearer ${state.auth.token}`,
       },
+    });
+    if (!response.ok) {
+      const errorData = await response.json();
+      return rejectWithValue(errorData.message);
+    }
+    const responseData = await response.json();
+    return responseData;
+  }
+);
+
+export const updateStationStatus = createAsyncThunk(
+  "stations/updateStationStatus",
+  async (data:{id:string, status: string}, { rejectWithValue, getState }) => {
+    const state = getState() as { auth: { token: string } };
+    const response = await fetch(`${BASE_URL}/station/status/${data.id}`, {
+      method: "PATCH",
+      headers: {
+        "content-type": "application/json",
+        Authorization: `Bearer ${state.auth.token}`,
+      },
+      body: JSON.stringify({status:data.status}),
     });
     if (!response.ok) {
       const errorData = await response.json();
@@ -367,6 +389,25 @@ const stationSlice = createSlice({
       state.stationPresenters = action.payload;
     });
     builder.addCase(getStationPresenters.rejected, (state, { payload }) => {
+      state.loading = "failed";
+      toast.error(payload as string);
+    });
+
+    // Update Station Status
+    builder.addCase(updateStationStatus.pending, (state) => {
+      state.loading = "pending";
+    });
+    builder.addCase(updateStationStatus.fulfilled, (state, action) => {
+      state.loading = "succeeded";
+      const index = state.allStations.findIndex(
+        (station) => station._id === action.payload._id
+      );
+      if (index !== -1) {
+        state.allStations[index] = action.payload;
+      }
+      toast.success("Station status updated successfully");
+    });
+    builder.addCase(updateStationStatus.rejected, (state, { payload }) => {
       state.loading = "failed";
       toast.error(payload as string);
     });

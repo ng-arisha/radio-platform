@@ -33,7 +33,7 @@ function NewStationModal({ page, role }: { page: string; role: string }) {
   );
   const dispatch = useDispatch<AppDispatch>();
   const params = useParams<{ mediaId: string }>();
-  const mediaParams = useParams<{ mediaIdd: string }>();
+  const mediaParams = useParams<{ mediaId: string }>();
   const loading = useSelector(
     (state: RootState) => state.stations.addingStation
   );
@@ -70,7 +70,7 @@ function NewStationModal({ page, role }: { page: string; role: string }) {
         code,
         frequency,
         userId: selectedUser,
-        mediaHouseId: role === "admin" ? params.mediaId : mediaParams.mediaIdd,
+        mediaHouseId: role === "admin" ? params.mediaId : mediaParams.mediaId,
       };
       const res = await dispatch(newStation(data));
       if (res.type === "stations/newStation/rejected") {

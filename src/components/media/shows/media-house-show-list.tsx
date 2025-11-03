@@ -16,10 +16,10 @@ function MediaHouseShowsList() {
     (state: RootState) => state.shows.mediaHouseShows
   );
 
-  const params = useParams<{ mediaIdd: string }>();
+  const params = useParams<{ mediaId: string }>();
 
   useEffect(() => {
-    dispatch(getMediaHouseShows({ id: params.mediaIdd }));
+    dispatch(getMediaHouseShows({ id: params.mediaId }));
   }, [dispatch]);
   return (
     <div>

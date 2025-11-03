@@ -50,7 +50,7 @@ const handleFetchtransactions = async (timeRange: string,
     limit: number) => {
     await dispatch(
       getMediaTransactions({
-        id: params.mediaIdd,
+        id: params.mediaId,
         timeRange,
         phoneNumber,
         type,
@@ -64,10 +64,10 @@ const handleFetchtransactions = async (timeRange: string,
   useEffect(() => {
     handleFetchtransactions(selectedTimeFilter,phoneNumber,selectedTransactionType,currentPage,recordsPerPage);
   }, [selectedTimeFilter,phoneNumber,selectedTransactionType,currentPage,recordsPerPage]);
-  const params = useParams<{ mediaIdd: string }>();
+  const params = useParams<{ mediaId: string }>();
   useEffect(() => {
-    dispatch(getMediaTransactionHistory({ id: params.mediaIdd }));
-  }, [dispatch, params.mediaIdd]);
+    dispatch(getMediaTransactionHistory({ id: params.mediaId }));
+  }, [dispatch, params.mediaId]);
 
  
   return (

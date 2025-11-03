@@ -1,10 +1,13 @@
-import { formatCurrency } from "@/utils/utils";
-import { Edit2, Eye, Power } from "lucide-react";
+import { formatDate } from "@/utils/utils";
+import { Eye } from "lucide-react";
+import Link from "next/link";
+import EditStationModal from "../stations/edit-station-modal";
+import PowerOnOrOffStation from "../stations/power-on-or-off-station";
 
 function MediaStationsList({
   stationData,
 }: {
-  stationData: StationUmmaryType[];
+  stationData: StationType[];
 }) {
   return (
     <div>
@@ -23,10 +26,10 @@ function MediaStationsList({
                   Admin
                 </th>
                 <th className="px-6 py-4 text-left text-sm font-semibold">
-                  Total Revenue
+                 Address
                 </th>
                 <th className="px-6 py-4 text-left text-sm font-semibold">
-                  Budget
+                Date Created
                 </th>
                 <th className="px-6 py-4 text-left text-sm font-semibold">
                   Status
@@ -38,17 +41,17 @@ function MediaStationsList({
             </thead>
             <tbody className="divide-y divide-gray-600">
               {stationData.map((station) => (
-                <tr key={station.id} className="hover:bg-gray-650">
+                <tr key={station._id} className="hover:bg-gray-650">
                   <td className="px-6 py-4 font-medium">{station.name}</td>
                   <td className="px-6 py-4 text-blue-400">
                     {station.frequency}
                   </td>
-                  <td className="px-6 py-4">{station.admin}</td>
+                  <td className="px-6 py-4">{station.user? station.user.fullName : "N/A"}</td>
                   <td className="px-6 py-4 text-green-400">
-                    {formatCurrency(station.revenue)}
+                    {station.address}
                   </td>
                   <td className="px-6 py-4">
-                    {formatCurrency(station.budget)}
+                    {formatDate(station.createdAt)}
                   </td>
                   <td className="px-6 py-4">
                     <span
@@ -63,33 +66,16 @@ function MediaStationsList({
                   </td>
                   <td className="px-6 py-4">
                     <div className="flex gap-2">
-                      <button
+                      <EditStationModal station={station} />
+                      <Link
+                      href={`/stations/${station._id}/dashboard`}
                         className="p-2 hover:bg-gray-600 rounded transition-colors"
                         title="View Details"
                       >
                         <Eye size={18} />
-                      </button>
-                      <button
-                        className="p-2 hover:bg-gray-600 rounded transition-colors"
-                        title="Edit"
-                      >
-                        <Edit2 size={18} />
-                      </button>
-                      <button
-                        className="p-2 hover:bg-gray-600 rounded transition-colors"
-                        title={
-                          station.status === "active" ? "Disable" : "Activate"
-                        }
-                      >
-                        <Power
-                          size={18}
-                          className={
-                            station.status === "active"
-                              ? "text-green-400"
-                              : "text-red-400"
-                          }
-                        />
-                      </button>
+                      </Link>
+                      
+                     <PowerOnOrOffStation station={station} />
                     </div>
                   </td>
                 </tr>

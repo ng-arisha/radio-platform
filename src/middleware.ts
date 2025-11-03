@@ -75,7 +75,7 @@ export function middleware(request: NextRequest) {
 
     }else if(role === UserRole.MEDIA_HOUSE){
       if(decodedToken?.media){
-        const allowedPaths = ["/media/"+decodedToken.media];
+        const allowedPaths = ["/media/"+decodedToken.media, "/stations"];
       const isAllowed = allowedPaths.some(allowedPath => path === allowedPath || path.startsWith(allowedPath + "/"));
       if(isAllowed){
         return NextResponse.next();
