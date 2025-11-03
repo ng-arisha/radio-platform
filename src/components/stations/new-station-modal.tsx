@@ -10,39 +10,42 @@ import { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import { api } from "../../../convex/_generated/api";
-import { Id } from "../../../convex/_generated/dataModel";
 import Button from "../shared/button";
 import Input from "../shared/input";
 
-function NewStationModal({ page,role }: { page: string,role:string }) {
+function NewStationModal({ page, role }: { page: string; role: string }) {
   const newStationModal = useRef<HTMLDialogElement>(null);
   const [stationName, setStationName] = useState("");
   const [address, setAddress] = useState("");
   const [frequency, setFrequency] = useState("");
   const [enabled, setEnabled] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+
   const [selectedUser, setSelectedUser] = useState("");
 
-  const [showCode, setShowCode] = useState("");
+  const [code, setCode] = useState("");
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
   const [selectedStation, setSelectedStation] = useState("");
- 
+
   const newShow = useMutation(api.shows.create);
-  const stationUsers = useSelector((state:RootState)=>state.users.stationAdminUsers);
+  const stationUsers = useSelector(
+    (state: RootState) => state.users.stationAdminUsers
+  );
   const dispatch = useDispatch<AppDispatch>();
   const params = useParams<{ mediaId: string }>();
   const mediaParams = useParams<{ mediaIdd: string }>();
-  const loading = useSelector((state:RootState)=>state.stations.addingStation);
-  
+  const loading = useSelector(
+    (state: RootState) => state.stations.addingStation
+  );
 
   useEffect(() => {
-    dispatch(getStationAdminUsers())
-    dispatch(getMediaStations({id: params.mediaId}))
-  }, [page,dispatch]);
+    dispatch(getStationAdminUsers());
+    dispatch(getMediaStations({ id: params.mediaId }));
+  }, [page, dispatch]);
 
-
-  const stations = useSelector((state:RootState)=>state.stations.mediaStations);
+  const stations = useSelector(
+    (state: RootState) => state.stations.mediaStations
+  );
   const showModal = () => {
     if (newStationModal.current) {
       newStationModal.current.showModal();
@@ -56,8 +59,6 @@ function NewStationModal({ page,role }: { page: string,role:string }) {
   };
 
   const handleNewStation = async () => {
-    
-    setIsLoading(true);
     if (page === "stations") {
       if (!stationName || !address || !frequency) {
         toast.error("Please provide all missing details");
@@ -66,9 +67,10 @@ function NewStationModal({ page,role }: { page: string,role:string }) {
       const data = {
         name: stationName,
         address,
+        code,
         frequency,
-        userId:selectedUser,
-        mediaHouseId: role === 'admin' ? params.mediaId : mediaParams.mediaIdd,
+        userId: selectedUser,
+        mediaHouseId: role === "admin" ? params.mediaId : mediaParams.mediaIdd,
       };
       const res = await dispatch(newStation(data));
       if (res.type === "stations/newStation/rejected") {
@@ -76,32 +78,14 @@ function NewStationModal({ page,role }: { page: string,role:string }) {
         return;
       }
     }
-    if(page === "shows"){
-      // console.log({selectedStation});
-      // console.log({stationName,showCode,startTime,endTime,enabled});
-      if (!stationName || !showCode || !startTime || !endTime || !selectedStation) {
-        toast.error("Please provide all missing details");
-        return;
-      }
-      
-      const data = {
-        stationId: selectedStation as Id<"stations">,
-        name: stationName,
-        code: showCode,
-        startTime,
-        endTime,
-        jackpotEnabled: enabled
-      };
-      await newShow(data);
 
-    }
-
-    setIsLoading(false);
     setAddress("");
     setStationName("");
     setFrequency("");
     closeModal();
-    toast.success(`${page === "stations" ? "Station" : "Show"} created successfully`);
+    toast.success(
+      `${page === "stations" ? "Station" : "Show"} created successfully`
+    );
   };
   return (
     <div>
@@ -137,9 +121,8 @@ function NewStationModal({ page,role }: { page: string,role:string }) {
               </select>
             </div>
           )}
-          {
-            page === "stations" && (
-              <div className="my-3">
+          {page === "stations" && (
+            <div className="my-3">
               <label className="block text-sm font-medium text-gray-300">
                 Select Adminstrator <span className="text-red-400">*</span>
               </label>
@@ -157,8 +140,7 @@ function NewStationModal({ page,role }: { page: string,role:string }) {
                 ))}
               </select>
             </div>
-            )
-          }
+          )}
           <div className="my-3">
             <Input
               value={stationName}
@@ -196,43 +178,40 @@ function NewStationModal({ page,role }: { page: string,role:string }) {
               />
             </div>
           )}
-          {page === "shows" && (
-            <div className="my-3">
-              <Input
-                value={showCode}
-                onChange={setShowCode}
-                label="Show Code"
-                type="text"
-                required
-                placeholder="Enter Show code"
-              />
-            </div>
-          )}
+          <div className="my-3">
+            <Input
+              value={code}
+              onChange={setCode}
+              label="Station Code"
+              type="text"
+              required
+              placeholder="Enter Show code"
+            />
+          </div>
 
           {page === "shows" && (
             <div className="my-3 flex justify-between items-center space-x-2 w-full">
-             <div className="w-full">
-             <Input
-                value={startTime}
-                onChange={setStartTime}
-                label="Start Time"
-                type="time"
-                required
-                placeholder=""
-                
-              />
-             </div>
+              <div className="w-full">
+                <Input
+                  value={startTime}
+                  onChange={setStartTime}
+                  label="Start Time"
+                  type="time"
+                  required
+                  placeholder=""
+                />
+              </div>
 
-             <div className="w-full">
-             <Input
-                value={endTime}
-                onChange={setEndTime}
-                label="End Time"
-                type="time"
-                required
-                placeholder=""
-              />
-             </div>
+              <div className="w-full">
+                <Input
+                  value={endTime}
+                  onChange={setEndTime}
+                  label="End Time"
+                  type="time"
+                  required
+                  placeholder=""
+                />
+              </div>
             </div>
           )}
           <div className="flex items-center">
@@ -248,7 +227,7 @@ function NewStationModal({ page,role }: { page: string,role:string }) {
             </label>
           </div>
           <div className="flex justify-between items-cente mt-6">
-            {loading === 'pending' ? (
+            {loading === "pending" ? (
               <SunIcon className="text-gray-100 animate-spin" size={20} />
             ) : (
               <Button onClick={handleNewStation} variant="primary">

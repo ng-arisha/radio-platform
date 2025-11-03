@@ -40,6 +40,7 @@ export const newStation = createAsyncThunk(
       name: string;
       address: string;
       frequency: string;
+      code: string;
       userId: string;
       mediaHouseId: string;
     },
