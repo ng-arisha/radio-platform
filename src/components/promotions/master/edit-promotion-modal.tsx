@@ -57,6 +57,7 @@ function EditPromotionModal({ promotion }: { promotion: PromotionType }) {
       amount,
       expiryDate: new Date(expiryDate).toISOString(),
       type: promotionType,
+      numberOfBeneficiaries: promotionType === PromoType.FIXED_SHOW_WINNING ? numberOfBeneficiaries : undefined,
     };
     dispatch(editPromotion(data));
   };

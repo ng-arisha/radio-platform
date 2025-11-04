@@ -14,14 +14,13 @@ import {
   Home,
   Radio,
   Receipt,
-  ReceiptCent,
   Settings,
   TrendingUp,
   Trophy,
   Tv,
   Users,
   Wallet,
-  Wallet2,
+  Wallet2
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -42,9 +41,16 @@ function SideNavigation() {
   const shows = useSelector((state: RootState) => state.shows.allShows);
   const dispatch = useDispatch<AppDispatch>();
   useEffect(() => {
-    dispatch(getAllMediaHouses());
+    if(tokenUser?.role === UserRole.ADMIN){
+      dispatch(getAllMediaHouses());
+      dispatch(getAllMediaHouses());
     dispatch(getAllStations());
     dispatch(getAllShows());
+    }
+    // if(tokenUser?.role === UserRole.ADMIN || tokenUser?.role === UserRole.MEDIA_HOUSE){
+    //   dispatch(getAllStations());
+    // }
+    
   }, []);
   // add media house links to the admin links in the children section of media houses
   const masterLinks =
@@ -127,11 +133,11 @@ function SideNavigation() {
       path: `/media/${tokenUser?.media}/transactions`,
       icon: <Receipt />,
     },
-    {
-      name: "Reports",
-      path: `/media/${tokenUser?.media}/reports`,
-      icon: <ReceiptCent />,
-    },
+    // {
+    //   name: "Reports",
+    //   path: `/media/${tokenUser?.media}/reports`,
+    //   icon: <ReceiptCent />,
+    // },
     {
       name: "Settings",
       path: `/media/${tokenUser?.media}/settings`,

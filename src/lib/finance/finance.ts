@@ -9,6 +9,7 @@ interface InitialFinanceState {
   loadingShowData: "idle" | "pending" | "succeeded" | "failed";
   stationTransactionsData: PaginatatedTxnsType | null;
   showCommissionData: { level: string; commission: number; color: string }[];
+  allocatingFundsToShow: "idle" | "pending" | "succeeded" | "failed";
 }
 
 const initialState: InitialFinanceState = {
@@ -18,6 +19,7 @@ const initialState: InitialFinanceState = {
   loadingShowData: "idle",
   stationTransactionsData: null,
   showCommissionData: [],
+  allocatingFundsToShow: "idle",
 };
 
 export const allocateFundsToMediaHouse = createAsyncThunk(
@@ -70,6 +72,7 @@ export const allocateFundsToStation = createAsyncThunk(
     );
     if (!response.ok) {
       const errorData = await response.json();
+      
       return rejectWithValue(errorData.message);
     }
     const responseData = await response.json();
@@ -295,21 +298,23 @@ const financeSlice = createSlice({
     });
     builder.addCase(allocateFundsToStation.rejected, (state, { payload }) => {
       state.loading = "failed";
+      console.log("Payload:", payload);
       toast.error((payload as string) || "Failed to allocate funds to station");
     });
 
     // allocate funds to show
     builder.addCase(allocateFundsToShow.pending, (state) => {
-      state.loading = "pending";
+      state.allocatingFundsToShow = "pending";
+     
     });
     builder.addCase(allocateFundsToShow.fulfilled, (state) => {
-      state.loading = "succeeded";
+      state.allocatingFundsToShow = "succeeded";
       toast.success("Funds allocated to show successfully");
     });
     builder.addCase(allocateFundsToShow.rejected, (state, { payload }) => {
-      state.loading = "failed";
+      state.allocatingFundsToShow = "failed";
       console.log("Payload:", payload);
-      toast.error((payload as string) || "Failed to allocate funds to show");
+      toast.error("Failed to allocate funds to show");
     });
 
     // get show commission data

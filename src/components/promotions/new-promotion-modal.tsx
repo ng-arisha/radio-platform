@@ -40,7 +40,7 @@ function NewPromotionModal() {
   const shows = useSelector((state: RootState) => state.shows.stationShows);
   const loading = useSelector((state: RootState) => state.promotions.loading);
   useEffect(() => {
-    dispatch(getShowInStation({ id: params.stationId }));
+    dispatch(getShowInStation({ id: params.stationId,status:"active",search:"" }));
   }, [dispatch, params.stationId]);
 
   const openModal = () => {

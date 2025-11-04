@@ -114,6 +114,7 @@ export const getMediaHouseDahsboardData = createAsyncThunk(
         return rejectWithValue(errorData.message);
       }
       const responseData = await response.json();
+      console.log(responseData);
       return responseData;
     } catch (error) {
       return rejectWithValue((error as Error).message);

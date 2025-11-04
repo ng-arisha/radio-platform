@@ -19,7 +19,7 @@ function ViewShowDetails({
 }) {
   const viewShowDetailsModal = useRef<HTMLDialogElement>(null);
   const [name, setName] = useState(show.name);
-  const [code, setCode] = useState(show.code);
+  // const [code, setCode] = useState(show.code);
   const [startTime, setStartTime] = useState(show.startTime);
   const [endTime, setEndTime] = useState(show.endTime);
   const loading = useSelector((state: RootState) => state.shows.updatingShow);
@@ -50,7 +50,7 @@ function ViewShowDetails({
     const data = {
       id: show._id,
       name,
-      code,
+      activeDays: activedays,
       startTime,
       endTime,
     };
@@ -98,7 +98,7 @@ function ViewShowDetails({
           {purpose === "view" ? (
             <div className="grid grid-cols-3 gap-4">
               <TextColumn label="Show Name" value={show.name} />
-              <TextColumn label="Show Code" value={show.code} />
+              <TextColumn label="Active days" value={show.activeDays.join(",")} />
               <TextColumn label="Start Time" value={show.startTime} />
               <TextColumn label="End Time" value={show.endTime} />
               <TextColumn label="Show Status" value={show.status} />

@@ -135,6 +135,9 @@ const handleFetchtransactions = async (timeRange: string,
                 <table className="w-full">
                   <thead className="bg-gray-800">
                     <tr>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
+                       Station
+                      </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
                         Show
                       </th>
@@ -159,7 +162,10 @@ const handleFetchtransactions = async (timeRange: string,
                     {transactions.data.map((tx) => (
                       <tr key={tx._id} className="hover:bg-gray-800">
                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-white">
-                          {tx.show!.name}
+                          {tx.show? tx.show.station.name : "N/A"}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-white">
+                          {tx.show? tx.show.name : "N/A"}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-400">
                           {tx.transactionCode.slice(0, 9)}

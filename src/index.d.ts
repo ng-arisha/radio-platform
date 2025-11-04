@@ -87,7 +87,6 @@ declare type MediaHousePerformanceType = {
 declare type ShowType = {
   _id: string;
   name: string;
-  code: string;
   startTime: string;
   endTime: string;
   jackpotEnabled: boolean;
@@ -96,6 +95,7 @@ declare type ShowType = {
   station: StationType;
   revenue?: number;
   users: string[];
+  activeDays: string[];
 };
 
 declare type PresenterType = {

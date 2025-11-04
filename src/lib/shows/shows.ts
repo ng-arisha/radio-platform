@@ -116,7 +116,7 @@ export const updateShow = createAsyncThunk(
     data: {
       id: string;
       name: string;
-      code: string;
+      activeDays: string[];
       startTime: string;
       endTime: string;
     },
@@ -131,7 +131,7 @@ export const updateShow = createAsyncThunk(
       },
       body: JSON.stringify({
         name: data.name,
-        code: data.code,
+        code: data.activeDays,
         startTime: data.startTime,
         endTime: data.endTime,
       }),
@@ -388,6 +388,7 @@ export const getShowInStation = createAsyncThunk(
       return rejectWithValue(errorData.message);
     }
     const revenueData = await response.json();
+    console.log("station shows", revenueData);
     return revenueData;
   }
 );

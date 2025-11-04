@@ -2,7 +2,8 @@
 
 import { resetPassword } from "@/lib/auth/auth";
 import { AppDispatch, RootState } from "@/lib/store";
-import { Link, Radio, SunIcon } from "lucide-react";
+import { Radio, SunIcon } from "lucide-react";
+import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import toast from "react-hot-toast";

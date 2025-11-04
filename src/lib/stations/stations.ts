@@ -198,6 +198,8 @@ export const getStationPiedata = createAsyncThunk(
       return rejectWithValue(errorData.message);
     }
     const responseData = await response.json();
+    console.log("Fetching Pie Data for Station ID:", data.id);
+    console.log("Pie Data Response:", responseData);
     return responseData;
   }
 );
@@ -361,6 +363,7 @@ const stationSlice = createSlice({
     builder.addCase(getStationPiedata.fulfilled, (state, action) => {
       state.loadingPieData = "succeeded";
       state.stationPiedata = action.payload;
+      console.log("Station Pie Data Fetched:", action.payload);
     });
     builder.addCase(getStationPiedata.rejected, (state, { payload }) => {
       state.loadingPieData = "failed";

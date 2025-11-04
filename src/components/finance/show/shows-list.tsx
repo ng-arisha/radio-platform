@@ -113,7 +113,7 @@ function ShowList() {
                       Show Name
                     </th>
                     <th className="px-6 py-4 text-left text-xs font-semibold text-gray-300 uppercase tracking-wider">
-                      Code
+                      Active days
                     </th>
                     <th className="px-6 py-4 text-left text-xs font-semibold text-gray-300 uppercase tracking-wider">
                       Time Slot
@@ -151,7 +151,7 @@ function ShowList() {
                       </td>
                       <td className="px-6 py-4">
                         <span className="text-gray-300 font-mono text-sm">
-                          {show.code}
+                          {show.activeDays.join(", ")}
                         </span>
                       </td>
                       <td className="px-6 py-4">

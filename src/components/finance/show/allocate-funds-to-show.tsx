@@ -25,7 +25,7 @@ function AllocateFundsToShow(
     const [allocated, setAllocated] = useState<number>(0);
   
     const dispatch = useDispatch<AppDispatch>();
-    const loading = useSelector((state: RootState) => state.finance.loading);
+    const loading = useSelector((state: RootState) => state.finance.allocatingFundsToShow);
   
     const openModal = () => {
       if (allocateShowModel.current) {
@@ -52,8 +52,11 @@ function AllocateFundsToShow(
           showId: showId,
         };
         const res = await dispatch(allocateFundsToShow(data));
+        console.log(res);
         if (res.meta.requestStatus === "fulfilled") {
           closeModal();
+        }else{
+          toast.error(res.payload as string);
         }
       }
       // allocate funds logic here

@@ -24,7 +24,7 @@ function NewPresenter() {
   const loading = useSelector((state: RootState) => state.users.addingUser);
 
   useEffect(() => {
-    dispatch(getShowInStation({ id: params.stationId }));
+    dispatch(getShowInStation({ id: params.stationId,status:"active",search:"" }));
   }, [dispatch, params.stationId]);
 
   const openModal = () => {
