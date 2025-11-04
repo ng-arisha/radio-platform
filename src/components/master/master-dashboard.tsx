@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import Input from "../shared/input";
 import Select from "../shared/reusable-select-input";
 
 function MasterDashboard() {
@@ -23,14 +24,29 @@ function MasterDashboard() {
     (state: RootState) => state.master.masterDashboardData
   );
   const [activeRange, setActiveRange] = useState(timeFilters[2].value);
+  const [fromDate, setFromDate] = useState<string>("");
+  const [toDate, setToDate] = useState<string>("");
 
-  const fetchPlatformDashboardData = async (range: string) => {
-    await dispatch(getPlatformDashboardData({ range }));
+  const fetchPlatformDashboardData = async (range: string,fromDate:string, toDate:string) => {
+    await dispatch(getPlatformDashboardData({ range, fromDate, toDate }));
   };
 
   useEffect(() => {
-    fetchPlatformDashboardData(activeRange);
-  }, [activeRange]);
+    if(fromDate  && toDate ){
+      const fromutcDate = new Date(fromDate + "T00:00:00Z").toISOString();
+      const toutcDate = new Date(toDate + "T00:00:00Z").toISOString();
+      
+      fetchPlatformDashboardData(activeRange, fromutcDate, toutcDate);
+      
+    }else if (!fromDate && !toDate){
+      setFromDate("");
+      setToDate("");
+      fetchPlatformDashboardData(activeRange,"","");
+      
+    }
+   
+    
+  }, [activeRange, fromDate, toDate]);
   return (
     <div className="mt-4">
       <div className="flex justify-between items-center mb-4">
@@ -42,6 +58,19 @@ function MasterDashboard() {
             Overview of financial performance accross all media houses
           </p>
         </div>
+        <Input 
+        value={fromDate}
+        onChange={setFromDate}
+        type="date"
+        />
+        <div>
+          <p>To</p>
+        </div>
+        <Input 
+        value={toDate}
+        onChange={setToDate}
+        type="date"
+        />
         <Select
               value={activeRange}
               onChange={(value) => setActiveRange(value)}

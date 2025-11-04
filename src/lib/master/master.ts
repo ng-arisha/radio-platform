@@ -24,10 +24,10 @@ const initialState: InitialMasterState = {
 
 export const getPlatformDashboardData = createAsyncThunk(
     "master/getPlatformDashboardData",
-    async (data:{range:string}, { rejectWithValue, getState }) => {
+    async (data:{range:string,fromDate:string,toDate:string}, { rejectWithValue, getState }) => {
       try {
         const state = getState() as { auth: { token: string } };
-        const response = await fetch(`${BASE_URL}/show/platform-summary?range=${data.range}`, {
+        const response = await fetch(`${BASE_URL}/show/platform-summary?range=${data.range}&fromDate=${data.fromDate}&toDate=${data.toDate}`, {
           method: "GET",
           headers: {
             "content-type": "application/json",
