@@ -252,8 +252,8 @@ export const sidebarLinks = [
     icon: NewspaperIcon,
     children: [
       { label: "Revenue Reports", path: "/reports/revenue" },
-      { label: "Payout Reports", path: "/reports/payouts" },
-      { label: "Bonus Reports", path: "/reports/bonuses" },
+      // { label: "Payout Reports", path: "/reports/payouts" },
+      // { label: "Bonus Reports", path: "/reports/bonuses" },
     ],
   },
   {

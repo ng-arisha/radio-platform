@@ -24,6 +24,8 @@ import { useDispatch, useSelector } from "react-redux";
 
 function MasterTransactionsList() {
   const [phoneNumber, setPhoneNumber] = useState("");
+  const [fromDate, setFromDate] = useState<string>("");
+  const [toDate, setToDate] = useState<string>("");
   const recordPerPageFilter = [
     { label: "5", value: 5 },
     { label: "10", value: 10 },
@@ -57,7 +59,9 @@ function MasterTransactionsList() {
     phoneNumber: string,
     type: string,
     page: number,
-    limit: number) => {
+    limit: number,
+    startDate:string,
+    endDate:string) => {
     await dispatch(
       getAllTransactions({
         timeRange,
@@ -65,14 +69,29 @@ function MasterTransactionsList() {
         type,
         page,
         limit,
+        startDate,
+        endDate
       })
     );
     
   }
 
   useEffect(() => {
-    handleFetchtransactions(selectedTimeFilter,phoneNumber,selectedTransactionType,currentPage,recordsPerPage);
-  }, [selectedTimeFilter,phoneNumber,selectedTransactionType,currentPage,recordsPerPage]);
+    if(fromDate && toDate){
+      handleFetchtransactions(
+        selectedTimeFilter,
+        phoneNumber,
+        selectedTransactionType,
+        currentPage,
+        recordsPerPage,
+        fromDate,
+        toDate
+      );
+    }else if(!fromDate && !toDate){
+      handleFetchtransactions(selectedTimeFilter,phoneNumber,selectedTransactionType,currentPage,recordsPerPage,"","");
+    }
+    
+  }, [selectedTimeFilter,phoneNumber,selectedTransactionType,currentPage,recordsPerPage, fromDate, toDate]);
   return (
     <div>
       <div className="mb-8">
@@ -105,6 +124,11 @@ function MasterTransactionsList() {
           {/* Filters */}
           <div className="flex gap-3">
             <div className="flex items-center gap-2 bg-gray-800 rounded-lg p-1 border border-gray-600">
+            <Input value={fromDate} onChange={setFromDate} type="date" />
+              <div>
+                <p>To</p>
+              </div>
+              <Input value={toDate} onChange={setToDate} type="date" />
               <Select
                 Icon={Clock}
                 value={selectedTimeFilter}

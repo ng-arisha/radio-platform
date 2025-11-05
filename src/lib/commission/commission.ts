@@ -18,10 +18,10 @@ const initialState: InitialCommissionState = {
 
 export const getSMasterPlatformCommission = createAsyncThunk(
   "commission/getSMasterPlatformCommission",
-  async (data: { range: string }, { rejectWithValue, getState }) => {
+  async (data: { range: string,fromDate:string,endDate:string }, { rejectWithValue, getState }) => {
     const state = getState() as { auth: { token: string } };
     const response = await fetch(
-      `${BASE_URL}/show/performance?range=${data.range}`,
+      `${BASE_URL}/show/performance?range=${data.range}&fromDate=${data.fromDate}&toDate=${data.endDate}`,
       {
         method: "GET",
         headers: {
