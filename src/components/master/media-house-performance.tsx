@@ -6,26 +6,44 @@ import { timeFilters } from "@/utils/utils";
 import { Filter } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import {
+  Bar,
+  BarChart,
+  CartesianGrid,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts";
+import Input from "../shared/input";
 import ReusableLoader from "../shared/reusable-loader";
 import Select from "../shared/reusable-select-input";
 import MediaHouseSummary from "./media-house-summary";
 
 function MediaHousePerformance() {
   const [activeRange, setActiveRange] = useState(timeFilters[2].value);
+  const [fromDate, setFromDate] = useState<string>("");
+  const [toDate, setToDate] = useState<string>("");
   const dispatch = useDispatch<AppDispatch>();
   const loading = useSelector(
     (state: RootState) => state.master.loadingMediaPerformanceData
   );
   const data = useSelector((state: RootState) => state.master.performancedata);
 
-  const fetchPlatformPerformanceData = async (range: string) => {
-    await dispatch(getPlatformPerformancedata({ range }));
-  }
+  const fetchPlatformPerformanceData = async (range: string,fromDate:string, toDate:string) => {
+    await dispatch(getPlatformPerformancedata({ range, fromDate, toDate }));
+  };
 
   useEffect(() => {
-    fetchPlatformPerformanceData(activeRange);
-  }, [activeRange]);
+    if(fromDate  && toDate ){
+      const fromutcDate = new Date(fromDate + "T00:00:00Z").toISOString();
+      const toutcDate = new Date(toDate + "T00:00:00Z").toISOString();
+      fetchPlatformPerformanceData(activeRange,fromutcDate,toutcDate);
+    }else if(!fromDate && !toDate){
+      fetchPlatformPerformanceData(activeRange,"","");
+    }
+    
+  }, [activeRange,fromDate,toDate]);
   return (
     <div className="mt-4">
       {loading === "pending" ? (
@@ -34,15 +52,22 @@ function MediaHousePerformance() {
         <div>
           <div className="bg-gray-700 rounded-lg p-6 border border-gray-600">
             <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-semibold text-white mb-4">
-              Media House Performance
-            </h3>
-            <Select 
-            value={activeRange}
-            onChange={(value) => setActiveRange(value)}
-            options={timeFilters}
-            Icon={Filter}
-            />
+              <h3 className="text-lg font-semibold text-white mb-4">
+                Media House Performance
+              </h3>
+             <div className="flex gap-3 items-center">
+             <Input value={fromDate} onChange={setFromDate} type="date" />
+              <div>
+                <p>To</p>
+              </div>
+              <Input value={toDate} onChange={setToDate} type="date" />
+              <Select
+                value={activeRange}
+                onChange={(value) => setActiveRange(value)}
+                options={timeFilters}
+                Icon={Filter}
+              />
+             </div>
             </div>
             <ResponsiveContainer width="100%" height={300}>
               <BarChart data={data}>

@@ -3,12 +3,23 @@
 import { getMediaHouseDahsboardData } from "@/lib/media/media";
 import { AppDispatch, RootState } from "@/lib/store";
 import { formatCurrency, timeFilters } from "@/utils/utils";
-import { DollarSign, Radio, SunIcon, TrendingUp, Users } from "lucide-react";
+import {
+  DollarSign,
+  Filter,
+  Radio,
+  SunIcon,
+  TrendingUp,
+  Users,
+} from "lucide-react";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import Input from "../shared/input";
+import Select from "../shared/reusable-select-input";
 
 function MediaHouseDahboard({ param }: { param: string }) {
   const [activeRange, setActiveRange] = useState(timeFilters[2].value);
+  const [fromDate, setFromDate] = useState<string>("");
+  const [toDate, setToDate] = useState<string>("");
   const dispatch = useDispatch<AppDispatch>();
   const loading = useSelector(
     (state: RootState) => state.media.loadingDashboardData
@@ -17,19 +28,37 @@ function MediaHouseDahboard({ param }: { param: string }) {
     (state: RootState) => state.media.mediaHouseDashboarddata
   );
 
-  const fetchMediaHouseDashboardData = async (range: string) => {
-    await dispatch(getMediaHouseDahsboardData({ range: range, id: param }));
+  const fetchMediaHouseDashboardData = async (range: string,fromDate:string, toDate:string) => {
+    await dispatch(getMediaHouseDahsboardData({ range: range, id: param,fromDate,toDate }));
   };
 
   useEffect(() => {
-    fetchMediaHouseDashboardData(activeRange);
-  }, [activeRange]);
+    if(fromDate && toDate){
+      const fromutcDate = new Date(fromDate + "T00:00:00Z").toISOString();
+      const toutcDate = new Date(toDate + "T00:00:00Z").toISOString();
+      fetchMediaHouseDashboardData(activeRange,fromutcDate,toutcDate);
+    }else if( !fromDate && !toDate){
+      fetchMediaHouseDashboardData(activeRange,"","");
+    }
+    
+  }, [activeRange,fromDate,toDate]);
   return (
     <div className="mt-4">
       <div className="flex justify-end items-center mb-4">
-      <div className="flex gap-3">
-            <div className="flex items-center gap-2 bg-gray-800 rounded-lg p-1 border border-gray-600">
-              {timeFilters.map((item) => (
+        <div className="flex gap-3">
+          <div className="flex items-center gap-2 bg-gray-800 rounded-lg p-1 border border-gray-600">
+            <Input value={fromDate} onChange={setFromDate} type="date" />
+            <div>
+              <p>To</p>
+            </div>
+            <Input value={toDate} onChange={setToDate} type="date" />
+            <Select
+              value={activeRange}
+              onChange={setActiveRange}
+              options={timeFilters}
+              Icon={Filter}
+            />
+            {/* {timeFilters.map((item) => (
                 <button
                   key={item.value}
                   onClick={() => setActiveRange(item.value)}
@@ -41,9 +70,9 @@ function MediaHouseDahboard({ param }: { param: string }) {
                 >
                   {item.label}
                 </button>
-              ))}
-            </div>
+              ))} */}
           </div>
+        </div>
       </div>
       {loading === "pending" ? (
         <div className="h-24 flex flex-col justify-center items-center text-gray-300">

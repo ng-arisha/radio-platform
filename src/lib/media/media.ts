@@ -99,10 +99,10 @@ export const getSingleMediaHouse = createAsyncThunk(
 
 export const getMediaHouseDahsboardData = createAsyncThunk(
   "media/getMediaHouseDahsboardData",
-  async (data:{id:string,range:string}, { rejectWithValue, getState }) => {
+  async (data:{id:string,range:string,fromDate:string,toDate:string}, { rejectWithValue, getState }) => {
     try {
       const state = getState() as { auth: { token: string } };
-      const response = await fetch(`${BASE_URL}/media/media-dashboard/${data.id}?range=${data.range}`, {
+      const response = await fetch(`${BASE_URL}/media/media-dashboard/${data.id}?range=${data.range}&fromDate=${data.fromDate}&toDate=${data.toDate}`, {
         method: "GET",
         headers: {
           "content-type": "application/json",
