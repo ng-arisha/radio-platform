@@ -1,10 +1,12 @@
 "use client";
 
+import Input from "@/components/shared/input";
 import ReusableLoader from "@/components/shared/reusable-loader";
+import Select from "@/components/shared/reusable-select-input";
 import { getStationCommission } from "@/lib/commission/commission";
 import { AppDispatch, RootState } from "@/lib/store";
 import { formatCurrency } from "@/utils/utils";
-import { Percent, Wallet } from "lucide-react";
+import { Filter, Percent, Wallet } from "lucide-react";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -35,6 +37,8 @@ function StationCommission() {
         },
       ];
       const [activeRange, setActiveRange] = useState("1d");
+      const [fromDate, setFromDate] = useState<string>("");
+  const [toDate, setToDate] = useState<string>("");
 
   const dispatch = useDispatch<AppDispatch>();
 
@@ -44,15 +48,25 @@ function StationCommission() {
   );
   const params = useParams<{ stationId: string }>();
 
-  const fetchMasterCommission = async (range: string) => {
+  const fetchMasterCommission = async (range: string,fromDate:string,endDate:string) => {
     await dispatch(
-        getStationCommission({ range: range, id: params.stationId })
+        getStationCommission({ range: range, id: params.stationId, startDate: fromDate, endDate: endDate })
     );
   };
 
   useEffect(() => {
-    fetchMasterCommission(activeRange);
-  }, [activeRange]);
+    if(fromDate && toDate){
+      setActiveRange("1d");
+      fetchMasterCommission("", fromDate, toDate);
+      setFromDate("");
+      setToDate("");
+      // setActiveRange("1d");
+    }else if(!fromDate && !toDate){
+      fetchMasterCommission(activeRange, "", "");
+      //setActiveRange("1d");
+    }
+  
+  }, [activeRange, fromDate, toDate]);
     return (
         <div>
       <div className="mb-8">
@@ -68,26 +82,25 @@ function StationCommission() {
           Overview of Revenue performance accross all shows
         </p>
       </div>
-      <div className="bg-gray-700 rounded-xl p-6 border border-gray-600 shadow-lg mb-6">
-        <div className="flex flex-wrap gap-4 items-center justify-between">
+      <div className="bg-gray-700 rounded-xl p-2 border border-gray-600 shadow-lg mb-6">
+        <div className="flex flex-wrap gap-4 items-center justify-end">
           {/* Search */}
 
           {/* Filters */}
           <div className="flex gap-3">
             <div className="flex items-center gap-2 bg-gray-800 rounded-lg p-1 border border-gray-600">
-              {range.map((item) => (
-                <button
-                  key={item.value}
-                  onClick={() => setActiveRange(item.value)}
-                  className={`px-4 py-2 rounded-md text-sm font-medium transition-colors cursor-pointer ${
-                    activeRange === item.value
-                      ? "bg-orange-600 text-white"
-                      : "text-gray-400 hover:text-white"
-                  }`}
-                >
-                  {item.label}
-                </button>
-              ))}
+            <Input value={fromDate} onChange={setFromDate} type="date" />
+              <div>
+                <p>To</p>
+              </div>
+              <Input value={toDate} onChange={setToDate} type="date" />
+              <Select
+                Icon={Filter}
+                value={activeRange}
+                onChange={setActiveRange}
+                options={range}
+              />
+             
             </div>
           </div>
         </div>

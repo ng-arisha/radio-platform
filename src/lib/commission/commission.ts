@@ -68,12 +68,12 @@ export const getMediaHouseCommission = createAsyncThunk(
 export const getStationCommission = createAsyncThunk(
   "commission/getStationCommission",
   async (
-    data: { id: string; range: string },
+    data: { id: string; range: string, startDate:string,endDate:string},
     { rejectWithValue, getState }
   ) => {
     const state = getState() as { auth: { token: string } };
     const response = await fetch(
-      `${BASE_URL}/show/commission-by-show/${data.id}?range=${data.range}`,
+      `${BASE_URL}/show/commission-by-show/${data.id}?range=${data.range}&fromDate=${data.startDate}&toDate=${data.endDate}`,
       {
         method: "GET",
         headers: {

@@ -18,6 +18,8 @@ import Select from "../shared/reusable-select-input";
 
 function StationTransactionList() {
   const [phoneNumber, setPhoneNumber] = useState("");
+  const [startDate, setStartDate] = useState<string>("");
+  const [endDate, setEndDate] = useState<string>("");
   const recordPerPageFilter = [
     { label: "5", value: 5 },
     { label: "10", value: 10 },
@@ -53,7 +55,9 @@ function StationTransactionList() {
     phoneNumber: string,
     type: string,
     page: number,
-    limit: number
+    limit: number,
+    startDate: string,
+    endDate: string
   ) => {
     await dispatch(
       getStationTransactions({
@@ -63,24 +67,44 @@ function StationTransactionList() {
         type,
         page,
         limit,
+        startDate,
+        endDate,
       })
     );
   };
 
   useEffect(() => {
-    handleFetchtransactions(
-      selectedTimeFilter,
-      phoneNumber,
-      selectedTransactionType,
-      currentPage,
-      recordsPerPage
-    );
+    if (startDate && endDate) {
+      handleFetchtransactions(
+        selectedTimeFilter,
+        phoneNumber,
+        selectedTransactionType,
+        currentPage,
+        recordsPerPage,
+        startDate,
+        endDate
+      );
+      setEndDate("");
+      setStartDate("");
+    } else if (!startDate && !endDate) {
+      handleFetchtransactions(
+        selectedTimeFilter,
+        phoneNumber,
+        selectedTransactionType,
+        currentPage,
+        recordsPerPage,
+        "",
+        ""
+      );
+    }
   }, [
     selectedTimeFilter,
     phoneNumber,
     selectedTransactionType,
     currentPage,
     recordsPerPage,
+    startDate,
+    endDate,
   ]);
   return (
     <div>
@@ -93,9 +117,7 @@ function StationTransactionList() {
             Transaction Visibility
           </h1>
         </div>
-        <p className="text-gray-400">
-          View the transactions across all shows 
-        </p>
+        <p className="text-gray-400">View the transactions across all shows</p>
       </div>
 
       <div className="bg-gray-700 rounded-xl p-6 border border-gray-600 shadow-lg mb-6">
@@ -114,6 +136,11 @@ function StationTransactionList() {
           {/* Filters */}
           <div className="flex gap-3">
             <div className="flex items-center gap-2 bg-gray-800 rounded-lg p-1 border border-gray-600">
+              <Input value={startDate} onChange={setStartDate} type="date" />
+              <div>
+                <p>To</p>
+              </div>
+              <Input value={endDate} onChange={setEndDate} type="date" />
               <Select
                 Icon={Clock}
                 value={selectedTimeFilter}
@@ -131,7 +158,7 @@ function StationTransactionList() {
         </div>
       </div>
 
-      {(loading === "pending" || showTransactions === null) ? (
+      {loading === "pending" || showTransactions === null ? (
         <div className="h-24 flex flex-col justify-center items-center text-gray-300">
           <SunIcon className="animate-spin" size={32} />
           <p className="mt-2">Loading show transactions...</p>
@@ -219,22 +246,20 @@ function StationTransactionList() {
         </div>
       )}
 
-<div className="flex justify-between items-center mt-6">
+      <div className="flex justify-between items-center mt-6">
         <Select
           Icon={Filter}
           value={recordsPerPage}
           onChange={(e) => setRecordsPerPage(Number(e))}
           options={recordPerPageFilter}
         />
-       {
-        loading === 'succeeded' && showTransactions !== null && (
-            <Pagination
+        {loading === "succeeded" && showTransactions !== null && (
+          <Pagination
             currentPage={currentPage}
             totalPages={showTransactions!.totalPages}
             onPageChange={handlePageChange}
           />
-        )
-       }
+        )}
       </div>
     </div>
   );

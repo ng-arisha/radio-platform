@@ -9,13 +9,17 @@ interface InitialStationType {
   mediaStations: StationType[];
   allStations: StationType[];
   station: StationType | null;
-  stationDashboard:{label:string;value:string;icon:string;color:string}[];
-  stationPiedata:{name:string;value:number;color:string}[];
+  stationDashboard: {
+    label: string;
+    value: string;
+    icon: string;
+    color: string;
+  }[];
+  stationPiedata: { name: string; value: number; color: string }[];
   loadingPieData: "idle" | "pending" | "succeeded" | "failed";
-  stationBarData:{showName:string;revenue:number}[];
+  stationBarData: { showName: string; revenue: number }[];
   loadingBarData: "idle" | "pending" | "succeeded" | "failed";
-  stationPresenters:UserType[];
-  
+  stationPresenters: UserType[];
 }
 
 const initialState: InitialStationType = {
@@ -24,13 +28,12 @@ const initialState: InitialStationType = {
   mediaStations: [],
   allStations: [],
   station: null,
-  stationDashboard:[],
-  stationPiedata:[],
+  stationDashboard: [],
+  stationPiedata: [],
   loadingPieData: "idle",
-  stationBarData:[],
+  stationBarData: [],
   loadingBarData: "idle",
-  stationPresenters:[],
- 
+  stationPresenters: [],
 };
 
 export const newStation = createAsyncThunk(
@@ -164,15 +167,21 @@ export const getAllStations = createAsyncThunk(
 
 export const getStationDashBoard = createAsyncThunk(
   "stations/ggetStationDashBoard",
-  async (data:{id:string,range:string}, { rejectWithValue, getState }) => {
+  async (
+    data: { id: string; range: string; startDate: string; endDate: string },
+    { rejectWithValue, getState }
+  ) => {
     const state = getState() as { auth: { token: string } };
-    const response = await fetch(`${BASE_URL}/station/station-dashboard/${data.id}?range=${data.range}`, {
-      method: "GET",
-      headers: {
-        "content-type": "application/json",
-        Authorization: `Bearer ${state.auth.token}`,
-      },
-    });
+    const response = await fetch(
+      `${BASE_URL}/station/station-dashboard/${data.id}?range=${data.range}&startDate=${data.startDate}&endDate=${data.endDate}`,
+      {
+        method: "GET",
+        headers: {
+          "content-type": "application/json",
+          Authorization: `Bearer ${state.auth.token}`,
+        },
+      }
+    );
     if (!response.ok) {
       const errorData = await response.json();
       return rejectWithValue(errorData.message);
@@ -184,15 +193,18 @@ export const getStationDashBoard = createAsyncThunk(
 
 export const getStationPiedata = createAsyncThunk(
   "stations/getStationPiedata",
-  async (data:{id:string}, { rejectWithValue, getState }) => {
+  async (data: { id: string }, { rejectWithValue, getState }) => {
     const state = getState() as { auth: { token: string } };
-    const response = await fetch(`${BASE_URL}/station/station-pie-data/${data.id}`, {
-      method: "GET",
-      headers: {
-        "content-type": "application/json",
-        Authorization: `Bearer ${state.auth.token}`,
-      },
-    });
+    const response = await fetch(
+      `${BASE_URL}/station/station-pie-data/${data.id}`,
+      {
+        method: "GET",
+        headers: {
+          "content-type": "application/json",
+          Authorization: `Bearer ${state.auth.token}`,
+        },
+      }
+    );
     if (!response.ok) {
       const errorData = await response.json();
       return rejectWithValue(errorData.message);
@@ -205,15 +217,21 @@ export const getStationPiedata = createAsyncThunk(
 );
 export const getStationBardata = createAsyncThunk(
   "stations/getStationBardata",
-  async (data:{id:string,range:string}, { rejectWithValue, getState }) => {
+  async (
+    data: { id: string; range: string; startDate: string; endDate: string },
+    { rejectWithValue, getState }
+  ) => {
     const state = getState() as { auth: { token: string } };
-    const response = await fetch(`${BASE_URL}/station/station-bar-data/${data.id}?range=${data.range}`, {
-      method: "GET",
-      headers: {
-        "content-type": "application/json",
-        Authorization: `Bearer ${state.auth.token}`,
-      },
-    });
+    const response = await fetch(
+      `${BASE_URL}/station/station-bar-data/${data.id}?range=${data.range}&startDate=${data.startDate}&endDate=${data.endDate}`,
+      {
+        method: "GET",
+        headers: {
+          "content-type": "application/json",
+          Authorization: `Bearer ${state.auth.token}`,
+        },
+      }
+    );
     if (!response.ok) {
       const errorData = await response.json();
       return rejectWithValue(errorData.message);
@@ -225,15 +243,18 @@ export const getStationBardata = createAsyncThunk(
 
 export const getStationPresenters = createAsyncThunk(
   "stations/getStationPresenters",
-  async (data:{id:string}, { rejectWithValue, getState }) => {
+  async (data: { id: string }, { rejectWithValue, getState }) => {
     const state = getState() as { auth: { token: string } };
-    const response = await fetch(`${BASE_URL}/station/station-presenters/${data.id}`, {
-      method: "GET",
-      headers: {
-        "content-type": "application/json",
-        Authorization: `Bearer ${state.auth.token}`,
-      },
-    });
+    const response = await fetch(
+      `${BASE_URL}/station/station-presenters/${data.id}`,
+      {
+        method: "GET",
+        headers: {
+          "content-type": "application/json",
+          Authorization: `Bearer ${state.auth.token}`,
+        },
+      }
+    );
     if (!response.ok) {
       const errorData = await response.json();
       return rejectWithValue(errorData.message);
@@ -245,7 +266,10 @@ export const getStationPresenters = createAsyncThunk(
 
 export const updateStationStatus = createAsyncThunk(
   "stations/updateStationStatus",
-  async (data:{id:string, status: string}, { rejectWithValue, getState }) => {
+  async (
+    data: { id: string; status: string },
+    { rejectWithValue, getState }
+  ) => {
     const state = getState() as { auth: { token: string } };
     const response = await fetch(`${BASE_URL}/station/status/${data.id}`, {
       method: "PATCH",
@@ -253,7 +277,7 @@ export const updateStationStatus = createAsyncThunk(
         "content-type": "application/json",
         Authorization: `Bearer ${state.auth.token}`,
       },
-      body: JSON.stringify({status:data.status}),
+      body: JSON.stringify({ status: data.status }),
     });
     if (!response.ok) {
       const errorData = await response.json();
@@ -355,7 +379,7 @@ const stationSlice = createSlice({
       toast.error(payload as string);
     });
 
-    // 
+    //
     // Get Station Pie data
     builder.addCase(getStationPiedata.pending, (state) => {
       state.loadingPieData = "pending";

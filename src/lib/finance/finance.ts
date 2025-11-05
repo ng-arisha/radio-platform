@@ -166,12 +166,14 @@ export const getStationTransactions = createAsyncThunk(
       range: string;
       type: string;
       phoneNumber: string;
+      startDate:string;
+      endDate:string;
     },
     { rejectWithValue, getState }
   ) => {
     const state = getState() as { auth: { token: string } };
     const response = await fetch(
-      `${BASE_URL}/transaction/station-transactions/${data.id}?page=${data.page}&limit=${data.limit}&range=${data.range}&type=${data.type}&phoneNumber=${data.phoneNumber}`,
+      `${BASE_URL}/transaction/station-transactions/${data.id}?page=${data.page}&limit=${data.limit}&range=${data.range}&type=${data.type}&phoneNumber=${data.phoneNumber}&startDate=${data.startDate}&endDate=${data.endDate}`,
       {
         method: "GET",
         headers: {

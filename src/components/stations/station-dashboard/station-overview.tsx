@@ -1,11 +1,10 @@
 "use client";
 
-import NewShow from "@/components/finance/show/new-show";
-import NewPromotionModal from "@/components/promotions/new-promotion-modal";
+import Input from "@/components/shared/input";
 import Select from "@/components/shared/reusable-select-input";
 import { getStationDashBoard } from "@/lib/stations/stations";
 import { AppDispatch, RootState } from "@/lib/store";
-import { timeFilters, UserRole } from "@/utils/utils";
+import { timeFilters } from "@/utils/utils";
 import { DollarSign, Filter, Radio, Sun, TrendingUp, Users } from "lucide-react";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -13,6 +12,8 @@ import { useDispatch, useSelector } from "react-redux";
 
 function StationOverview() {
   const [activeRange, setActiveRange] = useState(timeFilters[2].value);
+  const [startDate, setStartDate] = useState<string>("");
+  const [endDate, setEndDate] = useState<string>("");
   const dispatch = useDispatch<AppDispatch>();
   const dashboarddata = useSelector(
     (state: RootState) => state.stations.stationDashboard
@@ -20,13 +21,20 @@ function StationOverview() {
   const loading = useSelector((state: RootState) => state.stations.loading);
   const params = useParams<{ stationId: string }>();
 
-  const fetchStationDashboardData = async (range: string) => {
-    await dispatch(getStationDashBoard({ range: range, id: params.stationId }));
+  const fetchStationDashboardData = async (range: string,startDate:string,endDate:string) => {
+    await dispatch(getStationDashBoard({ range: range, id: params.stationId, startDate: startDate, endDate: endDate }));
   }
 
   useEffect(() => {
-    fetchStationDashboardData(activeRange);
-  }, [activeRange]);
+    if(startDate && endDate){
+      fetchStationDashboardData(activeRange, startDate, endDate);
+    }else if(!startDate && !endDate){
+      setStartDate("");
+      setEndDate("");
+      fetchStationDashboardData(activeRange,"","");
+    }
+    
+  }, [activeRange, startDate, endDate]);
   return (
     <div className="mt-4">
       {/* overview */}
@@ -35,15 +43,28 @@ function StationOverview() {
             <h2 className="text-3xl font-medium text-white mb-2">Station Overview</h2>
             <p className="text-gray-400">Complete snapshot of your station&rsquo;s performance and activity</p>
           </div>
-          <div className="flex gap-3">
+          <div className="flex gap-3 items-center">
+          <Input 
+        value={startDate}
+        onChange={setStartDate}
+        type="date"
+        />
+        <div>
+          <p>To</p>
+        </div>
+        <Input 
+        value={endDate}
+        onChange={setEndDate}
+        type="date"
+        />
           <Select 
           options={timeFilters}
           value={activeRange}
           onChange={setActiveRange}
           Icon={Filter}
           />
-            <NewShow role={UserRole.STATION_ADMIN} />
-            <NewPromotionModal />
+            {/* <NewShow role={UserRole.STATION_ADMIN} /> */}
+            {/* <NewPromotionModal /> */}
            {/* <AllocateFundsModal /> */}
            
           </div>
