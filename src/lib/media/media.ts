@@ -148,10 +148,10 @@ export const getMediaHousePieData = createAsyncThunk(
 
 export const getMediaRevenueByStation = createAsyncThunk(
   "media/getMediaRevenueByStation",
-  async (data:{id:string,range:string}, { rejectWithValue, getState }) => {
+  async (data:{id:string,range:string,startDate:string,endDate:string}, { rejectWithValue, getState }) => {
     try {
       const state = getState() as { auth: { token: string } };
-      const response = await fetch(`${BASE_URL}/media/media-station-data/${data.id}?range=${data.range}`, {
+      const response = await fetch(`${BASE_URL}/media/media-station-data/${data.id}?range=${data.range}&startDate=${data.startDate}&endDate=${data.endDate}`, {
         method: "GET",
         headers: {
           "content-type": "application/json",
@@ -173,10 +173,10 @@ export const getMediaRevenueByStation = createAsyncThunk(
 
 export const getMediaRevenueByShow = createAsyncThunk(
   "media/getMediaRevenueByShow",
-  async (data:{id:string,range:string}, { rejectWithValue, getState }) => {
+  async (data:{id:string,range:string,startDate:string,endDate:string}, { rejectWithValue, getState }) => {
     try {
       const state = getState() as { auth: { token: string } };
-      const response = await fetch(`${BASE_URL}/media/media-show-revenue-data/${data.id}?range=${data.range}`, {
+      const response = await fetch(`${BASE_URL}/media/media-show-revenue-data/${data.id}?range=${data.range}&startDate=${data.startDate}&endDate=${data.endDate}`, {
         method: "GET",
         headers: {
           "content-type": "application/json",
@@ -471,7 +471,7 @@ const mediaSlice = createSlice({
     builder.addCase(getMediaRevenueByStation.fulfilled, (state, action) => {
       state.loadingRevenueByStation = "succeeded";
       console.log(action.payload);
-      state.mediaRevenueByStation = action.payload;
+      state.mediaRevenueByStation = action.payload.revenueByStation;
     });
     builder.addCase(getMediaRevenueByStation.rejected, (state) => {
       state.loadingRevenueByStation = "failed";
@@ -484,7 +484,7 @@ const mediaSlice = createSlice({
     builder.addCase(getMediaRevenueByShow.fulfilled, (state, action) => {
       state.loadingRevenueByShow = "succeeded";
       console.log(action.payload);
-      state.mediaRevenueByShow = action.payload;
+      state.mediaRevenueByShow = action.payload.data;
     });
     builder.addCase(getMediaRevenueByShow.rejected, (state) => {
       state.loadingRevenueByShow = "failed";

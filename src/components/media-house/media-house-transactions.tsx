@@ -1,9 +1,13 @@
 "use client";
 
-import { getMediaTransactionHistory } from "@/lib/media/media";
 import { AppDispatch, RootState } from "@/lib/store";
 import { getMediaTransactions } from "@/lib/transactions/transaction";
-import { formatCurrency, formatDate, timeFilters, transactionsType } from "@/utils/utils";
+import {
+  formatCurrency,
+  formatDate,
+  timeFilters,
+  transactionsType,
+} from "@/utils/utils";
 import { Clock, Filter, Receipt, Search } from "lucide-react";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -15,39 +19,45 @@ import Select from "../shared/reusable-select-input";
 
 function MediaHouseTransactions() {
   const [phoneNumber, setPhoneNumber] = useState("");
-    const recordPerPageFilter = [
-      { label: "5", value: 5 },
-      { label: "10", value: 10 },
-      { label: "20", value: 20 },
-      { label: "50", value: 50 },
-      { label: "100", value: 100 },
-    ];
-  
-    const [recordsPerPage, setRecordsPerPage] = useState(
-      recordPerPageFilter[0].value
-    );
-  
-    const [selectedTimeFilter, setSelectedTimeFilter] = useState(
-      timeFilters[0].value
-    );
-    const [selectedTransactionType, setSelectedTransactionType] = useState(
-      transactionsType[0].value
-    );
-    const [currentPage, setCurrentPage] = useState(1);
-  
-    const handlePageChange = (page: number) => {
-      setCurrentPage(page);
-    };
+  const [fromDate, setFromDate] = useState<string>("");
+  const [toDate, setToDate] = useState<string>("");
+  const recordPerPageFilter = [
+    { label: "5", value: 5 },
+    { label: "10", value: 10 },
+    { label: "20", value: 20 },
+    { label: "50", value: 50 },
+    { label: "100", value: 100 },
+  ];
+
+  const [recordsPerPage, setRecordsPerPage] = useState(
+    recordPerPageFilter[0].value
+  );
+
+  const [selectedTimeFilter, setSelectedTimeFilter] = useState(
+    timeFilters[0].value
+  );
+  const [selectedTransactionType, setSelectedTransactionType] = useState(
+    transactionsType[0].value
+  );
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
   const dispatch = useDispatch<AppDispatch>();
   const loading = useSelector((state: RootState) => state.transactions.loading);
   const transactions = useSelector(
     (state: RootState) => state.transactions.mediaTransactions
   );
-const handleFetchtransactions = async (timeRange: string,
+  const handleFetchtransactions = async (
+    timeRange: string,
     phoneNumber: string,
     type: string,
     page: number,
-    limit: number) => {
+    limit: number,
+    startDate: string,
+    endDate: string
+  ) => {
     await dispatch(
       getMediaTransactions({
         id: params.mediaId,
@@ -56,23 +66,52 @@ const handleFetchtransactions = async (timeRange: string,
         type,
         page,
         limit,
+        startDate,
+        endDate,
       })
     );
+  };
+
+  useEffect(() => {
+    if(fromDate && toDate){
+      handleFetchtransactions(
+        selectedTimeFilter,
+        phoneNumber,
+        selectedTransactionType,
+        currentPage,
+        recordsPerPage,
+        fromDate,
+        toDate
+      );
+    }else if(!fromDate && !toDate){
+      handleFetchtransactions(
+        selectedTimeFilter,
+        phoneNumber,
+        selectedTransactionType,
+        currentPage,
+        recordsPerPage,
+        "",
+        ""
+      );
+    }
     
-  }
-
-  useEffect(() => {
-    handleFetchtransactions(selectedTimeFilter,phoneNumber,selectedTransactionType,currentPage,recordsPerPage);
-  }, [selectedTimeFilter,phoneNumber,selectedTransactionType,currentPage,recordsPerPage]);
+  }, [
+    selectedTimeFilter,
+    phoneNumber,
+    selectedTransactionType,
+    currentPage,
+    recordsPerPage,
+    fromDate,
+    toDate,
+  ]);
   const params = useParams<{ mediaId: string }>();
-  useEffect(() => {
-    dispatch(getMediaTransactionHistory({ id: params.mediaId }));
-  }, [dispatch, params.mediaId]);
+  // useEffect(() => {
+  //   dispatch(getMediaTransactionHistory({ id: params.mediaId }));
+  // }, [dispatch, params.mediaId]);
 
- 
   return (
     <div className="mt-4">
-        <div className="mb-8">
+      <div className="mb-8">
         <div className="flex items-center gap-3 mb-2">
           <div className="p-2 bg-blue-900 rounded-lg">
             <Receipt className="text-blue-400" size={24} />
@@ -101,6 +140,11 @@ const handleFetchtransactions = async (timeRange: string,
           {/* Filters */}
           <div className="flex gap-3">
             <div className="flex items-center gap-2 bg-gray-800 rounded-lg p-1 border border-gray-600">
+              <Input value={fromDate} onChange={setFromDate} type="date" />
+              <div>
+                <p>To</p>
+              </div>
+              <Input value={toDate} onChange={setToDate} type="date" />
               <Select
                 Icon={Clock}
                 value={selectedTimeFilter}
@@ -118,7 +162,6 @@ const handleFetchtransactions = async (timeRange: string,
         </div>
       </div>
 
-      
       {loading === "pending" || transactions === null ? (
         <ReusableLoader />
       ) : (
@@ -135,8 +178,8 @@ const handleFetchtransactions = async (timeRange: string,
                 <table className="w-full">
                   <thead className="bg-gray-800">
                     <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
-                       Station
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
+                        Station
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
                         Show
@@ -162,10 +205,10 @@ const handleFetchtransactions = async (timeRange: string,
                     {transactions.data.map((tx) => (
                       <tr key={tx._id} className="hover:bg-gray-800">
                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-white">
-                          {tx.show? tx.show.station.name : "N/A"}
+                          {tx.show ? tx.show.station.name : "N/A"}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-white">
-                          {tx.show? tx.show.name : "N/A"}
+                          {tx.show ? tx.show.name : "N/A"}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-400">
                           {tx.transactionCode.slice(0, 9)}
@@ -202,15 +245,13 @@ const handleFetchtransactions = async (timeRange: string,
           onChange={(e) => setRecordsPerPage(Number(e))}
           options={recordPerPageFilter}
         />
-       {
-        loading === 'succeeded' && transactions !== null && (
-            <Pagination
+        {loading === "succeeded" && transactions !== null && (
+          <Pagination
             currentPage={currentPage}
             totalPages={transactions!.totalPages}
             onPageChange={handlePageChange}
           />
-        )
-       }
+        )}
       </div>
     </div>
   );

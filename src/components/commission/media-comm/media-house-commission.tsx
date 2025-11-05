@@ -1,10 +1,12 @@
 "use client";
 
+import Input from "@/components/shared/input";
 import ReusableLoader from "@/components/shared/reusable-loader";
+import Select from "@/components/shared/reusable-select-input";
 import { getMediaHouseCommission } from "@/lib/commission/commission";
 import { AppDispatch, RootState } from "@/lib/store";
 import { formatCurrency } from "@/utils/utils";
-import { Percent, Wallet } from "lucide-react";
+import { Filter, Percent, Wallet } from "lucide-react";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -34,6 +36,8 @@ function MediaHouseCommission() {
     },
   ];
   const [activeRange, setActiveRange] = useState("1d");
+  const [fromDate, setFromDate] = useState<string>("");
+  const [toDate, setToDate] = useState<string>("");
 
   const dispatch = useDispatch<AppDispatch>();
 
@@ -43,15 +47,20 @@ function MediaHouseCommission() {
   );
   const params = useParams<{ mediaId: string }>();
 
-  const fetchMasterCommission = async (range: string) => {
+  const fetchMasterCommission = async (range: string,fromDate:string,toDate:string) => {
     await dispatch(
-      getMediaHouseCommission({ range: range, id: params.mediaId })
+      getMediaHouseCommission({ range: range, id: params.mediaId, fromDate, toDate })
     );
   };
 
   useEffect(() => {
-    fetchMasterCommission(activeRange);
-  }, [activeRange]);
+    if(fromDate && toDate){
+      fetchMasterCommission(activeRange, fromDate, toDate);
+    }else if(!fromDate && !toDate){
+      fetchMasterCommission(activeRange, "", "");
+    }
+    // fetchMasterCommission(activeRange);
+  }, [activeRange, fromDate, toDate]);
   return (
     <div>
       <div className="mb-8">
@@ -74,7 +83,18 @@ function MediaHouseCommission() {
           {/* Filters */}
           <div className="flex gap-3">
             <div className="flex items-center gap-2 bg-gray-800 rounded-lg p-1 border border-gray-600">
-              {range.map((item) => (
+              <Input value={fromDate} onChange={setFromDate} type="date" />
+              <div>
+                <p>To</p>
+              </div>
+              <Input value={toDate} onChange={setToDate} type="date" />
+              <Select
+                value={activeRange}
+                onChange={(value) => setActiveRange(value)}
+                options={range}
+                Icon={Filter}
+              />
+              {/* {range.map((item) => (
                 <button
                   key={item.value}
                   onClick={() => setActiveRange(item.value)}
@@ -86,7 +106,7 @@ function MediaHouseCommission() {
                 >
                   {item.label}
                 </button>
-              ))}
+              ))} */}
             </div>
           </div>
         </div>
@@ -162,7 +182,8 @@ function MediaHouseCommission() {
                           </td>
                           <td className="px-6 py-4 text-gray-300">
                             <div className="font-medium">
-                            {masterCommission.mediaHouseName}-{item.stationName}
+                              {masterCommission.mediaHouseName}-
+                              {item.stationName}
                             </div>
                           </td>
                           <td className="px-6 py-4 text-gray-300">

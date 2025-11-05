@@ -55,12 +55,14 @@ export const getMediaTransactions = createAsyncThunk(
         type: string;
         page: number;
         limit: number;
+        startDate:string;
+        endDate:string
       },
       { rejectWithValue, getState }
     ) => {
       const state = getState() as { auth: { token: string } };
       const response = await fetch(
-        `${BASE_URL}/media/media-show-transaction-history-paginated/${data.id}?timeRange=${data.timeRange}&phoneNumber=${data.phoneNumber}&type=${data.type}&page=${data.page}&limit=${data.limit}`,
+        `${BASE_URL}/media/media-show-transaction-history-paginated/${data.id}?timeRange=${data.timeRange}&phoneNumber=${data.phoneNumber}&type=${data.type}&page=${data.page}&limit=${data.limit}&startDate=${data.startDate}&endDate=${data.endDate}`,
         {
           method: "GET",
           headers: {

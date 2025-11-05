@@ -7,10 +7,13 @@ import { Filter, SunIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import Input from "../shared/input";
 import Select from "../shared/reusable-select-input";
 
 function MediaHouseRevenueByStation({param}:{param:string}) {
   const [activeRange, setActiveRange] = useState(timeFilters[3].value);
+  const [startDate, setStartDate] = useState<string>("");
+  const [toDate, setToDate] = useState<string>("");
   const dispatch = useDispatch<AppDispatch>();
   const loading = useSelector(
     (state: RootState) => state.media.loadingRevenueByStation
@@ -18,15 +21,20 @@ function MediaHouseRevenueByStation({param}:{param:string}) {
   const stationRevenueData = useSelector(
     (state: RootState) => state.media.mediaRevenueByStation
   );
-  const fetchMediaRevenueByStation = async (range: string) => {
+  const fetchMediaRevenueByStation = async (range: string,startDate:string,endDate:string) => {
     await dispatch(
-      getMediaRevenueByStation({ range: range, id: param })
+      getMediaRevenueByStation({ range: range, id: param, startDate, endDate })
     );
   }
 
   useEffect(()=>{
-    fetchMediaRevenueByStation(activeRange);
-  },[activeRange])
+    if(startDate && toDate){
+      fetchMediaRevenueByStation(activeRange, startDate, toDate);
+    }else if(!startDate && !toDate){
+      fetchMediaRevenueByStation(activeRange, "", "");
+    }
+    // fetchMediaRevenueByStation(activeRange);
+  },[activeRange, startDate, toDate]);
   return (
     <div className="mt-4">
       {loading === "pending" ? (
@@ -40,13 +48,27 @@ function MediaHouseRevenueByStation({param}:{param:string}) {
         <div className="bg-gray-900 rounded-lg p-6 shadow-sm border border-gray-700">
           <div className="mb-4 flex justify-between items-center">
           <h3 className="text-lg font-semibold  text-white">Revenue by Station</h3>
-
+         <div className="flex items-center gap-3">
+         <Input 
+        value={startDate}
+        onChange={setStartDate}
+        type="date"
+        />
+        <div>
+          <p>To</p>
+        </div>
+        <Input 
+        value={toDate}
+        onChange={setToDate}
+        type="date"
+        />
           <Select 
           onChange={setActiveRange}
           value={activeRange}
           options={timeFilters}
           Icon={Filter}
           />
+         </div>
           </div>
           <ResponsiveContainer width="100%" height={300}>
             <BarChart data={stationRevenueData}>

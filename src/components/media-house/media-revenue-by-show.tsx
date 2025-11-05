@@ -15,10 +15,13 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
+import Input from "../shared/input";
 import Select from "../shared/reusable-select-input";
 
 function MediaRevenueByShow({ param }: { param: string }) {
   const [activeRange, setActiveRange] = useState(timeFilters[3].value);
+  const [startDate, setStartDate] = useState<string>("");
+  const [toDate, setToDate] = useState<string>("");
   const dispatch = useDispatch<AppDispatch>();
   const loading = useSelector(
     (state: RootState) => state.media.loadingRevenueByShow
@@ -27,13 +30,18 @@ function MediaRevenueByShow({ param }: { param: string }) {
     (state: RootState) => state.media.mediaRevenueByShow
   );
 
-  const fetchMediaRevenueByShow = async (range: string) => {
-    await dispatch(getMediaRevenueByShow({ range: range, id: param }));
+  const fetchMediaRevenueByShow = async (range: string,startDate:string,endDate:string) => {
+    await dispatch(getMediaRevenueByShow({ range: range, id: param, startDate, endDate }));
   }
 
   useEffect(() => {
-    fetchMediaRevenueByShow(activeRange);
-  }, [activeRange]);
+    if(startDate && toDate){
+      fetchMediaRevenueByShow(activeRange, startDate, toDate);
+    }else if(!startDate && !toDate){
+      fetchMediaRevenueByShow(activeRange, "", "");
+    }
+    // fetchMediaRevenueByShow(activeRange);
+  }, [activeRange, startDate, toDate]);
   return (
     <div className="mt-4">
       {loading === "pending" ? (
@@ -48,12 +56,27 @@ function MediaRevenueByShow({ param }: { param: string }) {
               <h3 className="text-lg font-semibold mb-4 text-white">
                 Top Performing Shows
               </h3>
-              <Select
-                onChange={setActiveRange}
-                value={activeRange}
-                options={timeFilters}
-                Icon={Filter}
-              />
+              <div className="flex items-center gap-3">
+         <Input 
+        value={startDate}
+        onChange={setStartDate}
+        type="date"
+        />
+        <div>
+          <p>To</p>
+        </div>
+        <Input 
+        value={toDate}
+        onChange={setToDate}
+        type="date"
+        />
+          <Select 
+          onChange={setActiveRange}
+          value={activeRange}
+          options={timeFilters}
+          Icon={Filter}
+          />
+         </div>
             </div>
 
             <ResponsiveContainer width="100%" height={300}>
