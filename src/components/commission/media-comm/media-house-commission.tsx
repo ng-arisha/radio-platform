@@ -5,7 +5,7 @@ import ReusableLoader from "@/components/shared/reusable-loader";
 import Select from "@/components/shared/reusable-select-input";
 import { getMediaHouseCommission } from "@/lib/commission/commission";
 import { AppDispatch, RootState } from "@/lib/store";
-import { formatCurrency } from "@/utils/utils";
+import { formatCurrency, range } from "@/utils/utils";
 import { Filter, Percent, Wallet } from "lucide-react";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -13,28 +13,7 @@ import { useDispatch, useSelector } from "react-redux";
 import AssignMediaHouseCommissionRtae from "./assign-media-house-commission-rate";
 
 function MediaHouseCommission() {
-  const range = [
-    {
-      label: "1 hr Ago",
-      value: "1h",
-    },
-    {
-      label: "6 hrs Ago",
-      value: "6h",
-    },
-    {
-      label: "1 day Ago",
-      value: "1d",
-    },
-    {
-      label: "This Week",
-      value: "1w",
-    },
-    {
-      label: "This Month",
-      value: "1m",
-    },
-  ];
+
   const [activeRange, setActiveRange] = useState("1d");
   const [fromDate, setFromDate] = useState<string>("");
   const [toDate, setToDate] = useState<string>("");

@@ -7,6 +7,8 @@ interface InitialCommissionState {
   masterCommission: MasterCommissionType | null;
   mediaCommission: MediaHousesCommissionType | null;
   stationCommission: StationLevelCommissionType | null;
+  loadingRevenueByCodes: "idle" | "pending" | "succeeded" | "failed";
+  revenueByStationCodes: { name: string; value: number }[];
 }
 
 const initialState: InitialCommissionState = {
@@ -14,11 +16,16 @@ const initialState: InitialCommissionState = {
   masterCommission: null,
   mediaCommission: null,
   stationCommission: null,
+  loadingRevenueByCodes: "idle",
+  revenueByStationCodes: [],
 };
 
 export const getSMasterPlatformCommission = createAsyncThunk(
   "commission/getSMasterPlatformCommission",
-  async (data: { range: string,fromDate:string,endDate:string }, { rejectWithValue, getState }) => {
+  async (
+    data: { range: string; fromDate: string; endDate: string },
+    { rejectWithValue, getState }
+  ) => {
     const state = getState() as { auth: { token: string } };
     const response = await fetch(
       `${BASE_URL}/show/performance?range=${data.range}&fromDate=${data.fromDate}&toDate=${data.endDate}`,
@@ -42,12 +49,12 @@ export const getSMasterPlatformCommission = createAsyncThunk(
 export const getMediaHouseCommission = createAsyncThunk(
   "commission/getMediaHouseCommission",
   async (
-    data: { id: string; range: string,fromDate:string; toDate:string },
+    data: { id: string; range: string; fromDate: string; toDate: string },
     { rejectWithValue, getState }
   ) => {
     const state = getState() as { auth: { token: string } };
     const response = await fetch(
-      `${BASE_URL}/show/commission-by-station/${data.id}?range=${data.range}${data.fromDate ? `&fromDate=${data.fromDate}` : ''}${data.toDate ? `&toDate=${data.toDate}` : ''}`,
+      `${BASE_URL}/show/commission-by-station/${data.id}?range=${data.range}${data.fromDate ? `&fromDate=${data.fromDate}` : ""}${data.toDate ? `&toDate=${data.toDate}` : ""}`,
       {
         method: "GET",
         headers: {
@@ -68,7 +75,7 @@ export const getMediaHouseCommission = createAsyncThunk(
 export const getStationCommission = createAsyncThunk(
   "commission/getStationCommission",
   async (
-    data: { id: string; range: string, startDate:string,endDate:string},
+    data: { id: string; range: string; startDate: string; endDate: string },
     { rejectWithValue, getState }
   ) => {
     const state = getState() as { auth: { token: string } };
@@ -152,6 +159,32 @@ export const setStationCommissionRate = createAsyncThunk(
           Authorization: `Bearer ${state.auth.token}`,
         },
         body: JSON.stringify({ rate: data.rate }),
+      }
+    );
+    if (!response.ok) {
+      const errorData = await response.json();
+      return rejectWithValue(errorData.message);
+    }
+    const responseData = await response.json();
+    return responseData;
+  }
+);
+
+export const setStationRevenueByCodes = createAsyncThunk(
+  "commission/setStationRevenueByCodes",
+  async (
+    data: { range: string; startDate: string; endDate: string },
+    { rejectWithValue, getState }
+  ) => {
+    const state = getState() as { auth: { token: string } };
+    const response = await fetch(
+      `${BASE_URL}/commission/revenue-distribution-by-show/?range=${data.range}&fromDate=${data.startDate}&toDate=${data.endDate}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${state.auth.token}`,
+        },
       }
     );
     if (!response.ok) {
@@ -258,6 +291,25 @@ const commissionSlice = createSlice({
       state.loading = "failed";
       toast.error(payload as string);
     });
+
+    // Get Revenue Distribution by Show Codes
+    builder.addCase(setStationRevenueByCodes.pending, (state) => {
+      state.loadingRevenueByCodes = "pending";
+    });
+    builder.addCase(
+      setStationRevenueByCodes.fulfilled,
+      (state, action) => {
+        state.loadingRevenueByCodes = "succeeded";
+        state.revenueByStationCodes = action.payload;
+      }
+    );
+    builder.addCase(
+      setStationRevenueByCodes.rejected,
+      (state, { payload }) => {
+        state.loadingRevenueByCodes = "failed";
+        toast.error(payload as string);
+      }
+    );
   },
 });
 

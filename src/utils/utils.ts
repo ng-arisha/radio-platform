@@ -28,6 +28,29 @@ export enum PromoType {
   SHOW_GIVEAWAY = "show_giveaway",
 }
 
+export const range = [
+  {
+    label: "1 hr Ago",
+    value: "1h",
+  },
+  {
+    label: "6 hrs Ago",
+    value: "6h",
+  },
+  {
+    label: "1 day Ago",
+    value: "1d",
+  },
+  {
+    label: "This Week",
+    value: "1w",
+  },
+  {
+    label: "This Month",
+    value: "1m",
+  },
+];
+
 export const daysOfWeek = [
   "Sunday",
   "Monday",
