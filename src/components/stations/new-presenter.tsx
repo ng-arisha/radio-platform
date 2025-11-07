@@ -1,6 +1,7 @@
 "use client";
 
 import { getShowInStation } from "@/lib/shows/shows";
+import { getStationPresenters } from "@/lib/stations/stations";
 import { AppDispatch, RootState } from "@/lib/store";
 import { createMediaHouseUser } from "@/lib/users/users";
 import { Mail, Phone, Plus, SunIcon, User, X } from "lucide-react";
@@ -64,6 +65,7 @@ function NewPresenter() {
     }
     closeModal();
     // dispatch action to create new presenter
+    dispatch(getStationPresenters({ id: params.stationId }));
   };
   return (
     <div>

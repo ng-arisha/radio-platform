@@ -10,6 +10,7 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import DeleteShowModal from "./delete-show-modal";
 import NewShow from "./new-show";
 import ViewShowDetails from "./view-show-details";
 
@@ -213,6 +214,7 @@ function ShowList() {
                             <Eye size={18} />
                           </Link>
                           <ViewShowDetails show={show} purpose="edit" />
+                          <DeleteShowModal show={show} />
                           {/* <button
                             className={`p-2 rounded-lg transition-colors ${
                               show.status === "Active"

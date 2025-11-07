@@ -1,5 +1,6 @@
 import { BASE_URL } from "@/utils/utils";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import toast from "react-hot-toast";
 
 interface InitialTrasactionSTate {
   loading: "idle" | "pending" | "succeeded" | "failed";
@@ -14,7 +15,7 @@ const initialState: InitialTrasactionSTate = {
 };
 
 export const getAllTransactions = createAsyncThunk(
-  "shows/getAllTransactions",
+  "transactions/getAllTransactions",
   async (
     data: {
       timeRange: string;
@@ -48,7 +49,7 @@ export const getAllTransactions = createAsyncThunk(
 );
 
 export const getMediaTransactions = createAsyncThunk(
-    "shows/getMediaTransactions",
+    "transactions/getMediaTransactions",
     async (
       data: {
         id:string
@@ -71,6 +72,39 @@ export const getMediaTransactions = createAsyncThunk(
             "Content-Type": "application/json",
             Authorization: `Bearer ${state.auth.token}`,
           },
+        }
+      );
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message);
+      }
+      const revenueData = await response.json();
+      return revenueData;
+    }
+  );
+
+
+  export const processPayouts = createAsyncThunk(
+    "transactions/processPayouts",
+    async (
+      data: {
+        phoneNumber:string,
+        amount:number,
+        showId:string,
+        promotionId:string
+      },
+      { rejectWithValue, getState }
+    ) => {
+      const state = getState() as { auth: { token: string } };
+      const response = await fetch(
+        `${BASE_URL}/transaction/payout`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${state.auth.token}`,
+          },
+          body:JSON.stringify(data)
         }
       );
       if (!response.ok) {
@@ -111,6 +145,20 @@ const transactionSlice = createSlice({
     });
     builder.addCase(getMediaTransactions.rejected, (state) => {
       state.loading = "failed";
+    });
+
+    // Process Payouts
+    builder.addCase(processPayouts.pending, (state) => {
+      state.loading = "pending";
+    });
+    builder.addCase(processPayouts.fulfilled, (state, action) => {
+      state.loading = "succeeded";
+      console.log("Payout processed:", action.payload);
+      toast.success("Payout processed successfully");
+    });
+    builder.addCase(processPayouts.rejected, (state) => {
+      state.loading = "failed";
+      toast.error("Failed to process payout");
     });
   },
 });

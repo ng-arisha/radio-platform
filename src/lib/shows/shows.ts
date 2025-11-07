@@ -19,6 +19,7 @@ interface InitialShowState {
   mediaHouseShows: ShowType[];
   randomShowTransaction: TransactionsType | null;
   allShows: ShowType[];
+  deletingShow: "idle" | "pending" | "succeeded" | "failed";
 }
 
 const initialState: InitialShowState = {
@@ -38,6 +39,7 @@ const initialState: InitialShowState = {
   mediaHouseShows: [],
   randomShowTransaction: null,
   allShows: [],
+  deletingShow: "idle",
 };
 
 export const getShowDetails = createAsyncThunk(
@@ -165,6 +167,33 @@ export const changeShowStatus = createAsyncThunk(
       body: JSON.stringify({
         status: data.status,
       }),
+    });
+    if (!response.ok) {
+      const errorData = await response.json();
+      return rejectWithValue(errorData.message);
+    }
+    const showData = await response.json();
+    return showData;
+  }
+);
+
+export const deleteShow = createAsyncThunk(
+  "shows/deleteShow",
+  async (
+    data: {
+      id: string;
+      
+    },
+    { rejectWithValue, getState }
+  ) => {
+    const state = getState() as { auth: { token: string } };
+    const response = await fetch(`${BASE_URL}/show/delete-show/${data.id}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${state.auth.token}`,
+      },
+     
     });
     if (!response.ok) {
       const errorData = await response.json();
@@ -581,6 +610,19 @@ const showSlice = createSlice({
     });
     builder.addCase(changeShowStatus.rejected, (state) => {
       state.loading = "failed";
+    });
+
+    // Delete Show
+    builder.addCase(deleteShow.pending, (state) => {
+      state.deletingShow = "pending";
+    });
+    builder.addCase(deleteShow.fulfilled, (state, action) => {
+      state.deletingShow = "succeeded";
+      toast.success("Show deleted successfully!");
+  });
+    builder.addCase(deleteShow.rejected, (state) => {
+      state.deletingShow = "failed";
+      toast.error("Failed to delete show.");
     });
   },
 });

@@ -1,17 +1,25 @@
 "use client";
 
 import Input from "@/components/shared/input";
-import { getRandomTransaction } from "@/lib/shows/shows";
+import Select from "@/components/shared/reusable-select-input";
+import { getRandomTransaction, getShowPromotions } from "@/lib/shows/shows";
 import { AppDispatch, RootState } from "@/lib/store";
-import { Award, Gift } from "lucide-react";
+import { processPayouts } from "@/lib/transactions/transaction";
+import { Award, Gift, SunIcon } from "lucide-react";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 
 function GenerateNewWinner() {
   const dispatch = useDispatch<AppDispatch>();
   const [amount, setAmount] = useState<number>(0);
+  const [selectedPromotion, setSelectedPromotion] = useState<string>("");
+  const promotions = useSelector(
+    (state: RootState) => state.shows.showPromotions
+  );
   const loading = useSelector((state: RootState) => state.shows.loading);
+  const handlingPayouts = useSelector((state:RootState) => state.transactions.loading);
   const randomTransaction = useSelector(
     (state: RootState) => state.shows.randomShowTransaction
   );
@@ -24,7 +32,29 @@ function GenerateNewWinner() {
     }
   };
 
+    useEffect(() => {
+      dispatch(getShowPromotions({ id: params.showId }));
+    }, [dispatch]);
+
   useEffect(() => {}, [randomTransaction,dispatch]);
+
+  const handlePayouts = async () => {
+    if(!selectedPromotion && randomTransaction!==null && !randomTransaction?.phoneNumber){
+      toast.error("Please select a promotion and ensure a winner is selected");
+    }
+    const data = {
+      phoneNumber: randomTransaction?.phoneNumber || "",
+      amount,
+      showId: params.showId,
+      promotionId: selectedPromotion
+    }
+    await dispatch(processPayouts(data));
+  }
+
+  const modifiedPromotions = promotions.map((promotion) => ({
+    label: promotion.name,
+    value: promotion._id,
+  }));
 
   return (
     <div>
@@ -47,6 +77,13 @@ function GenerateNewWinner() {
             <div className="bg-gray-700 max-w-md bg-opacity-20 rounded-lg p-6 backdrop-blur-sm">
               
               <p className="text-white text-opacity-80 mb-2">{randomTransaction.phoneNumber}</p>
+              <Select 
+              value={selectedPromotion}
+              onChange={setSelectedPromotion}
+              options={modifiedPromotions}
+              Icon={Gift}
+              label="Select Promotion"
+              />
              <div className="mt-4 ">
                 <Input 
                 label="Reward Amount"
@@ -65,11 +102,18 @@ function GenerateNewWinner() {
               >
                 Regenerate Winner
               </button>
-              <button
-              type="button"
-              className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition font-semibold">
-                Send Reward
-              </button>
+             {
+              handlingPayouts === "pending" ? (
+                <SunIcon className="animate-spin text-white" size={32} />
+              ):(
+                <button
+                type="button"
+                onClick={handlePayouts}
+                className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition font-semibold">
+                  Send Reward
+                </button>
+              )
+             }
             </div>
           </div>
         ):(

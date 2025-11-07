@@ -276,7 +276,7 @@ export const sidebarLinks = [
     children: [
       { label: "Revenue Reports", path: "/reports/revenue" },
       // { label: "Payout Reports", path: "/reports/payouts" },
-      // { label: "Bonus Reports", path: "/reports/bonuses" },
+      { label: "Promotion Reports", path: "/reports/promos" },
     ],
   },
   {

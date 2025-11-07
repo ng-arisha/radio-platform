@@ -37,6 +37,7 @@ function RevenueDistributionByShowCode() {
   useEffect(() => {
     if (fromDate && toDate) {
       
+      
       fetchRevenueDistributionByStationCodes("", fromDate, toDate);
     } else if (!fromDate && !toDate) {
       fetchRevenueDistributionByStationCodes(activeRange, "", "");

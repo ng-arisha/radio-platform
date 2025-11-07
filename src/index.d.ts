@@ -115,6 +115,9 @@ declare type PromotionType = {
   status: string;
   type?: string;
   show: ShowType;
+  spent: number;
+  numberOfBeneficiaries: number;
+  beneficiaries:string[];
   expiryDate: string;
   createdAt: string;
 };

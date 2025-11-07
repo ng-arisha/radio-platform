@@ -3,7 +3,7 @@
 import Button from "@/components/shared/button";
 import Input from "@/components/shared/input";
 import { getStationSummary } from "@/lib/media/media";
-import { createNewShow } from "@/lib/shows/shows";
+import { createNewShow, getShowInStation } from "@/lib/shows/shows";
 import { AppDispatch, RootState } from "@/lib/store";
 import { daysOfWeek, UserRole } from "@/utils/utils";
 import { Plus, Radio, SunIcon, X } from "lucide-react";
@@ -77,6 +77,8 @@ function NewShow({role}:{role:string}) {
       setEndTime("");
       setActiveDays([]);
     }
+
+     await dispatch(getShowInStation({ id: params.stationId, search:"", status:"", range:"" }));
   };
   return (
     <div>

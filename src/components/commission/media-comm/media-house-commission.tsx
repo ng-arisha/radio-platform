@@ -73,19 +73,7 @@ function MediaHouseCommission() {
                 options={range}
                 Icon={Filter}
               />
-              {/* {range.map((item) => (
-                <button
-                  key={item.value}
-                  onClick={() => setActiveRange(item.value)}
-                  className={`px-4 py-2 rounded-md text-sm font-medium transition-colors cursor-pointer ${
-                    activeRange === item.value
-                      ? "bg-orange-600 text-white"
-                      : "text-gray-400 hover:text-white"
-                  }`}
-                >
-                  {item.label}
-                </button>
-              ))} */}
+             
             </div>
           </div>
         </div>
