@@ -40,7 +40,7 @@ function UserTable({ users }: { users: UserType[] }) {
                     <span>Inactive</span>
                   </p>
                 ) : (
-                  <p className="py-1 px-2 rounded-full bg-red-500/30 text-red-500 flex justify-center items-center w-fit">
+                  <p className="py-1 px-2 rounded-full bg-green-500/30 text-green-500 flex justify-center items-center w-fit">
                     <Power className="mr-1" size={16} />
                     <span>Active</span>
                   </p>

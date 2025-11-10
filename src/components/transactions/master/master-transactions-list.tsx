@@ -178,6 +178,10 @@ function MasterTransactionsList() {
                         Amount
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
+                        Operator
+                      </th>
+                     
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
                         Type
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
@@ -201,10 +205,13 @@ function MasterTransactionsList() {
                           {tx.show? tx.show.name: "N/A" }
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-400">
-                          {tx.transactionCode.slice(0, 9)}
+                          {tx.receipt ? tx.receipt : tx.transactionCode.slice(0, 9)}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-white">
                           {formatCurrency(tx.amount)}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-white">
+                          {tx.operator ? tx.operator: "N/A"}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <span

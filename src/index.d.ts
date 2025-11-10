@@ -131,6 +131,9 @@ declare type TransactionsType = {
   createdAt: string;
   transactionCode: string;
   show?: ShowType;
+  code:string;
+  receipt:string;
+  operator:string
 };
 
 declare type AllocationType = {

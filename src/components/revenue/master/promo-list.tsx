@@ -107,17 +107,21 @@ function PromoList() {
                           {formatCurrency(promo.amount - promo.spent)}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-white">
-                          {promo.type === PromoType.FIXED_SHOW_WINNING ? promo.numberOfBeneficiaries : "Unlimited"}
+                          {promo.type === PromoType.FIXED_SHOW_WINNING
+                            ? promo.numberOfBeneficiaries
+                            : "Unlimited"}
                         </td>
                         <td className="relative px-6 py-4 whitespace-nowrap text-sm font-semibold text-white">
-                          {promo.beneficiaries.length} Benefiaries<BenefiaryToolTip benefiaries={promo.beneficiaries} />
-                          
+                          {promo.beneficiaries.length} Benefiaries
+                          <BenefiaryToolTip benefiaries={promo.beneficiaries} />
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <span
                             className={`px-2 py-1 text-xs font-medium rounded`}
                           >
-                            {promo.type === PromoType.FIXED_SHOW_WINNING ? "Fixed":"Giveaway"}
+                            {promo.type === PromoType.FIXED_SHOW_WINNING
+                              ? "Fixed"
+                              : "Giveaway"}
                           </span>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
