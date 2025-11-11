@@ -21,7 +21,9 @@ declare type MediaHouseType = {
 declare type StationPresenters = {
   role:string;
   showName:string;
-  user: UserType
+  user: UserType;
+  commissionRate: number;
+  commissionId: string;
 }
 
 declare type UserType = {

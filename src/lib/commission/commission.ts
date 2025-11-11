@@ -146,6 +146,30 @@ export const setMediaHouseCommissionRate = createAsyncThunk(
   }
 );
 
+export const assignPresenterPaymentRate = createAsyncThunk(
+  "commission/assignPresenterPaymentRate",
+  async (data: { id: string; rate: number }, { rejectWithValue, getState }) => {
+    const state = getState() as { auth: { token: string } };
+    const response = await fetch(
+      `${BASE_URL}/commission/assign-user-rate/${data.id}`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${state.auth.token}`,
+        },
+        body: JSON.stringify({ rate: data.rate }),
+      }
+    );
+    if (!response.ok) {
+      const errorData = await response.json();
+      return rejectWithValue(errorData.message);
+    }
+    const responseData = await response.json();
+    return responseData;
+  }
+);
+
 export const setStationCommissionRate = createAsyncThunk(
   "commission/setStationCommissionRate",
   async (data: { id: string; rate: number }, { rejectWithValue, getState }) => {
@@ -296,17 +320,27 @@ const commissionSlice = createSlice({
     builder.addCase(setStationRevenueByCodes.pending, (state) => {
       state.loadingRevenueByCodes = "pending";
     });
+    builder.addCase(setStationRevenueByCodes.fulfilled, (state, action) => {
+      state.loadingRevenueByCodes = "succeeded";
+      state.revenueByStationCodes = action.payload;
+    });
+    builder.addCase(setStationRevenueByCodes.rejected, (state, { payload }) => {
+      state.loadingRevenueByCodes = "failed";
+      toast.error(payload as string);
+    });
+
+    // Assign Presenter Payment Rate
+    builder.addCase(assignPresenterPaymentRate.pending, (state) => {
+      state.loading = "pending";
+    });
+    builder.addCase(assignPresenterPaymentRate.fulfilled, (state, action) => {
+      state.loading = "succeeded";
+      toast.success("Presenter Payment Rate Assigned Successfully");
+    });
     builder.addCase(
-      setStationRevenueByCodes.fulfilled,
-      (state, action) => {
-        state.loadingRevenueByCodes = "succeeded";
-        state.revenueByStationCodes = action.payload;
-      }
-    );
-    builder.addCase(
-      setStationRevenueByCodes.rejected,
+      assignPresenterPaymentRate.rejected,
       (state, { payload }) => {
-        state.loadingRevenueByCodes = "failed";
+        state.loading = "failed";
         toast.error(payload as string);
       }
     );

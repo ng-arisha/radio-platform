@@ -193,10 +193,10 @@ export const getStationTransactions = createAsyncThunk(
 
 export const getShowCommission = createAsyncThunk(
   "finance/getShowCommission",
-  async (data: { id: string }, { rejectWithValue, getState }) => {
+  async (data: { id: string,startDate?:string, endDate?:string}, { rejectWithValue, getState }) => {
     const state = getState() as { auth: { token: string } };
     const response = await fetch(
-      `${BASE_URL}/show/show-commissions/${data.id}`,
+      `${BASE_URL}/show/show-commissions/${data.id}${data.startDate ? `?startDate=${data.startDate}&endDate=${data.endDate}` : ''}`,
       {
         method: "GET",
         headers: {

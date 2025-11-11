@@ -50,8 +50,12 @@ function TeamMembersList() {
                   <th className="text-left p-4 text-gray-300 font-semibold">
                     Phone Number
                   </th>
+                  <th>Role</th>
                   <th className="text-left p-4 text-gray-300 font-semibold">
-                    Joined At
+                    Date Created
+                  </th>
+                  <th className="text-left p-4 text-gray-300 font-semibold">
+                    Rate
                   </th>
                 </tr>
               </thead>
@@ -62,12 +66,16 @@ function TeamMembersList() {
                     className="border-t border-gray-600 hover:bg-gray-600 transition"
                   >
                     <td className="p-4 text-white font-medium">
-                      {member.fullName}
+                      {member.user.fullName}
                     </td>
-                    <td className="p-4 text-gray-300">{member.email}</td>
-                    <td className="p-4 text-gray-300">{member.phoneNumber}</td>
+                    <td className="p-4 text-gray-300">{member.user.email}</td>
+                    <td className="p-4 text-gray-300">{member.user.phoneNumber}</td>
+                    <td className="p-4 text-gray-300 capitalize">{member.role === "co_host" ? "Co- Host" : member.role}</td>
 
-                    <td className="p-4 text-gray-300">{formatDate(member.createdAt)}</td>
+                    <td className="p-4 text-gray-300">{formatDate(member.user.createdAt)}</td>
+                    <td className="p-4 text-gray-300">
+                      {member.commissionRate}%
+                    </td>
                   </tr>
                 ))}
               </tbody>

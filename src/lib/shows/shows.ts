@@ -12,7 +12,7 @@ interface InitialShowState {
   showStats: { label: string; value: string; icon: string; color: string }[];
   showRevenue: { time: string; revenue: number }[];
   showTransactionsdata: { time: string; revenue: number }[];
-  showPresnters: PresenterType[];
+  showPresnters: StationPresenters[];
   showPromotions: PromotionType[];
   showTransactions: PaginatatedTxnsType | null;
   stationShows: ShowType[];
@@ -238,10 +238,10 @@ export const deleteShow = createAsyncThunk(
 
 export const getShowStats = createAsyncThunk(
   "shows/getShowStats",
-  async (data: { id: string }, { rejectWithValue, getState }) => {
+  async (data: { id: string,startDate?:string,endDate?:string }, { rejectWithValue, getState }) => {
     const state = getState() as { auth: { token: string } };
     const response = await fetch(
-      `${BASE_URL}/transaction/show-stats/${data.id}`,
+      `${BASE_URL}/transaction/show-stats/${data.id}${data.startDate && data.endDate ? `?startDate=${data.startDate}&endDate=${data.endDate}` : ''}`,
       {
         method: "GET",
         headers: {

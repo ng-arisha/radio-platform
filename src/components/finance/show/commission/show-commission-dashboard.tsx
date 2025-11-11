@@ -1,16 +1,19 @@
 "use client";
 
+import Input from "@/components/shared/input";
 import ReusableLoader from "@/components/shared/reusable-loader";
 import { getShowCommission } from "@/lib/finance/finance";
 import { AppDispatch, RootState } from "@/lib/store";
 import { formatCurrency } from "@/utils/utils";
 import { useParams } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import ShowCommissionChart from "./show-commission-chart";
 
 function ShowCommissionDashboard() {
   const dispatch = useDispatch<AppDispatch>();
+  const [fromDate, setFromDate] = useState<string>("");
+  const [toDate, setToDate] = useState<string>("");
   const loading = useSelector(
     (state: RootState) => state.finance.loadingShowData
   );
@@ -19,11 +22,28 @@ function ShowCommissionDashboard() {
   );
   const params = useParams<{ showId: string }>();
 
+  const handleGetCommission = async (startDate: string, endDate: string) => {
+    await dispatch(
+      getShowCommission({ id: params.showId, startDate, endDate })
+    );
+  };
+
   useEffect(() => {
-    dispatch(getShowCommission({ id: params.showId }));
-  }, [dispatch]);
+    if (fromDate && toDate) {
+      handleGetCommission(fromDate, toDate);
+    } else if (!fromDate && !toDate) {
+      dispatch(getShowCommission({ id: params.showId }));
+    }
+  }, [dispatch, fromDate, toDate]);
   return (
     <div>
+      <div className="flex justify-end items-center gap-2 rounded-lg p-1  mb-4">
+        <Input value={fromDate} onChange={setFromDate} type="date" />
+        <div>
+          <p>To</p>
+        </div>
+        <Input value={toDate} onChange={setToDate} type="date" />
+      </div>
       {loading === "pending" ? (
         <ReusableLoader />
       ) : (

@@ -6,18 +6,21 @@ import { Radio, SunIcon } from "lucide-react";
 import { useParams } from "next/navigation";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import AssignPresentersPaymentrates from "./assign-presenters-rate";
 
 function PresentersList() {
-    const dispatch = useDispatch<AppDispatch>();
-    const loading = useSelector((state: RootState) => state.stations.loading);
-    const presenters = useSelector((state: RootState) => state.stations.stationPresenters);
-    const params = useParams<{ stationId: string }>();
+  const dispatch = useDispatch<AppDispatch>();
+  const loading = useSelector((state: RootState) => state.stations.loading);
+  const presenters = useSelector(
+    (state: RootState) => state.stations.stationPresenters
+  );
+  const params = useParams<{ stationId: string }>();
 
-    useEffect(() => {
-        dispatch(getStationPresenters({ id: params.stationId }));
-    }, [dispatch, params.stationId]);
-    return (
-        <div>
+  useEffect(() => {
+    dispatch(getStationPresenters({ id: params.stationId }));
+  }, [dispatch, params.stationId]);
+  return (
+    <div>
       {loading === "pending" ? (
         <div className="h-24 flex flex-col justify-center items-center text-gray-300">
           <SunIcon className="animate-spin mb-2" size={24} />
@@ -52,13 +55,18 @@ function PresentersList() {
                       Role
                     </th>
                     <th className="px-6 py-4 text-left text-xs font-semibold text-gray-300 uppercase tracking-wider">
+                      Rate
+                    </th>
+                    <th className="px-6 py-4 text-left text-xs font-semibold text-gray-300 uppercase tracking-wider">
                       Created At
                     </th>
-                    
+                    <th className="px-6 py-4 text-left text-xs font-semibold text-gray-300 uppercase tracking-wider">
+                      Action
+                    </th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-600">
-                  {presenters.map((presenter,index) => (
+                  {presenters.map((presenter, index) => (
                     <tr
                       key={index}
                       className="hover:bg-gray-600 transition-colors"
@@ -94,27 +102,32 @@ function PresentersList() {
                         </span>
                       </td>
                       <td className="px-6 py-4">
+                        <span className="text-gray-300 font-mono text-sm">
+                          {presenter.commissionRate}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4">
                         <div className="flex items-center gap-2 text-gray-300">
-                         
                           <span className="text-sm">
-                            {new Date(presenter.user.createdAt).toLocaleDateString()}
+                            {new Date(
+                              presenter.user.createdAt
+                            ).toLocaleDateString()}
                           </span>
                         </div>
                       </td>
-                     
-
+                      <td className="px-6 py-4">
+                        <AssignPresentersPaymentrates user={presenter} />
+                      </td>
                     </tr>
                   ))}
                 </tbody>
               </table>
             </div>
           </div>
-
-         
         </div>
       )}
     </div>
-    )
+  );
 }
 
-export default PresentersList
+export default PresentersList;
