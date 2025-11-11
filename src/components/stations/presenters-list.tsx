@@ -49,15 +49,18 @@ function PresentersList() {
                       Phone Number
                     </th>
                     <th className="px-6 py-4 text-left text-xs font-semibold text-gray-300 uppercase tracking-wider">
+                      Role
+                    </th>
+                    <th className="px-6 py-4 text-left text-xs font-semibold text-gray-300 uppercase tracking-wider">
                       Created At
                     </th>
                     
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-600">
-                  {presenters.map((presenter) => (
+                  {presenters.map((presenter,index) => (
                     <tr
-                      key={presenter._id}
+                      key={index}
                       className="hover:bg-gray-600 transition-colors"
                     >
                       <td className="px-6 py-4">
@@ -72,24 +75,29 @@ function PresentersList() {
                       </td>
                       <td className="px-6 py-4">
                         <span className="text-gray-300 font-mono text-sm">
-                          {presenter.fullName}
+                          {presenter.user.fullName}
                         </span>
                       </td>
                       <td className="px-6 py-4">
                         <span className="text-gray-300 font-mono text-sm">
-                          {presenter.email}
+                          {presenter.user.email}
                         </span>
                       </td>
                       <td className="px-6 py-4">
                         <span className="text-gray-300 font-mono text-sm">
-                          {presenter.phoneNumber || "N/A"}
+                          {presenter.user.phoneNumber || "N/A"}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4">
+                        <span className="text-gray-300 font-mono text-sm">
+                          {presenter.role}
                         </span>
                       </td>
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-2 text-gray-300">
                          
                           <span className="text-sm">
-                            {new Date(presenter.createdAt).toLocaleDateString()}
+                            {new Date(presenter.user.createdAt).toLocaleDateString()}
                           </span>
                         </div>
                       </td>

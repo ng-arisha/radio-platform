@@ -18,6 +18,11 @@ declare type MediaHouseType = {
   createdAt: string;
   user: UserType;
 };
+declare type StationPresenters = {
+  role:string;
+  showName:string;
+  user: UserType
+}
 
 declare type UserType = {
   _id: string;
@@ -95,6 +100,7 @@ declare type ShowType = {
   station: StationType;
   revenue?: number;
   users: string[];
+  team:{user:string,role:string}[];
   activeDays: string[];
 };
 

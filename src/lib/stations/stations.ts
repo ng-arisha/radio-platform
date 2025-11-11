@@ -19,7 +19,7 @@ interface InitialStationType {
   loadingPieData: "idle" | "pending" | "succeeded" | "failed";
   stationBarData: { showName: string; revenue: number }[];
   loadingBarData: "idle" | "pending" | "succeeded" | "failed";
-  stationPresenters: UserType[];
+  stationPresenters: StationPresenters[];
 }
 
 const initialState: InitialStationType = {
