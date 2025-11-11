@@ -177,6 +177,38 @@ export const changeShowStatus = createAsyncThunk(
   }
 );
 
+export const assignPresenterToShow = createAsyncThunk(
+  "shows/assignPresenterToShow",
+  async (
+    data: {
+      id: string;
+      userId: string;
+      role:string;
+      
+    },
+    { rejectWithValue, getState }
+  ) => {
+    const state = getState() as { auth: { token: string } };
+    const response = await fetch(`${BASE_URL}/show/assign-presenter/${data.id}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${state.auth.token}`,
+      },
+      body: JSON.stringify({
+        userId: data.userId,
+        role:data.role
+      }),
+    });
+    if (!response.ok) {
+      const errorData = await response.json();
+      return rejectWithValue(errorData.message);
+    }
+    const showData = await response.json();
+    return showData;
+  }
+);
+
 export const deleteShow = createAsyncThunk(
   "shows/deleteShow",
   async (
@@ -623,6 +655,19 @@ const showSlice = createSlice({
     builder.addCase(deleteShow.rejected, (state) => {
       state.deletingShow = "failed";
       toast.error("Failed to delete show.");
+    });
+
+    // Assign Presenter to Show
+    builder.addCase(assignPresenterToShow.pending, (state) => {
+      state.loading = "pending";
+    });
+    builder.addCase(assignPresenterToShow.fulfilled, (state) => {
+      state.loading = "succeeded";
+      toast.success("Presenter assigned to show successfully!");
+    });
+    builder.addCase(assignPresenterToShow.rejected, (state,{payload}) => {
+      state.loading = "failed";
+      toast.error(`Failed to assign presenter to show. ${payload}`);
     });
   },
 });

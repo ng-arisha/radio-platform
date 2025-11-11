@@ -41,7 +41,7 @@ function NewPresenter() {
   };
 
   const handleNewPresenter = async () => {
-    if (!fullName || !email || !phoneNumber || !selectedShow) {
+    if (!fullName || !email || !phoneNumber) {
       // handle error
       toast.error("Please fill in all required fields.");
       return;
@@ -117,7 +117,7 @@ function NewPresenter() {
               Icon={Phone}
             />
           </div>
-          <div className="mb-6">
+          {/* <div className="mb-6">
             <label className="block text-sm font-medium mb-2 text-gray-300">
               Show to be Allocated <span className="text-red-400 ">*</span>
             </label>
@@ -134,7 +134,7 @@ function NewPresenter() {
                 </option>
               ))}
             </select>
-          </div>
+          </div> */}
 
           <div className="flex w-full justify-center items-center">
             {loading === "pending" ? (

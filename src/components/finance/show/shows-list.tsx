@@ -5,11 +5,12 @@ import Select from "@/components/shared/reusable-select-input";
 import { getShowInStation } from "@/lib/shows/shows";
 import { AppDispatch, RootState } from "@/lib/store";
 import { formatCurrency, timeFilters, UserRole } from "@/utils/utils";
-import { Clock, DollarSign, Eye, Filter, Radio, Search, SunIcon, Users } from "lucide-react";
+import { Clock, Eye, Filter, Radio, Search, SunIcon, Users } from "lucide-react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import AssignShowPresenter from "./assign-show-presenter";
 import DeleteShowModal from "./delete-show-modal";
 import NewShow from "./new-show";
 import ViewShowDetails from "./view-show-details";
@@ -182,7 +183,7 @@ function ShowList() {
                         </span>
                       </td>
                       <td className="px-6 py-4">
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center justify-center gap-2 flex-nowrap">
                           <Users className="text-gray-400" size={16} />
                           <span className="text-gray-300 text-sm">
                             {show.users? show.users.length: show.team.length}{" "}
@@ -194,7 +195,7 @@ function ShowList() {
                       </td>
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-2">
-                          <DollarSign className="text-green-400" size={16} />
+                          
                           <span className="text-green-400 font-bold">
                             {formatCurrency(show.revenue || 0)}
                           </span>
@@ -214,6 +215,8 @@ function ShowList() {
                             <Eye size={18} />
                           </Link>
                           <ViewShowDetails show={show} purpose="edit" />
+                         
+                          <AssignShowPresenter show={show} />
                           <DeleteShowModal show={show} />
                           {/* <button
                             className={`p-2 rounded-lg transition-colors ${
