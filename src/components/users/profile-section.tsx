@@ -38,7 +38,7 @@ function ProfileSection() {
                     <User className="h-10 w-10 text-gray-600" />
                 </div>
                 <h2 className="text-lg font-medium text-white mb-2">Balance: <span className="text-orange-500">{profileData.availableBalance}</span></h2>
-                <h2 className="text-lg font-medium text-white mb-2">Currency: <span className="text-orange-500">{profileData.currency}</span></h2>
+                <h2 className="text-lg font-medium text-white mb-2">Currency: <span className="text-orange-500 uppercase">{profileData.currency}</span></h2>
                 </div>
 
 
