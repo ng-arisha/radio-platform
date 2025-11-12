@@ -1,7 +1,7 @@
 "use client";
 
 import { AppDispatch, RootState } from "@/lib/store";
-import { createMediaHouseUser } from "@/lib/users/users";
+import { createMediaHouseUser, getMediaHouseUsers, getStationAdminUsers } from "@/lib/users/users";
 import { Plus, SunIcon, X } from "lucide-react";
 import { useRef, useState } from "react";
 import toast from "react-hot-toast";
@@ -46,6 +46,8 @@ function NewUserModal({path,page}:{path:string,page:string}) {
       setFullName("");
       setEmail("");
       setPhoneNumber("");
+      dispatch(getMediaHouseUsers());
+      dispatch(getStationAdminUsers());
      
     }
     closeModal();

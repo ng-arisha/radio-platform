@@ -1,3 +1,4 @@
+import Cookies from "js-cookie";
 import {
   AwardIcon,
   DollarSign,
@@ -260,7 +261,7 @@ export const sidebarLinks = [
     icon: DollarSign,
   },
   {
-    label: "Commission",
+    label: "Revenue Share",
     path: "/commission",
     icon: Wallet,
   },
@@ -619,3 +620,49 @@ export const revenueData = [
   { date: "May", gross: 4800, net: 4400 },
   { date: "Jun", gross: 5200, net: 4800 },
 ];
+
+type TransactionExportFilters = {
+  timeRange?: string;
+  startDate?: string;
+  endDate?: string;
+  phoneNumber?: string;
+  type?: string;
+};
+
+
+
+export async function exportTransactions(
+  format: 'csv' | 'pdf',
+  filters: TransactionExportFilters = {},
+) {
+  const params = new URLSearchParams({
+    format,
+    ...Object.entries(filters).reduce<Record<string, string>>((acc, [key, value]) => {
+      if (value !== undefined && value !== null) {
+        acc[key] = String(value);
+      }
+      return acc;
+    }, {}),
+  });
+  const url = `${BASE_URL}/transaction/export-filtered-transactions?${params}`;
+
+  const res = await fetch(url, {
+    method: 'GET',
+    headers: {
+      Authorization: `Bearer ${Cookies.get('token')}`, // if JWT is needed
+    },
+  });
+
+  if (!res.ok) {
+    throw new Error('Failed to export transactions');
+  }
+
+  const blob = await res.blob();
+  const fileURL = window.URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = fileURL;
+  link.download = `transactions.${format}`;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+}

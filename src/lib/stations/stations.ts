@@ -20,6 +20,7 @@ interface InitialStationType {
   stationBarData: { showName: string; revenue: number }[];
   loadingBarData: "idle" | "pending" | "succeeded" | "failed";
   stationPresenters: StationPresenters[];
+  deleteingStation: "idle" | "pending" | "succeeded" | "failed";
 }
 
 const initialState: InitialStationType = {
@@ -34,6 +35,7 @@ const initialState: InitialStationType = {
   stationBarData: [],
   loadingBarData: "idle",
   stationPresenters: [],
+  deleteingStation: "idle",
 };
 
 export const newStation = createAsyncThunk(
@@ -111,6 +113,28 @@ export const stationDetails = createAsyncThunk(
     console.log(`Tone: ${state.auth.token}`);
     const response = await fetch(`${BASE_URL}/station/station/${data.id}`, {
       method: "GET",
+      headers: {
+        "content-type": "application/json",
+        Authorization: `Bearer ${state.auth.token}`,
+      },
+    });
+    if (!response.ok) {
+      const errorData = await response.json();
+      return rejectWithValue(errorData.message);
+    }
+    const responseData = await response.json();
+    console.log("Station Details Response:", responseData);
+    return responseData;
+  }
+);
+
+export const deleteStation = createAsyncThunk(
+  "stations/deleteStation",
+  async (data: { id: string }, { rejectWithValue, getState }) => {
+    const state = getState() as { auth: { token: string } };
+    console.log(`Tone: ${state.auth.token}`);
+    const response = await fetch(`${BASE_URL}/station/delete/${data.id}`, {
+      method: "DELETE",
       headers: {
         "content-type": "application/json",
         Authorization: `Bearer ${state.auth.token}`,
@@ -436,6 +460,22 @@ const stationSlice = createSlice({
     });
     builder.addCase(updateStationStatus.rejected, (state, { payload }) => {
       state.loading = "failed";
+      toast.error(payload as string);
+    });
+
+    // Delete Station
+    builder.addCase(deleteStation.pending, (state) => {
+      state.deleteingStation = "pending";
+    });
+    builder.addCase(deleteStation.fulfilled, (state, action) => {
+      state.deleteingStation = "succeeded";
+      state.allStations = state.allStations.filter(
+        (station) => station._id !== action.payload._id
+      );
+      toast.success("Station deleted successfully");
+    });
+    builder.addCase(deleteStation.rejected, (state, { payload }) => {
+      state.deleteingStation = "failed";
       toast.error(payload as string);
     });
   },

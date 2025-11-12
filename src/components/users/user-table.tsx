@@ -23,7 +23,7 @@ function UserTable({ users }: { users: UserType[] }) {
         <tbody>
           {/* row 1 */}
           {users.map((user, index) => (
-            <tr key={user._id}>
+            <tr key={index}>
               <th>{index + 1}</th>
               <td>{user.fullName}</td>
               <td>{user.email}</td>

@@ -7,12 +7,13 @@ import Select from "@/components/shared/reusable-select-input";
 import { AppDispatch, RootState } from "@/lib/store";
 import { getAllTransactions } from "@/lib/transactions/transaction";
 import {
+  exportTransactions,
   formatCurrency,
   formatDate,
   timeFilters,
   transactionsType,
 } from "@/utils/utils";
-import { Clock, Filter, Receipt, Search } from "lucide-react";
+import { Clock, Download, Filter, Receipt, Search } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -26,6 +27,8 @@ function MasterTransactionsList() {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [fromDate, setFromDate] = useState<string>("");
   const [toDate, setToDate] = useState<string>("");
+
+ 
   const recordPerPageFilter = [
     { label: "5", value: 5 },
     { label: "10", value: 10 },
@@ -54,6 +57,23 @@ function MasterTransactionsList() {
     (state: RootState) => state.transactions.masterTransactions
   );
   const dispatch = useDispatch<AppDispatch>();
+  const [exporting, setExporting] = useState(false);
+
+  const handleExport = async (format: "pdf"| "csv") => {
+    try {
+      setExporting(true);
+      if(fromDate && toDate){
+        await exportTransactions(format, { startDate: fromDate,endDate:toDate });
+      }else if(!fromDate && !toDate){
+        await exportTransactions(format);
+      }
+      
+    } catch (err) {
+      alert('Failed to export transactions');
+    } finally {
+      setExporting(false);
+    }
+  };
 
   const handleFetchtransactions = async (timeRange: string,
     phoneNumber: string,
@@ -153,10 +173,37 @@ function MasterTransactionsList() {
           <div className="max-w-7xl mx-auto">
             {/* Promotions Table */}
             <div className="bg-gray-900 rounded-lg shadow-lg overflow-hidden">
-              <div className="px-6 py-4 border-b border-gray-700">
+              <div className="px-6 py-4 border-b border-gray-700 flex justify-between items-center">
                 <h2 className="text-lg font-semibold text-white">
                   Transactions
                 </h2>
+                <div className="flex gap-3">
+                  <button
+                  onClick={() => handleExport('pdf')}
+                  disabled={exporting}
+                    type="button"
+                    className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg flex items-center gap-2 transition-colors"
+                  >
+                    <Download size={16} />
+                    {exporting ? 'Exporting...' : 'PDF'}
+                  </button>
+                  <button
+                  onClick={() => handleExport('csv')}
+                  disabled={exporting}
+                    type="button"
+                    className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg flex items-center gap-2 transition-colors"
+                  >
+                    <Download size={16} />
+                    {exporting ? 'Exporting...' : 'CSV'}
+                  </button>
+                  {/* <button
+                    type="button"
+                    className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg flex items-center gap-2 transition-colors"
+                  >
+                    <Download size={16} />
+                    Excel
+                  </button> */}
+                </div>
               </div>
               <div className="overflow-x-auto">
                 <table className="w-full">
