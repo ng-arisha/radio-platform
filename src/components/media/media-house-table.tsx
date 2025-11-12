@@ -1,5 +1,7 @@
-import { Edit, Eye, Power, Trash2 } from "lucide-react";
+import { Eye, Power, Trash2 } from "lucide-react";
 import Link from "next/link";
+import UpdateMediaHouseStatusModal from "../master/update-media-house-status-modal";
+import EditMediaHouseModal from "./edit-media-house-modal";
 
 function MediaHouseTable({ mediaHouses }: { mediaHouses: MediaHouseType[] }) {
   return (
@@ -53,18 +55,8 @@ function MediaHouseTable({ mediaHouses }: { mediaHouses: MediaHouseType[] }) {
                 >
                   <Eye className="" size={16} />
                 </Link>
-                <button
-                  type="button"
-                  className="p-2 cursor-pointer text-green-500 mr-2 rounded-md"
-                >
-                  <Edit className="" size={16} />
-                </button>
-                <button
-                  type="button"
-                  className="p-2 cursor-pointer text-red-500 mr-2 rounded-md"
-                >
-                  <Trash2 className="" size={16} />
-                </button>
+              <EditMediaHouseModal mediaHouse={media} />
+              <UpdateMediaHouseStatusModal mediaHouse={media} status={media.status === 'active' ? 'inactive': "active"} />
               </td>
             </tr>
           ))}

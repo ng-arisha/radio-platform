@@ -25,6 +25,8 @@ interface MediaHouseInterface {
   loadingFinanceData: "idle" | "pending" | "succeeded" | "failed";
 
   mediaShowTransactionHistory: TransactionsType[];
+
+  updatingMediaStatus: "idle" | "pending" | "succeeded" | "failed";
 }
 
 const initialState: MediaHouseInterface = {
@@ -47,6 +49,7 @@ const initialState: MediaHouseInterface = {
   mediaStationFinancedata: [],
   loadingFinanceData: "idle",
   mediaShowTransactionHistory: [],
+  updatingMediaStatus: "idle",
 };
 
 export const getAllMediaHouses = createAsyncThunk(
@@ -373,7 +376,7 @@ export const updateMiadHouse = createAsyncThunk(
     try {
       const state = getState() as { auth: { token: string } };
       const response = await fetch(`${BASE_URL}/media/update-media-house/${data.id}`, {
-        method: "POST",
+        method: "PATCH",
         headers: {
           "content-type": "application/json",
           Authorization: `Bearer ${state.auth.token}`,
@@ -381,6 +384,34 @@ export const updateMiadHouse = createAsyncThunk(
         body:JSON.stringify({
           name: data.name,
           address: data.address,
+        })
+      });
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message);
+      }
+      const responseData = await response.json();
+      return responseData;
+    } catch (error) {
+      return rejectWithValue((error as Error).message);
+    }
+  }
+);
+
+export const updateMiadHouseStatus = createAsyncThunk(
+  "media/updateMiadHouseStatus",
+  async (data:{id:string;status:string; }, { rejectWithValue, getState }) => {
+    try {
+      const state = getState() as { auth: { token: string } };
+      const response = await fetch(`${BASE_URL}/media/update-media-house/${data.id}`, {
+        method: "PATCH",
+        headers: {
+          "content-type": "application/json",
+          Authorization: `Bearer ${state.auth.token}`,
+        },
+        body:JSON.stringify({
+          status: data.status,
+    
         })
       });
       if (!response.ok) {
@@ -579,6 +610,20 @@ const mediaSlice = createSlice({
     });
     builder.addCase(updateMiadHouse.rejected, (state,{payload}) => {
       state.loading = "failed";
+      toast.error(payload as string);
+    });
+
+    // Update Media House Status
+    builder.addCase(updateMiadHouseStatus.pending, (state) => {
+      state.updatingMediaStatus = "pending";
+    });
+    builder.addCase(updateMiadHouseStatus.fulfilled, (state, action) => {
+      state.updatingMediaStatus = "succeeded";
+      state.mediaHouse = action.payload;
+      toast.success("Media House status updated successfully");
+    });
+    builder.addCase(updateMiadHouseStatus.rejected, (state,{payload}) => {
+      state.updatingMediaStatus = "failed";
       toast.error(payload as string);
     });
   },
