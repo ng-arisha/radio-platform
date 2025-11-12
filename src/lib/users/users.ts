@@ -16,6 +16,8 @@ interface InitialUserState {
     customerCare: number;
     financeOfficer: number;
   }[];
+
+  profileData:{fullName:string,email:string,phoneNumber:string,availableBalance: number,showName:string,startTime:string,endTime:string,activedays:string[],rate:number,currency:string } | null;
 }
 
 const initialState: InitialUserState = {
@@ -25,6 +27,7 @@ const initialState: InitialUserState = {
   presenterUsers: [],
   stationAdminUsers: [],
   userDistribution: [],
+  profileData:null,
 };
 
 export const getMediaHouseUsers = createAsyncThunk(
@@ -33,6 +36,30 @@ export const getMediaHouseUsers = createAsyncThunk(
     try {
       const state = getState() as { auth: { token: string } };
       const response = await fetch(`${BASE_URL}/user/media-users`, {
+        method: "GET",
+        headers: {
+          "content-type": "application/json",
+          Authorization: `Bearer ${state.auth.token}`,
+        },
+      });
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message);
+      }
+      const responseData = await response.json();
+      return responseData;
+    } catch (error) {
+      return rejectWithValue((error as Error).message);
+    }
+  }
+);
+
+export const getUserProfileData = createAsyncThunk(
+  "users/getUserProfileData",
+  async (_, { rejectWithValue, getState }) => {
+    try {
+      const state = getState() as { auth: { token: string } };
+      const response = await fetch(`${BASE_URL}/user/profile`, {
         method: "GET",
         headers: {
           "content-type": "application/json",
@@ -334,6 +361,19 @@ const userSlice = createSlice({
     });
     builder.addCase(getUserDistribution.rejected, (state) => {
       state.loading = "failed";
+    });
+
+    // get user profile data
+    builder.addCase(getUserProfileData.pending, (state) => {
+      state.loading = "pending";
+    });
+    builder.addCase(getUserProfileData.fulfilled, (state, { payload }) => {
+      state.loading = "succeeded";
+      state.profileData = payload;
+    });
+    builder.addCase(getUserProfileData.rejected, (state, { payload }) => {
+      state.loading = "failed";
+      state.profileData = null;
     });
   },
 });

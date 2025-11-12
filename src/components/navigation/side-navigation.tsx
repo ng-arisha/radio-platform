@@ -18,6 +18,7 @@ import {
   TrendingUp,
   Trophy,
   Tv,
+  User,
   Users,
   Wallet,
   Wallet2
@@ -216,6 +217,11 @@ function SideNavigation() {
       name: "Winners",
       path: `/shows/${tokenUser?.show}/winners`,
       icon: <Trophy />,
+    },
+    {
+      name: "Profile",
+      path: `/shows/${tokenUser?.show}/profile`,
+      icon: <User />,
     },
   ];
   const toggleDropdown = (label: string) => {
