@@ -186,8 +186,8 @@ function ShowList() {
                         <div className="flex items-center justify-center gap-2 flex-nowrap">
                           <Users className="text-gray-400" size={16} />
                           <span className="text-gray-300 text-sm">
-                            {show.users? show.users.length: show.team.length}{" "}
-                            {show.users?.length === 1
+                            {show.team.length}{" "}
+                            {show.team?.length === 1
                               ? "presenter"
                               : "presenters"}
                           </span>

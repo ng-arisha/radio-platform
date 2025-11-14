@@ -101,7 +101,6 @@ declare type ShowType = {
   createdAt: string;
   station: StationType;
   revenue?: number;
-  users: string[];
   team:{user:string,role:string}[];
   activeDays: string[];
 };

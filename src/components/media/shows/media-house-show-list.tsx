@@ -1,5 +1,6 @@
 "use client";
 
+import AssignShowPresenter from "@/components/finance/show/assign-show-presenter";
 import ViewShowDetails from "@/components/finance/show/view-show-details";
 import ReusableLoader from "@/components/shared/reusable-loader";
 import ChangeShowStatusModal from "@/components/shows/change-show-status-modal";
@@ -113,8 +114,8 @@ function MediaHouseShowsList() {
                         <div className="flex items-center gap-2">
                           <Users className="text-gray-400" size={16} />
                           <span className="text-gray-300 text-sm">
-                            {show.users.length}{" "}
-                            {show.users.length === 1
+                            {show.team.length}{" "}
+                            {show.team.length === 1
                               ? "presenter"
                               : "presenters"}
                           </span>
@@ -126,6 +127,7 @@ function MediaHouseShowsList() {
                           {/* view details */}
                           <ViewShowDetails show={show} purpose="view" />
                           <ViewShowDetails show={show} purpose="edit" />
+                          <AssignShowPresenter show={show} />
                           <ChangeShowStatusModal show={show} />
                         </div>
                       </td>

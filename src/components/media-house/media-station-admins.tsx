@@ -3,10 +3,12 @@
 import { getMediaStationAdmins } from "@/lib/media/media";
 import { AppDispatch, RootState } from "@/lib/store";
 import { formatDate } from "@/utils/utils";
-import { Edit2, Power, Radio, SunIcon, Trash2 } from "lucide-react";
+import { Radio, SunIcon } from "lucide-react";
 import { useParams } from "next/navigation";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import DeleteUserDialogue from "../users/delete-user-dialog";
+import UserDetailsModal from "../users/user-details-modal";
 
 function MediaStationAdmins() {
   const dispatch = useDispatch<AppDispatch>();
@@ -101,31 +103,12 @@ function MediaStationAdmins() {
                       </td>
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-2">
-                          <button
-                            type="button"
-                            className="p-2 hover:bg-gray-500 rounded-lg transition-colors"
-                            title={
-                              item.status === "active"
-                                ? "Deactivate"
-                                : "Activate"
-                            }
-                          >
-                            <Power className="w-4 h-4" />
-                          </button>
-                          <button
-                            type="button"
-                            className="p-2 hover:bg-gray-500 rounded-lg transition-colors"
-                            title="Edit"
-                          >
-                            <Edit2 className="w-4 h-4" />
-                          </button>
-                          <button
-                            type="button"
-                            className="p-2 hover:bg-red-900 text-red-400 rounded-lg transition-colors"
-                            title="Delete"
-                          >
-                            <Trash2 className="w-4 h-4" />
-                          </button>
+                        <UserDetailsModal user={item} action="view" />
+                          <UserDetailsModal user={item} action="edit" />
+                          <DeleteUserDialogue
+                            name={item.fullName}
+                            userId={item._id}
+                          />
                         </div>
                       </td>
                     </tr>

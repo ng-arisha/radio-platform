@@ -40,8 +40,8 @@ function MediaStationsList({
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-600">
-              {stationData.map((station) => (
-                <tr key={station._id} className="hover:bg-gray-650">
+              {stationData.map((station,index) => (
+                <tr key={index} className="hover:bg-gray-650">
                   <td className="px-6 py-4 font-medium">{station.name}</td>
                   <td className="px-6 py-4 text-blue-400">
                     {station.frequency}
