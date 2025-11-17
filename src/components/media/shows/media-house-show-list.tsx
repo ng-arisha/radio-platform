@@ -82,6 +82,7 @@ function MediaHouseShowsList() {
                       <td className="px-6 py-4">
                         <span className="text-gray-300 font-mono text-sm">
                           {/* days display to go here */}
+                          {show.activeDays.join(", ")}
                         </span>
                       </td>
                       <td className="px-6 py-4">
@@ -95,7 +96,7 @@ function MediaHouseShowsList() {
                       <td className="px-6 py-4">
                         <span
                           className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold ${
-                            show.status === "Active"
+                            show.status.toLocaleLowerCase() === "active"
                               ? "bg-green-900 text-green-300"
                               : "bg-gray-600 text-gray-300"
                           }`}

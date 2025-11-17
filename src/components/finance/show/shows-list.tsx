@@ -2,6 +2,7 @@
 
 import Input from "@/components/shared/input";
 import Select from "@/components/shared/reusable-select-input";
+import ChangeShowStatusModal from "@/components/shows/change-show-status-modal";
 import { getShowInStation } from "@/lib/shows/shows";
 import { AppDispatch, RootState } from "@/lib/store";
 import { formatCurrency, timeFilters, UserRole } from "@/utils/utils";
@@ -217,6 +218,7 @@ function ShowList() {
                           <ViewShowDetails show={show} purpose="edit" />
                          
                           <AssignShowPresenter show={show} />
+                          <ChangeShowStatusModal show={show} />
                           <DeleteShowModal show={show} />
                           {/* <button
                             className={`p-2 rounded-lg transition-colors ${
