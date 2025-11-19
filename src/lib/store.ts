@@ -15,6 +15,7 @@ import { statsReducer } from "./stats/stats";
 import { transactionReducer } from "./transactions/transaction";
 import { userReducer } from "./users/users";
 import { utilReducer } from "./util/util";
+import { walletReducer } from "./wallet/wallet";
 
 
 
@@ -59,6 +60,7 @@ export const store = configureStore({
         commission:commissionReducer,
         transactions:transactionReducer,
         revenue: revenueReducer,
+        wallet: walletReducer
 
     },
     middleware:(getDefaultMiddleware)=>getDefaultMiddleware({
