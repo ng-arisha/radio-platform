@@ -341,7 +341,7 @@ const commissionSlice = createSlice({
       assignPresenterPaymentRate.rejected,
       (state, { payload }) => {
         state.loading = "failed";
-        toast.error(payload as string);
+        toast.error(`Failed to assign rate ${payload}`);
       }
     );
   },

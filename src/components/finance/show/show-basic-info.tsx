@@ -1,15 +1,13 @@
 "use client";
 
+import { RootState } from "@/lib/store";
 import { UserRole } from "@/utils/utils";
 import { Radio } from "lucide-react";
-import { useState } from "react";
+import { useSelector } from "react-redux";
 import NewShow from "./new-show";
 
 function ShowBasicInfo() {
-    const [query, setQuery] = useState("");
-    const [filterStatus, setFilterStatus] = useState<
-    "all" | "active" | "inactive"
-  >("all");
+  const user = useSelector((state: RootState) => state.auth.tokenuser);
     return (
         <div>
             <div className="mb-8">
@@ -22,7 +20,7 @@ function ShowBasicInfo() {
                 Shows Management
               </h1>
               </div>
-              <NewShow role={UserRole.MEDIA_HOUSE} />
+             {user?.role === UserRole.MEDIA_HOUSE && <NewShow role={UserRole.MEDIA_HOUSE} />}
             </div>
             <p className="text-gray-400">
               Create, edit, and monitor all shows within your station

@@ -55,7 +55,7 @@ function PresentersList() {
                       Role
                     </th>
                     <th className="px-6 py-4 text-left text-xs font-semibold text-gray-300 uppercase tracking-wider">
-                      Rate
+                      Rate(%)
                     </th>
                     <th className="px-6 py-4 text-left text-xs font-semibold text-gray-300 uppercase tracking-wider">
                       Created At
@@ -76,39 +76,39 @@ function PresentersList() {
                           <div className="p-2 bg-gray-800 rounded-lg">
                             <Radio className="text-blue-400" size={18} />
                           </div>
-                          <span className="text-white font-semibold">
+                          <span className="text-white font-medium text-xs">
                             {presenter.showName || "N/A"}
                           </span>
                         </div>
                       </td>
                       <td className="px-6 py-4">
-                        <span className="text-gray-300 font-mono text-sm">
+                        <span className="text-gray-300 font-mono text-xs">
                           {presenter.user.fullName}
                         </span>
                       </td>
                       <td className="px-6 py-4">
-                        <span className="text-gray-300 font-mono text-sm">
+                        <span className="text-gray-300 font-mono text-xs">
                           {presenter.user.email}
                         </span>
                       </td>
                       <td className="px-6 py-4">
-                        <span className="text-gray-300 font-mono text-sm">
+                        <span className="text-gray-300 font-mono text-xs">
                           {presenter.user.phoneNumber || "N/A"}
                         </span>
                       </td>
                       <td className="px-6 py-4">
-                        <span className="text-gray-300 font-mono text-sm">
+                        <span className="text-gray-300 font-mono text-xs">
                           {presenter.role}
                         </span>
                       </td>
                       <td className="px-6 py-4">
-                        <span className="text-gray-300 font-mono text-sm">
+                        <span className="text-gray-300 font-mono text-xs">
                           {presenter.commissionRate}
                         </span>
                       </td>
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-2 text-gray-300">
-                          <span className="text-sm">
+                          <span className="text-xs">
                             {new Date(
                               presenter.user.createdAt
                             ).toLocaleDateString()}
