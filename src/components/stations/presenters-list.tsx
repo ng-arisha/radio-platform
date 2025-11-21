@@ -6,6 +6,7 @@ import { Radio, SunIcon } from "lucide-react";
 import { useParams } from "next/navigation";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import AssignShowPresenter from "../finance/show/assign-show-presenter";
 import AssignPresentersPaymentrates from "./assign-presenters-rate";
 
 function PresentersList() {
@@ -115,8 +116,9 @@ function PresentersList() {
                           </span>
                         </div>
                       </td>
-                      <td className="px-6 py-4">
+                      <td className="px-6 py-4 flex items-center gap-2">
                         <AssignPresentersPaymentrates user={presenter} />
+                        <AssignShowPresenter section="presenters" userId={presenter.user._id} />
                       </td>
                     </tr>
                   ))}

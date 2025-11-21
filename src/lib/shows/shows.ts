@@ -20,6 +20,9 @@ interface InitialShowState {
   randomShowTransaction: TransactionsType | null;
   allShows: ShowType[];
   deletingShow: "idle" | "pending" | "succeeded" | "failed";
+  plainShows:{_id:string,name:string}[];
+  assigningPresenterToShow: "idle" | "pending" | "succeeded" | "failed";
+  loadingPlainShows: "idle" | "pending" | "succeeded" | "failed";
 }
 
 const initialState: InitialShowState = {
@@ -40,6 +43,9 @@ const initialState: InitialShowState = {
   randomShowTransaction: null,
   allShows: [],
   deletingShow: "idle",
+  plainShows:[],
+  assigningPresenterToShow: "idle",
+  loadingPlainShows: "idle",
 };
 
 export const getShowDetails = createAsyncThunk(
@@ -427,6 +433,33 @@ export const getRandomTransaction = createAsyncThunk(
   }
 );
 
+export const getPlainShowInStation = createAsyncThunk(
+  "shows/getPlainShowInStation",
+  async (
+    data: { id: string; },
+    { rejectWithValue, getState }
+  ) => {
+    const state = getState() as { auth: { token: string } };
+    const response = await fetch(
+      `${BASE_URL}/show/plain-shows/${data.id}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${state.auth.token}`,
+        },
+      }
+    );
+    if (!response.ok) {
+      const errorData = await response.json();
+      return rejectWithValue(errorData.message);
+    }
+    const revenueData = await response.json();
+  
+    return revenueData;
+  }
+);
+
 export const getShowInStation = createAsyncThunk(
   "shows/getShowInStation",
   async (
@@ -659,15 +692,27 @@ const showSlice = createSlice({
 
     // Assign Presenter to Show
     builder.addCase(assignPresenterToShow.pending, (state) => {
-      state.loading = "pending";
+      state.assigningPresenterToShow = "pending";
     });
     builder.addCase(assignPresenterToShow.fulfilled, (state) => {
-      state.loading = "succeeded";
+      state.assigningPresenterToShow = "succeeded";
       toast.success("Presenter assigned to show successfully!");
     });
     builder.addCase(assignPresenterToShow.rejected, (state,{payload}) => {
-      state.loading = "failed";
+      state.assigningPresenterToShow = "failed";
       toast.error(`Failed to assign presenter to show. ${payload}`);
+    });
+
+    // Get Plain Shows in Station
+    builder.addCase(getPlainShowInStation.pending, (state) => {
+      state.loadingPlainShows = "pending";
+    });
+    builder.addCase(getPlainShowInStation.fulfilled, (state, action) => {
+      state.loadingPlainShows = "succeeded";
+      state.plainShows = action.payload;
+    });
+    builder.addCase(getPlainShowInStation.rejected, (state) => {
+      state.loadingPlainShows = "failed";
     });
   },
 });

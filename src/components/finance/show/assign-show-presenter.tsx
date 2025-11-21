@@ -1,9 +1,10 @@
 import Button from "@/components/shared/button";
 import Select from "@/components/shared/reusable-select-input";
-import { assignPresenterToShow } from "@/lib/shows/shows";
+import { assignPresenterToShow, getPlainShowInStation } from "@/lib/shows/shows";
 import { AppDispatch, RootState } from "@/lib/store";
 import { getShowPresenters } from "@/lib/users/users";
-import { SunIcon, Users, X } from "lucide-react";
+import { Radio, SunIcon, Users, X } from "lucide-react";
+import { useParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
@@ -22,15 +23,18 @@ const showRoles = [
   { label: "DJ", value: "dj" },
 ];
 
-function AssignShowPresenter({ show }: { show: ShowType }) {
+function AssignShowPresenter({ show, section,userId }: { show?: ShowType,section:string,userId?:string }) {
   const assignPresenterModal = useRef<HTMLDialogElement>(null);
   const presenters = useSelector(
     (state: RootState) => state.users.presenterUsers
   );
+  const param = useParams<{ stationId: string }>();
+  const plainShows = useSelector((state: RootState) => state.shows.plainShows);
 
-  const loading = useSelector((state: RootState) => state.shows.loading);
+  const loading = useSelector((state: RootState) => state.shows.assigningPresenterToShow);
 
   const [selectedUser, setSelectedUser] = useState<string>("");
+  const [selectedShow, setSelectedShow] = useState<string>("");
   const [selectedRole, setSelectedRole] = useState<string>(showRoles[0].value);
   const dispatch = useDispatch<AppDispatch>();
   const openModal = () => {
@@ -47,33 +51,60 @@ function AssignShowPresenter({ show }: { show: ShowType }) {
 
   useEffect(() => {
     dispatch(getShowPresenters());
-  }, [dispatch]);
+    dispatch(getPlainShowInStation({ id: param.stationId }));
+  }, [param.stationId, dispatch]);
 
   const modifiedPresenters = presenters.map((presenter) => ({
     label: presenter.fullName,
     value: presenter._id,
   }));
 
+  const modifiedShows = plainShows.map((show) => ({
+    label: show.name,
+    value: show._id,
+  }));
+
   const handleAssignPresenter = async () => {
     // Dispatch action to assign presenter to show
     console.log("Clicked");
-    if (selectedUser.trim()==="" || selectedRole.trim()==="") {
+    
+    if (section === 'shows'&& (selectedUser.trim()==="" || selectedRole.trim()==="")) {
       toast.error("Please select both presenter and role");
       return;
+    }else if(section==='presenters'&&(selectedShow.trim()==="" || selectedRole.trim()==="")){
+      toast.error("Please select both show and role");
+      return;
     }
-    const data = {
-      id: show._id,
-      userId: selectedUser,
-      role: selectedRole,
-    };
-
-    console.log("Assigning presenter with data:", data);
-
-    const res = await dispatch(assignPresenterToShow(data));
-    if (res.meta.requestStatus === "fulfilled") {
-      // toast.success("Presenter assigned successfully");
-      closeModal();
+    if(section ==='shows'){
+      const data = {
+        id: show!._id,
+        userId: selectedUser,
+        role: selectedRole,
+      };
+  
+      console.log("Assigning presenter with data:", data);
+  
+      const res = await dispatch(assignPresenterToShow(data));
+      if (res.meta.requestStatus === "fulfilled") {
+        // toast.success("Presenter assigned successfully");
+        closeModal();
+      } 
+    }else {
+      const data = {
+        id: selectedShow,
+        userId: userId!,
+        role: selectedRole,
+      };
+  
+      console.log("Assigning presenter with data:", data);
+  
+      const res = await dispatch(assignPresenterToShow(data));
+      if (res.meta.requestStatus === "fulfilled") {
+        toast.success("Presenter assigned successfully");
+        closeModal();
+      }
     }
+    
   };
   return (
     <div>
@@ -89,7 +120,7 @@ function AssignShowPresenter({ show }: { show: ShowType }) {
         <div className="modal-box">
           <div className="flex justify-between items-center gap-8">
             <h3 className="font-bold text-lg">
-              Assign Presenter to {show.name}
+              Assign Presenter to {section === 'presenters' ? 'Show' :show!.name }
             </h3>
             <X
               className="cursor-pointer text-red-600"
@@ -97,7 +128,9 @@ function AssignShowPresenter({ show }: { show: ShowType }) {
               size={28}
             />
           </div>
-          <div className="mt-4">
+        {
+          section === 'shows'&&(
+            <div className="mt-4">
             <Select
               value={selectedUser}
               onChange={(value) => setSelectedUser(value as string)}
@@ -106,6 +139,21 @@ function AssignShowPresenter({ show }: { show: ShowType }) {
               Icon={Users}
             />
           </div>
+          )
+        }
+         {
+          section === 'presenters'&&(
+            <div className="mt-4">
+            <Select
+              value={selectedShow}
+              onChange={(value) => setSelectedShow(value as string)}
+              options={modifiedShows}
+              label="Select Show"
+              Icon={Radio}
+            />
+          </div>
+          )
+        }
           <div className="mt-4">
             <Select
               value={selectedRole}

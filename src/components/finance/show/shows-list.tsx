@@ -217,7 +217,7 @@ function ShowList() {
                           </Link>
                           <ViewShowDetails show={show} purpose="edit" />
                          
-                          <AssignShowPresenter show={show} />
+                          <AssignShowPresenter show={show} section="shows" />
                           <ChangeShowStatusModal show={show} />
                           <DeleteShowModal show={show} />
                           {/* <button
