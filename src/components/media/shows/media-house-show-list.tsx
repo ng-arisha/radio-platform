@@ -103,12 +103,12 @@ function MediaHouseShowsList() {
                         >
                           <div
                             className={`w-2 h-2 rounded-full ${
-                              show.status === "Active"
+                              show.status === "active"
                                 ? "bg-green-400"
                                 : "bg-gray-400"
                             }`}
                           ></div>
-                          {show.status}
+                          {show.status === "active" ? "Active" : "Disbaled"}
                         </span>
                       </td>
                       <td className="px-6 py-4">

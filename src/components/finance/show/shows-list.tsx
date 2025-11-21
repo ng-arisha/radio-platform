@@ -83,7 +83,7 @@ function ShowList() {
                     className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
                       filterStatus === "inactive"
                         ? "bg-gray-600 text-white"
-                        : "text-gray-400 hover:text-white"
+                        : "text-green-400 hover:text-white"
                     }`}
                   >
                     Inactive
@@ -168,19 +168,19 @@ function ShowList() {
                       <td className="px-6 py-4">
                         <span
                           className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold ${
-                            show.status === "Active"
+                            show.status === "active"
                               ? "bg-green-900 text-green-300"
                               : "bg-gray-600 text-gray-300"
                           }`}
                         >
                           <div
                             className={`w-2 h-2 rounded-full ${
-                              show.status === "Active"
+                              show.status === "active"
                                 ? "bg-green-400"
                                 : "bg-gray-400"
                             }`}
                           ></div>
-                          {show.status}
+                          {show.status === 'active' ? 'Active' : 'Disabled'}
                         </span>
                       </td>
                       <td className="px-6 py-4">
