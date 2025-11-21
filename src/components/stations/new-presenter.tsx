@@ -52,7 +52,9 @@ function NewPresenter() {
       phoneNumber,
       showId: selectedShow,
       path: "new-presenter",
+      stationId: params.stationId,
     };
+   
     const res = await dispatch(createMediaHouseUser(data));
     console.log(res);
     if (createMediaHouseUser.fulfilled.match(res)) {
@@ -117,24 +119,7 @@ function NewPresenter() {
               Icon={Phone}
             />
           </div>
-          {/* <div className="mb-6">
-            <label className="block text-sm font-medium mb-2 text-gray-300">
-              Show to be Allocated <span className="text-red-400 ">*</span>
-            </label>
-            <select
-              id="adminstrator"
-              value={selectedShow}
-              onChange={(e) => setSelectedShow(e.target.value)}
-              className="w-full pl-3 pr-3 py-3 bg-gray-700 border border-gray-600 rounded-lg text-gray-200 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-transparent transition-all duration-200"
-            >
-              <option value="">Select Show</option>
-              {shows?.map((show) => (
-                <option key={show._id} value={show._id}>
-                  {show.name}
-                </option>
-              ))}
-            </select>
-          </div> */}
+          
 
           <div className="flex w-full justify-center items-center">
             {loading === "pending" ? (

@@ -134,11 +134,14 @@ export const createMediaHouseUser = createAsyncThunk(
       email: string;
       phoneNumber: string;
       showId?: string;
+      stationId?: string;
       path: string;
     },
     { rejectWithValue, getState }
   ) => {
     const state = getState() as { auth: { token: string } };
+    console.log(`Incomeing data: ${JSON.stringify(data)}`);
+    console.log(`Full Url: ${BASE_URL}/user/${data.path}`);
     const response = await fetch(`${BASE_URL}/user/${data.path}`, {
       method: "POST",
       headers: {
@@ -150,6 +153,7 @@ export const createMediaHouseUser = createAsyncThunk(
         email: data.email,
         phoneNumber: data.phoneNumber,
         showId: data.showId,
+        stationId: data.stationId,
       }),
     });
     if (!response.ok) {
