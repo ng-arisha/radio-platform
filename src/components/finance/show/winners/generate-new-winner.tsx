@@ -47,11 +47,16 @@ function GenerateNewWinner() {
       toast.error("Please select a promotion and ensure a winner is selected");
       return;
     }
-    const phoneNumber = randomTransaction?.phoneNumber?.startsWith('+')
-  ? randomTransaction.phoneNumber
-  : `+${randomTransaction?.phoneNumber}`;
+    const phone = randomTransaction?.phoneNumber;
+if (!phone) {
+      toast.error("Winner does not have a valid phone number.");
+      return;
+    
+}
+
+const normalizedPhone = phone.startsWith('+') ? phone : `+${phone}`;
     const data = {
-      phoneNumber: phoneNumber!,
+      phoneNumber: normalizedPhone,
       amount,
       showId: params.showId,
       promotionId: selectedPromotion._id,
@@ -143,7 +148,7 @@ function GenerateNewWinner() {
                 </div>
                 <div className="mt-1 flex justify-between items-center text-xs text-gray-400">
                 <span>Beneficiaries: {selectedPromotion?.numberOfBeneficiaries}</span>
-                <span>Remaining: {selectedPromotion?.numberOfBeneficiaries! - selectedPromotion?.beneficiaries.length!}</span>
+                <span>Remaining: {(selectedPromotion?.numberOfBeneficiaries ? selectedPromotion?.numberOfBeneficiaries : 0 ) - (selectedPromotion?.beneficiaries ? selectedPromotion?.beneficiaries.length : 0)}</span>
                 </div>
                 
               </div>
