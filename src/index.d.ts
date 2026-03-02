@@ -256,3 +256,31 @@ declare type DetailedMasterTransactionsType = {
     participants:number
   }[];
 }
+
+declare type CsTransactionsType = {
+  _id: string;
+  amount: number;
+  type: string;
+  username: string;
+  phoneNumber: string;
+  createdAt: string;
+  transactionCode: string;
+  station?: StationType;
+  code:string;
+  receipt:string;
+  operator:string
+  show:{
+  name:string;
+  _id:string;
+  }
+  createdAt:string;
+  updatedAt:string;
+};
+
+declare type PaginatatedTxnsType = {
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+  data: CsTransactionsType[];
+}

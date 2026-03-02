@@ -23,6 +23,7 @@ export enum UserRole {
   MEDIA_HOUSE = "media-house",
   STATION_ADMIN = "station-admin",
   PRESENTER = "presenter",
+  CUSTOMER_CARE = "customer-care",
 }
 export enum PromoType {
   FIXED_SHOW_WINNING = "fixed_show_winning",

@@ -10,6 +10,7 @@ interface InitialFinanceState {
   stationTransactionsData: PaginatatedTxnsType | null;
   showCommissionData: { level: string; commission: number; color: string }[];
   allocatingFundsToShow: "idle" | "pending" | "succeeded" | "failed";
+  cstransactions: PaginatatedTxnsType | null;
 }
 
 const initialState: InitialFinanceState = {
@@ -20,6 +21,7 @@ const initialState: InitialFinanceState = {
   stationTransactionsData: null,
   showCommissionData: [],
   allocatingFundsToShow: "idle",
+  cstransactions: null,
 };
 
 export const allocateFundsToMediaHouse = createAsyncThunk(
@@ -191,6 +193,41 @@ export const getStationTransactions = createAsyncThunk(
   }
 );
 
+export const getStationTransactionsForCs = createAsyncThunk(
+  "finance/getStationTransactionsForCs",
+  async (
+    data: {
+      id: string;
+      page: number;
+      limit: number;
+      range: string;
+      type: string;
+      phoneNumber: string;
+      startDate:string;
+      endDate:string;
+    },
+    { rejectWithValue, getState }
+  ) => {
+    const state = getState() as { auth: { token: string } };
+    const response = await fetch(
+      `${BASE_URL}/transaction/customer-station-transactions/${data.id}?page=${data.page}&limit=${data.limit}&range=${data.range}&type=${data.type}&phoneNumber=${data.phoneNumber}&startDate=${data.startDate}&endDate=${data.endDate}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${state.auth.token}`,
+        },
+      }
+    );
+    if (!response.ok) {
+      const errorData = await response.json();
+      return rejectWithValue(errorData.message);
+    }
+    const responseData = await response.json();
+    return responseData;
+  }
+);
+
 export const getShowCommission = createAsyncThunk(
   "finance/getShowCommission",
   async (data: { id: string,startDate?:string, endDate?:string}, { rejectWithValue, getState }) => {
@@ -333,6 +370,22 @@ const financeSlice = createSlice({
         (payload as string) || "Failed to fetch show commission data"
       );
     });
+
+      // get station transactions data for cs
+      builder.addCase(getStationTransactionsForCs.pending, (state) => {
+        state.loadingShowData = "pending";
+      });
+      builder.addCase(getStationTransactionsForCs.fulfilled, (state, { payload }) => {
+        state.loadingShowData = "succeeded";
+        state.cstransactions = payload;
+      });
+      builder.addCase(getStationTransactionsForCs.rejected, (state, { payload }) => {
+        state.loadingShowData = "failed";
+        toast.error(
+          (payload as string) || "Failed to fetch station transactions data"
+        );
+  })
+      
   },
 });
 

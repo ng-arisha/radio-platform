@@ -9,7 +9,6 @@ import {
   ChevronDown,
   ChevronRight,
   CreditCard,
-  DollarSign,
   Gift,
   Home,
   Radio,
@@ -20,8 +19,7 @@ import {
   Tv,
   User,
   Users,
-  Wallet,
-  Wallet2
+  Wallet
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -42,16 +40,15 @@ function SideNavigation() {
   const shows = useSelector((state: RootState) => state.shows.allShows);
   const dispatch = useDispatch<AppDispatch>();
   useEffect(() => {
-    if(tokenUser?.role === UserRole.ADMIN){
+    if (tokenUser?.role === UserRole.ADMIN) {
       dispatch(getAllMediaHouses());
       dispatch(getAllMediaHouses());
-    dispatch(getAllStations());
-    dispatch(getAllShows());
+      dispatch(getAllStations());
+      dispatch(getAllShows());
     }
     // if(tokenUser?.role === UserRole.ADMIN || tokenUser?.role === UserRole.MEDIA_HOUSE){
     //   dispatch(getAllStations());
     // }
-    
   }, []);
   // add media house links to the admin links in the children section of media houses
   const masterLinks =
@@ -123,11 +120,11 @@ function SideNavigation() {
       path: `/media/${tokenUser?.media}/finance`,
       icon: <Gift />,
     },
-    {
-      name: "Commissions",
-      path: `/media/${tokenUser?.media}/commission`,
-      icon: <Wallet2 />,
-    },
+    // {
+    //   name: "Commissions",
+    //   path: `/media/${tokenUser?.media}/commission`,
+    //   icon: <Wallet2 />,
+    // },
 
     {
       name: "Transactions",
@@ -176,11 +173,11 @@ function SideNavigation() {
       path: `/stations/${tokenUser?.station}/transactions`,
       icon: <Receipt />,
     },
-    {
-      name: "Commission",
-      path: `/stations/${tokenUser?.station}/commission`,
-      icon: <Wallet />,
-    },
+    // {
+    //   name: "Commission",
+    //   path: `/stations/${tokenUser?.station}/commission`,
+    //   icon: <Wallet />,
+    // },
     {
       name: "Settings",
       path: `/stations/${tokenUser?.station}/settings`,
@@ -203,24 +200,31 @@ function SideNavigation() {
       path: `/shows/${tokenUser?.show}/promotions`,
       icon: <Gift />,
     },
-    {
-      name: "Commissions",
-      path: `/shows/${tokenUser?.show}/commissions`,
-      icon: <DollarSign />,
-    },
+    // {
+    //   name: "Commissions",
+    //   path: `/shows/${tokenUser?.show}/commissions`,
+    //   icon: <DollarSign />,
+    // },
     {
       name: "Transactions",
       path: `/shows/${tokenUser?.show}/transactions`,
       icon: <CreditCard />,
     },
     {
-      name: "Winners",
+      name: "Run Draw",
       path: `/shows/${tokenUser?.show}/winners`,
       icon: <Trophy />,
     },
+    // {
+    //   name: "Profile",
+    //   path: `/shows/${tokenUser?.show}/profile`,
+    //   icon: <User />,
+    // },
+  ];
+  const csLinks = [
     {
-      name: "Profile",
-      path: `/shows/${tokenUser?.show}/profile`,
+      name: "Transactions",
+      path: `/cs/${tokenUser?.station}/txtions`,
       icon: <User />,
     },
   ];
@@ -349,6 +353,25 @@ function SideNavigation() {
         {tokenUser &&
           tokenUser.role === UserRole.MEDIA_HOUSE &&
           mediaHouseLinks.map(({ name, path, icon }, index) => {
+            const isActive = path === activePath;
+            return (
+              <li key={index}>
+                <Link
+                  href={path}
+                  className={`px-2 flex space-x-2 items-center text-gray-100 py-2 rounded-lg ${
+                    isActive ? "bg-gray-700/50" : ""
+                  }`}
+                >
+                  {icon}
+                  <span>{name}</span>
+                </Link>
+              </li>
+            );
+          })}
+
+        {tokenUser &&
+          tokenUser.role === UserRole.CUSTOMER_CARE &&
+          csLinks.map(({ name, path, icon }, index) => {
             const isActive = path === activePath;
             return (
               <li key={index}>

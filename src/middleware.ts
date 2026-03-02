@@ -88,6 +88,21 @@ export function middleware(request: NextRequest) {
       return NextResponse.redirect(new URL("/un-authorized", request.url));
       
 
+    }else if(role === UserRole.CUSTOMER_CARE){
+      if(decodedToken?.station){
+        const allowedPaths = ["/cs/"+decodedToken.station, "/txtions"];
+      const isAllowed = allowedPaths.some(allowedPath => path === allowedPath || path.startsWith(allowedPath + "/"));
+      if(isAllowed){
+        return NextResponse.next();
+      }
+      return NextResponse.redirect(new URL(`/cs/${decodedToken.station}/txtions`, request.url));
+      }
+      if(path === "/un-authorized"){
+        return NextResponse.next();
+      }
+      return NextResponse.redirect(new URL("/un-authorized", request.url));
+      
+
     }
   }
 }
