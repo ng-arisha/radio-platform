@@ -19,6 +19,10 @@ function StationNavigation() {
       href: `/stations/${params.stationId}/presenters`,
     },
     {
+      label: "Customer Care",
+      href: `/stations/${params.stationId}/customer-cares`,
+    },
+    {
       label: "Promotions",
       href: `/stations/${params.stationId}/promotions`,
     },

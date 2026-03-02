@@ -284,3 +284,17 @@ declare type PaginatatedTxnsType = {
   totalPages: number;
   data: CsTransactionsType[];
 }
+
+declare type CustomerCareType = {
+  _id: string;
+  fullName: string;
+  email: string;
+  role: string;
+  status: string;
+  phoneNumber: string;
+  createdAt: string;
+  station: {
+    _id: string;
+    name: string;
+  }
+}

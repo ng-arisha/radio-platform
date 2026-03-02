@@ -159,6 +159,11 @@ function SideNavigation() {
       icon: <Users />,
     },
     {
+      name: "Customer Cares",
+      path: `/stations/${tokenUser?.station}/customer-cares`,
+      icon: <Users />,
+    },
+    {
       name: "Promotions",
       path: `/stations/${tokenUser?.station}/promotions`,
       icon: <Gift />,

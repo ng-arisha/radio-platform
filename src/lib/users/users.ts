@@ -8,6 +8,7 @@ interface InitialUserState {
   mediahouseUsers: UserType[];
   presenterUsers: UserType[];
   stationAdminUsers: UserType[];
+  customerCareUsers: CustomerCareType[];
   userDistribution: {
     date: string;
     mediaHouse: number;
@@ -26,9 +27,12 @@ const initialState: InitialUserState = {
   mediahouseUsers: [],
   presenterUsers: [],
   stationAdminUsers: [],
+  customerCareUsers: [],
   userDistribution: [],
   profileData:null,
 };
+
+
 
 export const getMediaHouseUsers = createAsyncThunk(
   "users/mediahouseuser",
@@ -89,6 +93,61 @@ export const getStationAdminUsers = createAsyncThunk(
           "content-type": "application/json",
           Authorization: `Bearer ${state.auth.token}`,
         },
+      });
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message);
+      }
+      const responseData = await response.json();
+      return responseData;
+    } catch (error) {
+      return rejectWithValue((error as Error).message);
+    }
+  }
+);
+
+export const getStationCustomerCare = createAsyncThunk(
+  "users/getStationCustomerCare",
+  async (data:{id:string}, { rejectWithValue, getState }) => {
+    try {
+      const state = getState() as { auth: { token: string } };
+      const response = await fetch(`${BASE_URL}/user/station-cs/${data.id}`, {
+        method: "GET",
+        headers: {
+          "content-type": "application/json",
+          Authorization: `Bearer ${state.auth.token}`,
+        },
+      });
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message);
+      }
+      const responseData = await response.json();
+      return responseData;
+    } catch (error) {
+      return rejectWithValue((error as Error).message);
+    }
+  }
+);
+
+export const newStationCustomerCare = createAsyncThunk(
+  "users/newStationCustomerCare",
+  async (data:{stationId:string,fullName:string, email:string, phoneNumber:string,}, { rejectWithValue, getState }) => {
+    try {
+      const state = getState() as { auth: { token: string } };
+      const response = await fetch(`${BASE_URL}/user/new-customer-care`, {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+          Authorization: `Bearer ${state.auth.token}`,
+        },
+        body: JSON.stringify({
+          stationId: data.stationId,
+          fullName: data.fullName,
+          email: data.email,
+          phoneNumber: data.phoneNumber,
+        }),
+
       });
       if (!response.ok) {
         const errorData = await response.json();
@@ -379,6 +438,21 @@ const userSlice = createSlice({
       state.loading = "failed";
       state.profileData = null;
     });
+
+    // get station customer care users
+    builder.addCase(getStationCustomerCare.pending, (state) => {
+      state.addingUser = "pending";
+    });
+    builder.addCase(getStationCustomerCare.fulfilled, (state, { payload }) => {
+      state.addingUser = "succeeded";
+      state.customerCareUsers = payload;
+    });
+    builder.addCase(getStationCustomerCare.rejected, (state, { payload }) => {
+      state.addingUser = "failed";
+      state.customerCareUsers = [];
+      toast.error((payload as string) || "Failed to load customer care users");
+    });
+    
   },
 });
 
