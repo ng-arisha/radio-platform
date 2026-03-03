@@ -313,4 +313,5 @@ declare type WinnersType = {
     name: string;
   }
   createdAt: string;
+  stationName:string;
 }

@@ -6,6 +6,7 @@ interface InitialUserState {
   loading: "idle" | "pending" | "succeeded" | "failed";
   addingUser: "idle" | "pending" | "succeeded" | "failed";
   winners: WinnersType[];
+  mediaHouseWinners: WinnersType[];
   loadingWinners: "idle" | "pending" | "succeeded" | "failed";
   mediahouseUsers: UserType[];
   presenterUsers: UserType[];
@@ -34,6 +35,7 @@ const initialState: InitialUserState = {
   profileData:null,
   winners: [],
   loadingWinners: "idle",
+  mediaHouseWinners: [],
 };
 
 
@@ -195,6 +197,30 @@ export const getStationWinners = createAsyncThunk(
     try {
       const state = getState() as { auth: { token: string } };
       const response = await fetch(`${BASE_URL}/transaction/station-winners/${data.stationId}`, {
+        method: "GET",
+        headers: {
+          "content-type": "application/json",
+          Authorization: `Bearer ${state.auth.token}`,
+        },
+      });
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message);
+      }
+      const responseData = await response.json();
+      return responseData;
+    } catch (error) {
+      return rejectWithValue((error as Error).message);
+    }
+  }
+);
+
+export const getMediaHouseWinners = createAsyncThunk(
+  "users/getMediaHouseWinners",
+  async (data:{mediaId:string}, { rejectWithValue, getState }) => {
+    try {
+      const state = getState() as { auth: { token: string } };
+      const response = await fetch(`${BASE_URL}/transaction/media-house-winners/${data.mediaId}`, {
         method: "GET",
         headers: {
           "content-type": "application/json",
@@ -549,6 +575,20 @@ const userSlice = createSlice({
         state.winners = [];
         toast.error((payload as string) || "Failed to load station winners");
   });
+
+        // get media house winners
+        builder.addCase(getMediaHouseWinners.pending, (state) => {
+          state.loadingWinners = "pending";
+        });
+        builder.addCase(getMediaHouseWinners.fulfilled, (state, { payload }) => {
+          state.loadingWinners = "succeeded";
+          state.mediaHouseWinners = payload;
+        });
+        builder.addCase(getMediaHouseWinners.rejected, (state, { payload }) => {
+          state.loadingWinners = "failed";
+          state.mediaHouseWinners = [];
+          toast.error((payload as string) || "Failed to load media house winners");
+        });
     
   },
 });
