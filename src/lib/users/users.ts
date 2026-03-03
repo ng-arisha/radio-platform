@@ -185,6 +185,33 @@ export const getShowPresenters = createAsyncThunk(
   }
 );
 
+export const assignMediaHouseAdmin = createAsyncThunk(
+  "users/assignMediaHouseAdmin",
+  async (data:{mediaId:string,userId:string}, { rejectWithValue, getState }) => {
+    try {
+      const state = getState() as { auth: { token: string } };
+      const response = await fetch(`${BASE_URL}/media/assign-admin/${data.mediaId}`, {
+        method: "PATCH",
+        headers: {
+          "content-type": "application/json",
+          Authorization: `Bearer ${state.auth.token}`,
+        },
+        body: JSON.stringify({
+          userId: data.userId,
+        }),
+      });
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message);
+      }
+      const responseData = await response.json();
+      return responseData;
+    } catch (error) {
+      return rejectWithValue((error as Error).message);
+    }
+  }
+);
+
 export const createMediaHouseUser = createAsyncThunk(
   "users/createmediahouseuser",
   async (
@@ -451,6 +478,34 @@ const userSlice = createSlice({
       state.addingUser = "failed";
       state.customerCareUsers = [];
       toast.error((payload as string) || "Failed to load customer care users");
+    });
+
+    // create station customer care
+    builder.addCase(newStationCustomerCare.pending, (state) => {
+      state.addingUser = "pending";
+    });
+    builder.addCase(newStationCustomerCare.fulfilled, (state, { payload }) => {
+      state.addingUser = "succeeded";
+      state.customerCareUsers.push(payload);
+      toast.success("Customer care user added successfully");
+    });
+    builder.addCase(newStationCustomerCare.rejected, (state, { payload }) => {
+      state.addingUser = "failed";
+      toast.error((payload as string) || "Failed to add customer care user");
+    });
+
+    // assign media house admin
+    builder.addCase(assignMediaHouseAdmin.pending, (state) => {
+      state.addingUser = "pending";
+    });
+    builder.addCase(assignMediaHouseAdmin.fulfilled, (state, { payload }) => {
+      state.addingUser = "succeeded";
+      toast.success("Media house admin assigned successfully");
+    });
+
+    builder.addCase(assignMediaHouseAdmin.rejected, (state, { payload }) => {
+      state.addingUser = "failed";
+      toast.error((payload as string) || "Failed to assign media house admin");
     });
     
   },

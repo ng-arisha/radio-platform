@@ -1,6 +1,7 @@
 import { Eye, Power, Trash2 } from "lucide-react";
 import Link from "next/link";
 import UpdateMediaHouseStatusModal from "../master/update-media-house-status-modal";
+import AssignMediaAdmin from "../media-house/assign-media-admin";
 import EditMediaHouseModal from "./edit-media-house-modal";
 
 function MediaHouseTable({ mediaHouses }: { mediaHouses: MediaHouseType[] }) {
@@ -57,6 +58,7 @@ function MediaHouseTable({ mediaHouses }: { mediaHouses: MediaHouseType[] }) {
                 </Link>
               <EditMediaHouseModal mediaHouse={media} />
               <UpdateMediaHouseStatusModal mediaHouse={media} status={media.status === 'active' ? 'inactive': "active"} />
+              <AssignMediaAdmin mediaId={media._id} />
               </td>
             </tr>
           ))}

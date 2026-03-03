@@ -19,10 +19,10 @@ function ShowNavigation() {
       name: "Promotions",
       path: `/shows/${params.showId}/promotions`,
     },
-    {
-      name: "Commissions",
-      path: `/shows/${params.showId}/commissions`,
-    },
+    // {
+    //   name: "Commissions",
+    //   path: `/shows/${params.showId}/commissions`,
+    // },
     {
       name: "Transactions",
       path: `/shows/${params.showId}/transactions`,
