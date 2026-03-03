@@ -19,6 +19,7 @@ import {
   Tv,
   User,
   Users,
+  Users2Icon,
   Wallet
 } from "lucide-react";
 import Link from "next/link";
@@ -178,11 +179,11 @@ function SideNavigation() {
       path: `/stations/${tokenUser?.station}/transactions`,
       icon: <Receipt />,
     },
-    // {
-    //   name: "Commission",
-    //   path: `/stations/${tokenUser?.station}/commission`,
-    //   icon: <Wallet />,
-    // },
+    {
+      name: "Winners",
+      path: `/stations/${tokenUser?.station}/winners`,
+      icon: <Users2Icon />,
+    },
     {
       name: "Settings",
       path: `/stations/${tokenUser?.station}/settings`,
@@ -231,6 +232,11 @@ function SideNavigation() {
       name: "Transactions",
       path: `/cs/${tokenUser?.station}/txtions`,
       icon: <User />,
+    },
+    {
+      name: "Winners",
+      path: `/cs/${tokenUser?.station}/winners`,
+      icon: <Users2Icon />,
     },
   ];
   const toggleDropdown = (label: string) => {

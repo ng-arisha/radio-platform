@@ -298,3 +298,19 @@ declare type CustomerCareType = {
     name: string;
   }
 }
+
+declare type WinnersType = {
+  _id: string;
+  amount: number;
+  phoneNumber: string;
+  transactionDate: string;
+  show:{
+    _id: string;
+    name: string;
+  };
+  promotion:{
+    _id: string;
+    name: string;
+  }
+  createdAt: string;
+}

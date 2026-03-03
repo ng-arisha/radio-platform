@@ -5,6 +5,8 @@ const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 interface InitialUserState {
   loading: "idle" | "pending" | "succeeded" | "failed";
   addingUser: "idle" | "pending" | "succeeded" | "failed";
+  winners: WinnersType[];
+  loadingWinners: "idle" | "pending" | "succeeded" | "failed";
   mediahouseUsers: UserType[];
   presenterUsers: UserType[];
   stationAdminUsers: UserType[];
@@ -30,6 +32,8 @@ const initialState: InitialUserState = {
   customerCareUsers: [],
   userDistribution: [],
   profileData:null,
+  winners: [],
+  loadingWinners: "idle",
 };
 
 
@@ -167,6 +171,30 @@ export const getShowPresenters = createAsyncThunk(
     try {
       const state = getState() as { auth: { token: string } };
       const response = await fetch(`${BASE_URL}/user/presenters`, {
+        method: "GET",
+        headers: {
+          "content-type": "application/json",
+          Authorization: `Bearer ${state.auth.token}`,
+        },
+      });
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message);
+      }
+      const responseData = await response.json();
+      return responseData;
+    } catch (error) {
+      return rejectWithValue((error as Error).message);
+    }
+  }
+);
+
+export const getStationWinners = createAsyncThunk(
+  "users/getStationWinners",
+  async (data:{stationId:string}, { rejectWithValue, getState }) => {
+    try {
+      const state = getState() as { auth: { token: string } };
+      const response = await fetch(`${BASE_URL}/transaction/station-winners/${data.stationId}`, {
         method: "GET",
         headers: {
           "content-type": "application/json",
@@ -507,6 +535,20 @@ const userSlice = createSlice({
       state.addingUser = "failed";
       toast.error((payload as string) || "Failed to assign media house admin");
     });
+
+      // get station winners
+      builder.addCase(getStationWinners.pending, (state) => {
+        state.loadingWinners = "pending";
+      });
+      builder.addCase(getStationWinners.fulfilled, (state, { payload }) => {
+        state.loadingWinners = "succeeded";
+        state.winners = payload;
+      });
+      builder.addCase(getStationWinners.rejected, (state, { payload }) => {
+        state.loadingWinners = "failed";
+        state.winners = [];
+        toast.error((payload as string) || "Failed to load station winners");
+  });
     
   },
 });

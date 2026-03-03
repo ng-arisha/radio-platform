@@ -35,8 +35,8 @@ function StationNavigation() {
       href: `/stations/${params.stationId}/transactions`,
     },
     {
-      label: "Commissions",
-      href: `/stations/${params.stationId}/commission`,
+      label: "Winners",
+      href: `/stations/${params.stationId}/winners`,
     },
     {
       label: "Settings",
