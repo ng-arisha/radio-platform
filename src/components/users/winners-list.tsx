@@ -25,7 +25,7 @@ function WinnersList() {
                 <ReusableLoader
                 />
             ): winners.length === 0 ?  (
-                <div>
+                <div className="h-[calc(100vh-400px)] flex flex-col items-center justify-center text-red-500">
                     No winners yet
                 </div>
             ):(
