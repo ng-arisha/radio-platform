@@ -18,6 +18,7 @@ import {
   Trophy,
   Tv,
   User,
+  User2,
   Users,
   Users2Icon,
   Wallet
@@ -132,11 +133,11 @@ function SideNavigation() {
       path: `/media/${tokenUser?.media}/transactions`,
       icon: <Receipt />,
     },
-    // {
-    //   name: "Reports",
-    //   path: `/media/${tokenUser?.media}/reports`,
-    //   icon: <ReceiptCent />,
-    // },
+    {
+      name: "Winners",
+      path: `/media/${tokenUser?.media}/winners`,
+      icon: <User2 />,
+    },
     {
       name: "Settings",
       path: `/media/${tokenUser?.media}/settings`,
