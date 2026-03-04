@@ -171,6 +171,51 @@ export function getCurrentDateTime() {
   return { formattedDate, formattedTime };
 }
 
+// modified remaining show time function to handle shows that span across midnight
+export function getRemainingShowTimee(
+  startTime: string,
+  endTime: string
+): string {
+  const now = new Date();
+
+  const [startHours, startMinutes] = startTime.split(":").map(Number);
+  const [endHours, endMinutes] = endTime.split(":").map(Number);
+
+  const start = new Date(now);
+  start.setHours(startHours, startMinutes, 0, 0);
+
+  const end = new Date(now);
+  end.setHours(endHours, endMinutes, 0, 0);
+
+  const isOvernight = endTime < startTime;
+
+  if (isOvernight) {
+    // Case 1: after midnight (e.g. 00:30 for a 23:00 → 01:00 show)
+    if (now < start) {
+      start.setDate(start.getDate() - 1); // started yesterday
+    } else {
+      end.setDate(end.getDate() + 1); // ends tomorrow
+    }
+  }
+
+  // If show already ended
+  if (now > end) return "Show has ended";
+
+  // If show not started yet
+  if (now < start) return "Show has not started yet";
+
+  // Remaining time
+  const diffMs = end.getTime() - now.getTime();
+
+  const hours = Math.floor(diffMs / (1000 * 60 * 60));
+  const minutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+  const seconds = Math.floor((diffMs % (1000 * 60)) / 1000);
+
+  return `${hours.toString().padStart(2, "0")}:${minutes
+    .toString()
+    .padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
+}
+
 export function getRemainingShowTime(
   startTime: string,
   endTime: string

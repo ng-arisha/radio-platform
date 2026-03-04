@@ -2,7 +2,7 @@
 
 import { getShowDetails } from "@/lib/shows/shows";
 import { AppDispatch, RootState } from "@/lib/store";
-import { getRemainingShowTime } from "@/utils/utils";
+import { getRemainingShowTimee } from "@/utils/utils";
 import { Clock, Radio, SunIcon } from "lucide-react";
 import { useParams } from "next/navigation";
 import { useEffect } from "react";
@@ -47,7 +47,7 @@ function ShowInfo() {
               </p>
               <p className="text-2xl font-bold text-white flex items-center gap-2">
                 <Clock size={24} />
-                {getRemainingShowTime(show.startTime, show.endTime)}
+                {getRemainingShowTimee(show.startTime, show.endTime)}
               </p>
             </div>
           </div>
