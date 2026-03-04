@@ -183,9 +183,12 @@ export function getRemainingShowTimee(
 
   const start = new Date(now);
   start.setHours(startHours, startMinutes, 0, 0);
+  console.log("Start time:", start.toLocaleTimeString());
+  console.log("Current time:", now.toLocaleTimeString());
 
   const end = new Date(now);
   end.setHours(endHours, endMinutes, 0, 0);
+  console.log("End time:", end.toLocaleTimeString());
 
   const isOvernight = endTime < startTime;
 
@@ -205,6 +208,52 @@ export function getRemainingShowTimee(
   if (now < start) return "Show has not started yet";
 
   // Remaining time
+  const diffMs = end.getTime() - now.getTime();
+
+  const hours = Math.floor(diffMs / (1000 * 60 * 60));
+  const minutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+  const seconds = Math.floor((diffMs % (1000 * 60)) / 1000);
+
+  return `${hours.toString().padStart(2, "0")}:${minutes
+    .toString()
+    .padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
+}
+
+export function getRemainingShowTimeee(
+  startTime: string,
+  endTime: string
+): string {
+  const now = new Date();
+
+  const [sh, sm] = startTime.split(":").map(Number);
+  const [eh, em] = endTime.split(":").map(Number);
+
+  const start = new Date(now);
+  start.setHours(sh, sm, 0, 0);
+
+  const end = new Date(now);
+  end.setHours(eh, em, 0, 0);
+
+  // ✅ Detect overnight properly
+  const isOvernight =
+    eh < sh || (eh === sh && em <= sm);
+
+  if (isOvernight) {
+    // If current time is before end → we are after midnight
+    if (now <= end) {
+      // Show started yesterday
+      start.setDate(start.getDate() - 1);
+    } else {
+      // Show ends tomorrow
+      end.setDate(end.getDate() + 1);
+    }
+  }
+
+  // ✅ Status checks
+  if (now > end) return "Show has ended";
+  if (now < start) return "Show has not started yet";
+
+  // ✅ Remaining time
   const diffMs = end.getTime() - now.getTime();
 
   const hours = Math.floor(diffMs / (1000 * 60 * 60));

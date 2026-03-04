@@ -2,7 +2,7 @@
 
 import { getShowDetails } from "@/lib/shows/shows";
 import { AppDispatch, RootState } from "@/lib/store";
-import { getRemainingShowTimee } from "@/utils/utils";
+import { getRemainingShowTimeee } from "@/utils/utils";
 import { Clock, Radio, SunIcon } from "lucide-react";
 import { useParams } from "next/navigation";
 import { useEffect } from "react";
@@ -37,7 +37,7 @@ function ShowInfo() {
               </div>
               <p className="text-white text-opacity-90 flex items-center gap-2">
                 <Radio size={16} />
-                {show.station.name} {show.station.frequency} • {show.startTime}{" "}
+                {show.station ? `${show.station.name}` : "N/A"} {show.station ? `${show.station.frequency}`: "N/A"} • {show.startTime}{" "}
                 - {show.endTime}
               </p>
             </div>
@@ -47,7 +47,7 @@ function ShowInfo() {
               </p>
               <p className="text-2xl font-bold text-white flex items-center gap-2">
                 <Clock size={24} />
-                {getRemainingShowTimee(show.startTime, show.endTime)}
+                {getRemainingShowTimeee(show.startTime, show.endTime)}
               </p>
             </div>
           </div>
