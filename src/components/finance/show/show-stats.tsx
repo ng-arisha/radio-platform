@@ -84,3 +84,5 @@ function ShowStats() {
 }
 
 export default ShowStats;
+
+// {"reference_code":"222","operator":"tigo","amount":1000,"msisdn":"255613556380","paybill":"553111","trans_id":"6063001677921256","created_at":"2026-03-05 00:03:01"}

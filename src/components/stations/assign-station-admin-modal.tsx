@@ -1,22 +1,22 @@
 import { AppDispatch, RootState } from "@/lib/store";
-import { assignMediaHouseAdmin, getMediaHouseUsers } from "@/lib/users/users";
+import { assignStationAdmin, getStationAdminUsers } from "@/lib/users/users";
 import { SunIcon, User, User2, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import Button from "../shared/button";
 
-function AssignMediaAdmin({ mediaId }: { mediaId: string }) {
-  const assignMediaAdminModal = useRef<HTMLDialogElement>(null);
+function AssignStationAdminModal({stationId}:{ stationId: string }) {
+    const assignMediaAdminModal = useRef<HTMLDialogElement>(null);
   const dispatch = useDispatch<AppDispatch>();
   const loading = useSelector((state: RootState) => state.users.addingUser);
-  const mediaHouseUsers = useSelector(
-    (state: RootState) => state.users.mediahouseUsers
+  const stationAdmins = useSelector(
+    (state: RootState) => state.users.stationAdminUsers
   );
   const [selectedAdmin, setSelectedAdmin] = useState<string>("");
 
   useEffect(() => {
-    dispatch(getMediaHouseUsers());
+    dispatch(getStationAdminUsers());
   }, []);
 
   const openModal = () => {
@@ -38,17 +38,16 @@ function AssignMediaAdmin({ mediaId }: { mediaId: string }) {
     }
 
     const data = {
-      mediaId: mediaId,
+      stationId: stationId,
       userId: selectedAdmin,
     };
-    const res = await dispatch(assignMediaHouseAdmin(data));
+    const res = await dispatch(assignStationAdmin(data));
     if (res.meta.requestStatus === "fulfilled") {
       closeModal();
     }
   };
-
-  return (
-    <div>
+    return (
+        <div>
       <button
         onClick={openModal}
         type="button"
@@ -86,7 +85,7 @@ function AssignMediaAdmin({ mediaId }: { mediaId: string }) {
                 <option value="" disabled hidden>
                   Select Admin
                 </option>
-                {mediaHouseUsers.map((user) => (
+                {stationAdmins.map((user) => (
                   <option key={user._id} value={user._id}>
                     {user.fullName}
                   </option>
@@ -125,7 +124,7 @@ function AssignMediaAdmin({ mediaId }: { mediaId: string }) {
         </div>
       </dialog>
     </div>
-  );
+    )
 }
 
-export default AssignMediaAdmin;
+export default AssignStationAdminModal

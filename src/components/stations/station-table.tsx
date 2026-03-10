@@ -3,6 +3,7 @@
 import { EyeIcon, Power } from "lucide-react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
+import AssignStationAdminModal from "./assign-station-admin-modal";
 import DeleteStationModal from "./delete-station-modal";
 import EditStationModal from "./edit-station-modal";
 
@@ -59,6 +60,7 @@ function StationTable({ stations }: { stations: StationType[] }) {
                   <EyeIcon className="" size={16} />
                 </Link>
                 <DeleteStationModal station={station} />
+                <AssignStationAdminModal stationId={station._id} />
               </td>
             </tr>
           ))}

@@ -266,6 +266,33 @@ export const assignMediaHouseAdmin = createAsyncThunk(
   }
 );
 
+export const assignStationAdmin = createAsyncThunk(
+  "users/assignStationAdmin",
+  async (data:{stationId:string,userId:string}, { rejectWithValue, getState }) => {
+    try {
+      const state = getState() as { auth: { token: string } };
+      const response = await fetch(`${BASE_URL}/station/assign-admin/${data.stationId}`, {
+        method: "PATCH",
+        headers: {
+          "content-type": "application/json",
+          Authorization: `Bearer ${state.auth.token}`,
+        },
+        body: JSON.stringify({
+          userId: data.userId,
+        }),
+      });
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData.message);
+      }
+      const responseData = await response.json();
+      return responseData;
+    } catch (error) {
+      return rejectWithValue((error as Error).message);
+    }
+  }
+);
+
 export const createMediaHouseUser = createAsyncThunk(
   "users/createmediahouseuser",
   async (
@@ -588,6 +615,19 @@ const userSlice = createSlice({
           state.loadingWinners = "failed";
           state.mediaHouseWinners = [];
           toast.error((payload as string) || "Failed to load media house winners");
+        });
+
+        // assign station admin
+        builder.addCase(assignStationAdmin.pending, (state) => {
+          state.addingUser = "pending";
+        });
+        builder.addCase(assignStationAdmin.fulfilled, (state, { payload }) => {
+          state.addingUser = "succeeded";
+          toast.success("Station admin assigned successfully");
+        });
+        builder.addCase(assignStationAdmin.rejected, (state, { payload }) => {
+          state.addingUser = "failed";
+          toast.error((payload as string) || "Failed to assign station admin");
         });
     
   },
