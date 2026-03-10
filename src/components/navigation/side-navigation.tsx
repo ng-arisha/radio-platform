@@ -218,8 +218,13 @@ function SideNavigation() {
       icon: <CreditCard />,
     },
     {
-      name: "Run Draw",
+      name: "Winners",
       path: `/shows/${tokenUser?.show}/winners`,
+      icon: <Trophy />,
+    },
+    {
+      name: "Run Draw",
+      path: `/shows/${tokenUser?.show}/run-draw`,
       icon: <Trophy />,
     },
     // {

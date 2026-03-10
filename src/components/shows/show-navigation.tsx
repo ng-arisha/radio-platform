@@ -31,6 +31,10 @@ function ShowNavigation() {
       name: "Winners",
       path: `/shows/${params.showId}/winners`,
     },
+    {
+      name: "Run Draw",
+      path: `/shows/${params.showId}/run-draw`,
+    },
   ];
   return (
     <div className="flex items-center gap-2 bg-gray-800 rounded-lg p-1 border border-gray-800/80">

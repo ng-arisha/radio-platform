@@ -1,11 +1,11 @@
-import GenerateNewWinner from "@/components/finance/show/winners/generate-new-winner"
 import ShowNavigation from "@/components/shows/show-navigation"
+import ShowWinnersList from "@/components/users/show-winners-list"
 
 function WinnersPage() {
     return (
         <div>
             <ShowNavigation />
-            <GenerateNewWinner />
+           <ShowWinnersList />
         </div>
     )
 }
